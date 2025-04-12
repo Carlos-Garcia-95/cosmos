@@ -4,31 +4,37 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsuarioTable extends Migration
+return new class extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
         Schema::create('usuario', function (Blueprint $table) {
             $table->id('id_usuario');
-            $table->string('nombre_usuario', 50)->unique();
+            $table->string('nombre_usuario', 50);
             $table->string('nombre', 50);
             $table->string('apellido', 50);
-            $table->string('email', 50)->unique();
+            $table->string('email', 50);
             $table->date('fecha_nacimiento');
             $table->string('numero_telefono', 15);
-            $table->string('dni', 30)->unique();
+            $table->string('dni', 30);
             $table->string('direccion', 150)->nullable();
             $table->string('ciudad', 30);
             $table->string('codigo_postal', 10);
-            $table->string('contrasena', 50);
+            $table->string('contrasenia', 200);
             $table->timestamp('fecha_registro')->useCurrent();
-            /* $table->foreignId('id_descuento')->nullable()->constrained('descuento')->onDelete('set null'); */
-            $table->timestamps();
+            $table->unsignedBigInteger('id_descuento')->nullable();
+            $table->foreign('id_descuento')->references('id_descuento')->on('descuento');
         });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::dropIfExists('usuario');
     }
-}
+};

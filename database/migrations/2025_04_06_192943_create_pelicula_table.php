@@ -4,9 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePeliculaTable extends Migration
+return new class extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
         Schema::create('pelicula', function (Blueprint $table) {
             $table->id('id_pelicula');
@@ -18,14 +21,19 @@ class CreatePeliculaTable extends Migration
             $table->date('fecha_estreno');
             $table->timestamp('fecha_alta')->useCurrent();
             $table->date('fecha_baja')->nullable();
-            /* $table->foreignId('id_edad_recomendada')->nullable()->constrained('edad_recomendada'); */
-            /* $table->foreignId('id_sala')->nullable()->constrained('sala'); */
-            $table->timestamps();
+            $table->unsignedBigInteger('id_edad_recomendada')->nullable();
+            $table->foreign('id_edad_recomendada')->references('id_edad_recomendada')->on('edad_recomendada');
+            $table->unsignedBigInteger('id_sala')->nullable();
+            $table->foreign('id_sala')->references('id_sala')->on('sala');
+
         });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::dropIfExists('pelicula');
     }
-}
+};

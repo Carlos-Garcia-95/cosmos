@@ -4,9 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAdministradorTable extends Migration
+return new class extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
         Schema::create('administrador', function (Blueprint $table) {
             $table->id('id_administrador');
@@ -16,14 +19,16 @@ class CreateAdministradorTable extends Migration
             $table->string('email', 50)->unique();
             $table->date('fecha_nacimiento');
             $table->string('numero_telefono', 15);
-            $table->string('contrasena', 50);
+            $table->string('contrasenia', 200);
             $table->string('codigo_administrador', 20)->unique();
-            $table->timestamps();
         });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::dropIfExists('administrador');
     }
-}
+};

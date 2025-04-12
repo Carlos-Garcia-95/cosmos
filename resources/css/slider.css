@@ -1,0 +1,310 @@
+/* Estilos globales */
+body {
+    background-color: #000000; /* Color de fondo negro */
+    color: #f5f5f5; /* Color del texto (blanco claro) */
+    font-size: 16px; /* Tamaño de la fuente */
+}
+
+.header-section {
+    display: flex;
+    justify-content: flex-end; /* Alinea los botones a la derecha */
+    padding: 20px;
+    background-color: #000000; /* Fondo oscuro */
+}
+
+.header-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.header-buttons button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    background-color: #000000; /* Color de fondo del botón */
+    color: white;
+    border-radius: 5px;
+    transition: background-color 1s ease, transform 1s ease, box-shadow 1s ease;
+}
+
+.header-buttons button:hover {
+    background-color: #ffffff; 
+    color: #000000;
+    transform: scale(1.05); 
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); 
+}
+
+/* Estilos para el contenedor clonable */
+.cloneable {
+    padding: 20px; 
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; 
+    display: flex;
+    position: relative;
+    font-size: 1.1vw;
+}
+
+/* Estilos para la capa de superposición */
+.overlay {
+    z-index: 2;
+    background-image: linear-gradient(90deg, #000000 85%, #0000); /* Gradiente de superposición */
+    justify-content: flex-start;
+    align-items: center;
+    width: 37.5em;
+    height: 100%;
+    padding-left: 2em;
+    display: flex;
+    position: absolute;
+    inset: 0% auto 0% 0%;
+}
+
+/* Estilos internos de la superposición */
+.overlay-inner {
+    flex-flow: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 28.125em;
+    display: flex;
+}
+
+/* Fila de contador */
+.overlay-count-row {
+    grid-column-gap: 0.2em;
+    grid-row-gap: 0.2em;
+    flex-flow: row;
+    justify-content: flex-start;
+    align-items: center;
+    font-family: 'PP Neue Corp', Impact, sans-serif;
+    font-size: 5.625em;
+    font-weight: 700;
+    display: flex;
+}
+
+/* Estilos de los contadores */
+.count-column {
+    height: 1em;
+    overflow: hidden;
+}
+
+.count-heading {
+    width: 2ch;
+    font-size: 1em;
+    line-height: 1;
+    margin: 0px;
+}
+
+.count-row-divider {
+    background-color: #f5f5f5; 
+    width: 2px;
+    height: 0.75em;
+    transform: rotate(15deg);
+}
+
+/* Fila de navegación de la superposición */
+.overlay-nav-row {
+    grid-column-gap: 2em;
+    grid-row-gap: 2em;
+    display: flex;
+}
+
+/* Estilos del botón */
+.button {
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.4em;
+    justify-content: center;
+    align-items: center;
+    width: 4em;
+    height: 4em;
+    padding: 0;
+    display: flex;
+    position: relative;
+}
+
+.button-arrow {
+    flex: none;
+    width: 1em;
+    height: 0.75em;
+}
+
+.button-arrow.next {
+    transform: rotate(180deg);
+}
+
+.button-overlay {
+    z-index: 2;
+    position: absolute;
+    inset: -1px;
+}
+
+/* Esquinas de la superposición */
+.overlay-corner {
+    border-top: 1px solid #f5f5f5;
+    border-left: 1px solid #f5f5f5;
+    border-top-left-radius: 0.4em;
+    width: 1em;
+    height: 1em;
+}
+
+.overlay-corner.top-right {
+    position: absolute;
+    inset: 0% 0% auto auto;
+    transform: rotate(90deg);
+}
+
+.overlay-corner.bottom-left {
+    position: absolute;
+    inset: auto auto 0% 0%;
+    transform: rotate(-90deg);
+}
+
+.overlay-corner.bottom-right {
+    position: absolute;
+    inset: auto 0% 0% auto;
+    transform: rotate(180deg);
+}
+
+/* Transiciones del botón */
+.button, .button-overlay {
+    transition: transform 0.475s cubic-bezier(0.25, 0.8, 0.25, 1),
+        opacity 0.475s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.button:hover .button-overlay {
+    transform: scale(1.4);
+}
+
+.overlay-nav-row:hover:has(.button:hover) .button {
+    opacity: 0.4;
+}
+
+.button:hover {
+    transform: scale(0.85);
+    opacity: 1 !important;
+}
+
+/* Estilos para el slider */
+.main {
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0%;
+    overflow: hidden;
+}
+
+.slider-wrap {
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+}
+
+.slider-list {
+    flex-flow: row;
+    justify-content: flex-start;
+    align-items: stretch;
+    display: flex;
+    position: relative;
+}
+
+.slider-slide {
+    flex: none;
+    width: 42.5em;
+    height: 28em;
+    padding-left: 1.25em;
+    padding-right: 1.25em;
+    transition: opacity 0.4s;
+    position: relative;
+}
+
+[data-slider="slide"] {
+    opacity: 0.2;
+}
+
+[data-slider="slide"].active {
+    opacity: 1;
+}
+
+[data-slider="slide"].active .slide-caption {
+    transition-delay: 0.3s;
+}
+
+/* Estilos internos de la diapositiva */
+.slide-inner {
+    border-radius: 0.5em;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Imagen de la diapositiva */
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Estilos de la leyenda de la diapositiva */
+.slide-caption {
+    z-index: 2;
+    grid-column-gap: 0.4em;
+    grid-row-gap: 0.4em;
+    background-color: #f5f5f5; 
+    color: #333333;
+    white-space: nowrap;
+    border-radius: 0.25em;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0.4em 0.75em 0.4em 0.5em;
+    display: flex;
+    position: absolute;
+    top: 1.25em;
+    left: 1.25em;
+    overflow: hidden;
+}
+
+.caption-dot {
+    background-color: #333333; /* Color oscuro */
+    border-radius: 10em;
+    flex: none;
+    width: 0.5em;
+    height: 0.5em;
+}
+
+.caption {
+    font-size: 0.75em;
+    font-family: Arial, sans-serif;
+    margin: 0px;
+}
+
+.slide-caption {
+    transition: transform 0.525s cubic-bezier(0.25, 0.8, 0.25, 1),
+        opacity 0.525s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-delay: 0s;
+}
+
+html:not(.wf-design-mode) .slide-caption {
+    opacity: 0;
+    transform: translate(-25%, 0px);
+}
+
+html:not(.wf-design-mode) [data-slider="slide"].active .slide-caption {
+    opacity: 1;
+    transform: translate(0%, 0px);
+}
+
+/* Fuente personalizada */
+@font-face {
+    font-family: "PP Neue Corp";
+    src: url("https://cdn.prod.website-files.com/6717aac16c9ea22eeef1e79e/6717de2d56e40b921572d2d9_PPNeueCorp-TightUltrabold.woff2")
+        format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
