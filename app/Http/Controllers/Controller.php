@@ -4,5 +4,5 @@ namespace App\Http\Controllers;
 
 abstract class Controller
 {
-    // Cambios de nuevooo golhoasdawd   
+    // CPrueba de merge
 }
