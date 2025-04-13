@@ -11,7 +11,15 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
+<<<<<<< HEAD
     build: {
         outDir: 'public/build', // Asegúrate de que los archivos se generen en la carpeta correcta
     }
+=======
+
+    build: {
+        outDir: 'public/build',
+        manifest: true,
+    },
+>>>>>>> 7851448 (no message)
 });
