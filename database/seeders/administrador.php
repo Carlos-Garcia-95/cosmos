@@ -20,7 +20,7 @@ class administrador extends Seeder
                 'email' => 'juan.perez@admin.com',
                 'fecha_nacimiento' => '1985-01-15',
                 'numero_telefono' => '555123456',
-                'contrasenia' => bcrypt('password123'),
+                'contrasena' => bcrypt('password123'),
                 'codigo_administrador' => 'A001',
             ],
             [
@@ -30,7 +30,7 @@ class administrador extends Seeder
                 'email' => 'ana.gomez@admin.com',
                 'fecha_nacimiento' => '1990-02-20',
                 'numero_telefono' => '555654321',
-                'contrasenia' => bcrypt('password456'),
+                'contrasena' => bcrypt('password456'),
                 'codigo_administrador' => 'A002',
             ],
         ]);

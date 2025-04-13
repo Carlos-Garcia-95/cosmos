@@ -29,18 +29,18 @@ body {
 }
 
 .header-buttons button:hover {
-    background-color: #ffffff; 
+    background-color: #ffffff;
     color: #000000;
-    transform: scale(1.05); 
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); 
+    transform: scale(1.05);
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Estilos para el contenedor clonable */
 .cloneable {
-    padding: 20px; 
+    padding: 20px;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; 
+    min-height: 100vh;
     display: flex;
     position: relative;
     font-size: 1.1vw;
@@ -49,7 +49,11 @@ body {
 /* Estilos para la capa de superposición */
 .overlay {
     z-index: 2;
-    background-image: linear-gradient(90deg, #000000 85%, #0000); /* Gradiente de superposición */
+    background-image: linear-gradient(
+        90deg,
+        #000000 85%,
+        #0000
+    ); /* Gradiente de superposición */
     justify-content: flex-start;
     align-items: center;
     width: 37.5em;
@@ -76,7 +80,7 @@ body {
     flex-flow: row;
     justify-content: flex-start;
     align-items: center;
-    font-family: 'PP Neue Corp', Impact, sans-serif;
+    font-family: "PP Neue Corp", Impact, sans-serif;
     font-size: 5.625em;
     font-weight: 700;
     display: flex;
@@ -96,7 +100,7 @@ body {
 }
 
 .count-row-divider {
-    background-color: #f5f5f5; 
+    background-color: #f5f5f5;
     width: 2px;
     height: 0.75em;
     transform: rotate(15deg);
@@ -168,7 +172,8 @@ body {
 }
 
 /* Transiciones del botón */
-.button, .button-overlay {
+.button,
+.button-overlay {
     transition: transform 0.475s cubic-bezier(0.25, 0.8, 0.25, 1),
         opacity 0.475s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
@@ -255,7 +260,7 @@ img {
     z-index: 2;
     grid-column-gap: 0.4em;
     grid-row-gap: 0.4em;
-    background-color: #f5f5f5; 
+    background-color: #f5f5f5;
     color: #333333;
     white-space: nowrap;
     border-radius: 0.25em;
@@ -288,6 +293,138 @@ img {
         opacity 0.525s cubic-bezier(0.25, 0.8, 0.25, 1);
     transition-delay: 0s;
 }
+
+.modal-registro {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Para que flote sobre el contenido */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+}
+
+.modal-registro .form-container {
+    background-color: #1a1a1a; /* Fondo del formulario */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    width: 90%;
+    max-width: 500px;
+    position: relative; /* Para el botón de cerrar */
+    color: #fff;
+}
+
+.modal-registro .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.modal-registro .logo {
+    max-width: 300px;
+    height: auto;
+}
+
+.modal-registro .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.modal-registro .form-step {
+    display: none;
+}
+
+.modal-registro .form-step.active {
+    display: block;
+}
+
+.modal-registro .input {
+    width: calc(100% - 30px);
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.modal-registro .input::placeholder {
+    color: #777;
+}
+
+.modal-registro .button-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.modal-registro .btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    color: #fff;
+}
+
+.modal-registro .next-step,
+.modal-registro .btn[type="submit"] {
+    background-color: #e50914; /* Rojo característico */
+}
+
+.modal-registro .next-step:hover,
+.modal-registro .btn[type="submit"]:hover {
+    background-color: #c40812;
+}
+
+.modal-registro .prev-step {
+    background-color: #555;
+}
+
+.modal-registro .prev-step:hover {
+    background-color: #777;
+}
+
+.modal-registro label {
+    display: block;
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #ccc;
+    text-align: left;
+}
+
+.modal-registro label input[type="checkbox"] {
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.modal-registro .error-message {
+    color: #ff4d4d;
+    font-size: 0.9em;
+    margin-top: -15px;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+
 
 html:not(.wf-design-mode) .slide-caption {
     opacity: 0;
