@@ -6,6 +6,7 @@ abstract class Controller
 {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     // CPrueba de merge
     // Cambios de nuevooo golhoasdawd   
     // no se que estoy haciendo
@@ -15,4 +16,7 @@ abstract class Controller
 =======
     //
 >>>>>>> c853158 (Revert "se añaden comentarios")
+=======
+    // Cambios de nuevooo golho
+>>>>>>> 4edc32e (Se añade un comentario para que lo lea un marica)
 }
