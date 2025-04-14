@@ -6,7 +6,9 @@
     <title>Cosmos Cinema</title>
 
     <!--GSAPLaravel_8 No borrar, para entrar en GSAP. correo diegito866@gmail.com-->
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/slider.js', 'resources/css/slider.css'])<!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/slider.js', 'resources/css/slider.css', 'resources/js/registro.js', 'resources/js/login.js', 'resources/js/entradas.js', 'resources/css/compraEntradas.css', 'resources/js/compraEntradas.js'])
+    <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
+
 
 </head>
 
@@ -48,8 +50,9 @@
         <div class="main">
             <section class="header-section">
                 <div class="header-buttons">
-                    <button id="mostrarRegistro">ÚNETE A COSMOS</button></a>
-                    <a><button>INICIAR SESIÓN</button></a>
+                    <a href="#seccionCompra"><button id="mostrarCompra">COMPRAR ENTRADAS</button></a> <!--Luego lo moveremos, lo de bajar con efecto hasta el div y donde colocarlo-->
+                    <button id="mostrarRegistro">ÚNETE A COSMOS</button>
+                    <button id="mostrarLogin">INICIAR SESIÓN</button>
                 </div>
             </section>
             <div class="slider-wrap">
@@ -90,96 +93,68 @@
             </div>
         </div>
     </section>
-    <div class="modal-registro" id="modalRegistro">
-        <div class="form-container">
-            <button class="close-button" id="cerrarRegistro">&times;</button>
-            <div class="logo-container">
-                <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Cosmos Cinema Logo" class="logo">
-            </div>
-            <form method="POST">
-                @csrf
 
-                <div id="step1" class="form-step active">
-                    <!-- Fila para el email -->
-                    <div class="form-row">
-                        @if ($errors->has('email'))
-                        <div class="error-message">{{ $errors->first('email') }}</div>
-                        @endif
-                        <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required class="input">
-                    </div>
-
-                    <!-- Fila para confirmar el email -->
-                    <div class="form-row">
-                        @if ($errors->has('email_confirmation'))
-                        <div class="error-message">{{ $errors->first('email_confirmation') }}</div>
-                        @endif
-                        <input type="email" name="email_confirmation" placeholder="Confirmar tu email" value="{{ old('email_confirmation') }}" required class="input">
-                    </div>
-
-                    <!-- Fila para nombre y apellidos -->
-                    <div class="form-row">
-                        <div class="half-width">
-                            @if ($errors->has('nombre'))
-                            <div class="error-message">{{ $errors->first('nombre') }}</div>
-                            @endif
-                            <input type="text" name="nombre" placeholder="Nombre" value="{{ old('nombre') }}" required class="input">
-                        </div>
-                        <div class="half-width">
-                            @if ($errors->has('apellidos'))
-                            <div class="error-message">{{ $errors->first('apellidos') }}</div>
-                            @endif
-                            <input type="text" name="apellidos" placeholder="Apellidos" value="{{ old('apellidos') }}" required class="input">
-                        </div>
-                    </div>
-
-                    <!-- Botones -->
-                    <div class="button-group">
-                        <a href="{{ route('principal') }}" class="btn back-button">Volver</a>
-                        <button type="button" class="btn next-step">Siguiente</button>
-                    </div>
-                </div>
-
-                <div id="step2" class="form-step">
-                    @if ($errors->has('direccion'))
-                    <div class="error-message">{{ $errors->first('direccion') }}</div>
-                    @endif
-                    <input type="text" name="direccion" placeholder="Dirección" value="{{ old('direccion') }}" required class="input">
-                    @if ($errors->has('ciudad'))
-                    <div class="error-message">{{ $errors->first('ciudad') }}</div>
-                    @endif
-                    <input type="text" name="ciudad" placeholder="Ciudad" value="{{ old('ciudad') }}" required class="input">
-                    @if ($errors->has('codigo_postal'))
-                    <div class="error-message">{{ $errors->first('codigo_postal') }}</div>
-                    @endif
-                    <input type="text" name="codigo_postal" placeholder="Código Postal" value="{{ old('codigo_postal') }}" required class="input">
-                    @if ($errors->has('telefono'))
-                    <div class="error-message">{{ $errors->first('telefono') }}</div>
-                    @endif
-                    <input type="tel" name="telefono" placeholder="Teléfono" value="{{ old('telefono') }}" required class="input">
-                    @if ($errors->has('password'))
-                    <div class="error-message">{{ $errors->first('password') }}</div>
-                    @endif
-                    <input type="password" name="password" placeholder="Contraseña" required class="input">
-                    <div class="button-group">
-                        <button type="button" class="btn prev-step">Anterior</button>
-                        <button type="button" class="btn next-step">Siguiente</button>
-                    </div>
-                </div>
-
-                <div id="step3" class="form-step">
-                    <label><input type="checkbox"> Acepto recibir publicidad y comunicaciones sobre promociones y novedades relacionadas con mis preferencias y gustos cinematográficos.</label>
-                        @if ($errors->has('mayor_edad'))
-                        <div class="error-message">{{ $errors->first('mayor_edad') }}</div>
-                        @endif
-                        <label><input type="checkbox" name="mayor_edad" {{ old('mayor_edad') ? 'checked' : '' }} required> Soy mayor de 14 años</label>
-                        <div class="button-group">
-                            <button type="button" class="btn prev-step">Anterior</button>
-                            <button type="submit" class="btn">Registrarse</button>
-                        </div>
-                </div>
-            </form>
+    <section>
+    <!-- Modal de compra de entradas oculto inicialmente -->
+    <div id="seccionCompra">
+        <div class="movie-container">
+            <label>Pick a Movie</label>
+            <!-- Ya haremos el select con las querys necesarias para sacar info de base de datos -->
+            <select id="movie">
+                <option value='8'>True Romance - $8</option>
+                <option value='8'>American History X - $8</option>
+                <option value='8'>A Beautiful Mind - $8</option>
+                <option value='10'>Joker - $10</option>
+            </select>
         </div>
+
+        <a href="#mostrarCompra"><button id="cerrarCompra" class="cerrar-btn">Cerrar</button></a>
+
+        <!-- Podemos meter los tres dentro de una tabla y juntarla a asiento-->
+        <ul class="showcase">
+            <li>
+                <div class="seat"></div>
+                <small>Available</small>
+            </li>
+            <li>
+                <div class="seat selected"></div>
+                <small>Selected</small>
+            </li>
+            <li>
+                <div class="seat occupied"></div>
+                <small>Occupied</small>
+            </li>
+        </ul>
+
+        <!-- Contenedor para los asientos -->
+        <div class="container">
+        <div class="screen"></div>
+            @for ($i = 0; $i < 8; $i++)
+                <div class="row">
+                    @for ($j = 0; $j < 8; $j++)
+                        <div class="seat"></div>
+                    @endfor
+                </div>
+            @endfor
+        </div>
+
+        <!-- Información de los asientos seleccionados y precio -->
+        <div class="text-wrapper">
+            <p class="text">
+                You have selected <span id="count">0</span> seats for a price of $<span id="total">0</span>
+            </p>
+            <button id="confirmarCompra">Comprar Entradas</button>
+</div>
     </div>
+</section>
+
+    <x-modal.modal_registro>
+
+    </x-modal.modal_registro>
+    <x-modal.modal_login>
+
+    </x-modal.modal_login>
+
 </body>
 
 </html>

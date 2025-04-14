@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const modalRegistro = document.getElementById("modalRegistro");
-    const mostrarRegistroBtn = document.getElementById("mostrarRegistro");
-    const cerrarRegistroBtn = document.getElementById("cerrarRegistro");
-    const steps = modalRegistro.querySelectorAll(".form-step");
-    const nextButtons = modalRegistro.querySelectorAll(".next-step");
-    const prevButtons = modalRegistro.querySelectorAll(".prev-step");
-    const form = modalRegistro.querySelector("form");
+    const modalLogin = document.getElementById("modalLogin");
+    const mostrarLoginBtn = document.getElementById("mostrarLogin");
+    const cerrarLoginBtn = document.getElementById("cerrarLogin");
+    const steps = modalLogin.querySelectorAll(".form-step");
+    const nextButtons = modalLogin.querySelectorAll(".next-step");
+    const prevButtons = modalLogin.querySelectorAll(".prev-step");
+    const form = modalLogin.querySelector("form");
     let currentStep = 0;
 
     function showStep(stepIndex) {
@@ -15,13 +15,13 @@ document.addEventListener("DOMContentLoaded", function () {
         currentStep = stepIndex;
     }
 
-    mostrarRegistroBtn.addEventListener("click", () => {
-        modalRegistro.style.display = "flex";
+    mostrarLoginBtn.addEventListener("click", () => {
+        modalLogin.style.display = "flex";
         showStep(0); // Mostrar el primer paso al abrir el modal
     });
 
-    cerrarRegistroBtn.addEventListener("click", () => {
-        modalRegistro.style.display = "none";
+    cerrarLoginBtn.addEventListener("click", () => {
+        modalLogin.style.display = "none";
     });
 
     nextButtons.forEach((button) => {
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     form.addEventListener("submit", function (event) {
         // Aquí puedes agregar validaciones adicionales en JavaScript si lo deseas
-        // La submission del formulario seguirá enviando los datos a la ruta 'registro'
+        // La submission del formulario seguirá enviando los datos a la ruta 'login'
     });
 
     // Ocultar todos los pasos excepto el primero al cargar el modal
@@ -56,8 +56,8 @@ document.addEventListener("DOMContentLoaded", function () {
     form.addEventListener("submit", function () {
         // Simulación de envío exitoso
         setTimeout(() => {
-            modalRegistro.style.display = "none";
-            alert("Registro completado!"); 
+            modalLogin.style.display = "none";
+            alert("Login completado!"); 
             form.reset(); 
             showStep(0); 
         }, 1500); 
