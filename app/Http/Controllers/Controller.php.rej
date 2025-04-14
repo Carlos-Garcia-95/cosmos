@@ -1,0 +1,9 @@
+diff a/app/Http/Controllers/Controller.php b/app/Http/Controllers/Controller.php	(rejected hunks)
+@@ -12,4 +12,7 @@
+ +=======
+ +    // Carlos la lia en la empresa
+ +>>>>>>> eeedb25 (se añaden comentarios)
+++=======
++     //
+++>>>>>>> c853158 (Revert "se añaden comentarios")
+  }
