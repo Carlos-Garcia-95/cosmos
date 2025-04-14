@@ -294,7 +294,7 @@ img {
     transition-delay: 0s;
 }
 
-.modal-registro {
+.modal {
     display: none; /* Oculto por defecto */
     position: fixed; /* Para que flote sobre el contenido */
     top: 0;
@@ -307,7 +307,7 @@ img {
     z-index: 1000; /* Asegura que esté por encima de otros elementos */
 }
 
-.modal-registro .form-container {
+.modal .form-container {
     background-color: #1a1a1a; /* Fondo del formulario */
     padding: 40px;
     border-radius: 10px;
@@ -319,7 +319,7 @@ img {
     color: #fff;
 }
 
-.modal-registro .close-button {
+.modal .close-button {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -330,12 +330,12 @@ img {
     cursor: pointer;
 }
 
-.modal-registro .logo {
+.modal .logo {
     max-width: 300px;
     height: auto;
 }
 
-.modal-registro .logo-container {
+.modal .logo-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -343,15 +343,15 @@ img {
     width: 100%;
 }
 
-.modal-registro .form-step {
+.modal .form-step {
     display: none;
 }
 
-.modal-registro .form-step.active {
+.modal .form-step.active {
     display: block;
 }
 
-.modal-registro .input {
+.modal .input {
     width: calc(100% - 30px);
     padding: 12px;
     margin-bottom: 20px;
@@ -363,18 +363,18 @@ img {
     font-size: 16px;
 }
 
-.modal-registro .input::placeholder {
+.modal .input::placeholder {
     color: #777;
 }
 
-.modal-registro .button-group {
+.modal .button-group {
     display: flex;
     gap: 15px;
     justify-content: center;
     margin-top: 30px;
 }
 
-.modal-registro .btn {
+.modal .btn {
     padding: 12px 25px;
     border: none;
     border-radius: 5px;
@@ -385,25 +385,25 @@ img {
     color: #fff;
 }
 
-.modal-registro .next-step,
-.modal-registro .btn[type="submit"] {
+.modal .next-step,
+.modal .btn[type="submit"] {
     background-color: #e50914; /* Rojo característico */
 }
 
-.modal-registro .next-step:hover,
-.modal-registro .btn[type="submit"]:hover {
+.modal .next-step:hover,
+.modal .btn[type="submit"]:hover {
     background-color: #c40812;
 }
 
-.modal-registro .prev-step {
+.modal .prev-step {
     background-color: #555;
 }
 
-.modal-registro .prev-step:hover {
+.modal .prev-step:hover {
     background-color: #777;
 }
 
-.modal-registro label {
+.modal label {
     display: block;
     margin-bottom: 20px;
     font-size: 16px;
@@ -411,12 +411,12 @@ img {
     text-align: left;
 }
 
-.modal-registro label input[type="checkbox"] {
+.modal label input[type="checkbox"] {
     margin-right: 10px;
     vertical-align: middle;
 }
 
-.modal-registro .error-message {
+.modal .error-message {
     color: #ff4d4d;
     font-size: 0.9em;
     margin-top: -15px;
