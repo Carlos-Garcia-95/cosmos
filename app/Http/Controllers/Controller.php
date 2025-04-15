@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 abstract class Controller
 {
-<<<<<<< HEAD
+/* <<<<<<< HEAD
     // HOLA QUE TAL NO SE QUE ESTOY HACIENDO
 =======
 <<<<<<< HEAD
@@ -22,5 +22,5 @@ abstract class Controller
 =======
     // Cambios de nuevooo golho
 >>>>>>> 4edc32e (Se añade un comentario para que lo lea un marica)
->>>>>>> 140bd343dd40bf19c1d75c635b64d255ec8ab545
+>>>>>>> 140bd343dd40bf19c1d75c635b64d255ec8ab545 */
 }

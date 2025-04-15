@@ -62,13 +62,13 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id('id_user');
-            $table->string('nombre_user', 50);
+            $table->string('nombre_user', 50); //Lo quitamos??
             $table->string('nombre', 50);
-            $table->string('apellido', 50);
-            $table->string('email', 50);
+            $table->string('apellidos', 50);
+            $table->string('email', 50)->unique();
             $table->date('fecha_nacimiento');
             $table->string('numero_telefono', 15);
-            $table->string('dni', 30);
+            $table->string('dni', 30)->unique();
             $table->string('direccion', 150)->nullable();
             $table->string('ciudad', 30);
             $table->string('codigo_postal', 10);

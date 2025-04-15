@@ -24,8 +24,27 @@
                     <input type="email" name="email_confirmation" placeholder="Confirmar tu email" value="{{ old('email_confirmation') }}" required class="input">
                 </div>
 
-                <!-- Fila para nombre y apellidos -->
+                <!-- Fila para contraseña y confirmación -->
                 <div class="form-row">
+                    @if ($errors->has('password'))
+                    <div class="error-message">{{ $errors->first('password') }}</div>
+                    @endif
+                    <input type="password" name="password" placeholder="Contraseña" required class="input">
+                    @if ($errors->has('password_confirmation'))
+                    <div class="error-message">{{ $errors->first('password_confirmation') }}</div>
+                    @endif
+                    <input type="password" name="password_confirmation" placeholder="Confirmar contraseña" required class="input">
+                </div>
+
+                <!-- Botones -->
+                <div class="button-group">
+                    <a href="{{ route('principal') }}" class="btn back-button">Volver</a>
+                    <button type="button" class="btn next-step">Siguiente</button>
+                </div>
+            </div>
+
+            <div id="step2" class="form-step">
+                <div class="form-row" style="display: flex; justify-content: space-between;">
                     <div class="half-width">
                         @if ($errors->has('nombre'))
                         <div class="error-message">{{ $errors->first('nombre') }}</div>
@@ -39,35 +58,38 @@
                         <input type="text" name="apellidos" placeholder="Apellidos" value="{{ old('apellidos') }}" required class="input">
                     </div>
                 </div>
-
-                <!-- Botones -->
-                <div class="button-group">
-                    <a href="{{ route('principal') }}" class="btn back-button">Volver</a>
-                    <button type="button" class="btn next-step">Siguiente</button>
+                <div class="form-row">
+                    @if ($errors->has('direccion'))
+                    <div class="error-message">{{ $errors->first('direccion') }}</div>
+                    @endif
+                    <input type="text" name="direccion" placeholder="Dirección" value="{{ old('direccion') }}" required class="input">
                 </div>
-            </div>
-
-            <div id="step2" class="form-step">
-                @if ($errors->has('direccion'))
-                <div class="error-message">{{ $errors->first('direccion') }}</div>
-                @endif
-                <input type="text" name="direccion" placeholder="Dirección" value="{{ old('direccion') }}" required class="input">
-                @if ($errors->has('ciudad'))
-                <div class="error-message">{{ $errors->first('ciudad') }}</div>
-                @endif
-                <input type="text" name="ciudad" placeholder="Ciudad" value="{{ old('ciudad') }}" required class="input">
-                @if ($errors->has('codigo_postal'))
-                <div class="error-message">{{ $errors->first('codigo_postal') }}</div>
-                @endif
-                <input type="text" name="codigo_postal" placeholder="Código Postal" value="{{ old('codigo_postal') }}" required class="input">
-                @if ($errors->has('telefono'))
-                <div class="error-message">{{ $errors->first('telefono') }}</div>
-                @endif
-                <input type="tel" name="telefono" placeholder="Teléfono" value="{{ old('telefono') }}" required class="input">
-                @if ($errors->has('password'))
-                <div class="error-message">{{ $errors->first('password') }}</div>
-                @endif
-                <input type="password" name="password" placeholder="Contraseña" required class="input">
+                <div class="form-row" style="display: flex; justify-content: space-between;">
+                    <div class="half-width">
+                        @if ($errors->has('ciudad'))
+                        <div class="error-message">{{ $errors->first('ciudad') }}</div>
+                        @endif
+                        <input type="text" name="ciudad" placeholder="Ciudad" value="{{ old('ciudad') }}" required class="input">
+                    </div>
+                    <div class="half-width">
+                        @if ($errors->has('codigo_postal'))
+                        <div class="error-message">{{ $errors->first('codigo_postal') }}</div>
+                        @endif
+                        <input type="text" name="codigo_postal" placeholder="Código Postal" value="{{ old('codigo_postal') }}" required class="input">
+                    </div>
+                </div>
+                <div class="form-row">
+                    @if ($errors->has('telefono'))
+                    <div class="error-message">{{ $errors->first('telefono') }}</div>
+                    @endif
+                    <input type="tel" name="telefono" placeholder="Teléfono" value="{{ old('telefono') }}" required class="input">
+                </div>
+                <div class="form-row">
+                    @if ($errors->has('dni'))
+                    <div class="error-message">{{ $errors->first('dni') }}</div>
+                    @endif
+                    <input type="text" name="dni" placeholder="DNI" value="on" required class="input">
+                </div>
                 <div class="button-group">
                     <button type="button" class="btn prev-step">Anterior</button>
                     <button type="button" class="btn next-step">Siguiente</button>
@@ -75,17 +97,30 @@
             </div>
 
             <div id="step3" class="form-step">
-                <label><input type="checkbox"> Acepto recibir publicidad y comunicaciones sobre promociones y novedades relacionadas con mis preferencias y gustos cinematográficos.</label>
-                @if ($errors->has('mayor_edad'))
-                <div class="error-message">{{ $errors->first('mayor_edad') }}</div>
-                @endif
-                <label><input type="checkbox" name="mayor_edad" {{ old('mayor_edad') ? 'checked' : '' }} required> Soy mayor de 14 años</label>
+                <!-- Falta el captcha-->
+                <div class="form-row">
+                    <label><input type="checkbox"> Acepto recibir publicidad y comunicaciones sobre promociones y novedades relacionadas con mis preferencias y gustos cinematográficos.</label>
+                </div>
+                <div class="form-row">
+                    @if ($errors->has('mayor_edad'))
+                    <div class="error-message">{{ $errors->first('mayor_edad') }}</div>
+                    @endif
+                    <label><input type="checkbox" name="mayor_edad" required> Soy mayor de 14 años</label>
+                </div>
                 <div class="button-group">
                     <button type="button" class="btn prev-step">Anterior</button>
                     <button type="submit" class="btn">Registrarse</button>
                 </div>
+
+                <!-- Mostrar el mensaje-->
+                @if (session('mensaje'))
+                <div class="success-message" style="margin-top: 10px; color: green; font-weight: bold;">
+                    {{ session('mensaje') }}
+                </div>
+                @endif
+
+
             </div>
         </form>
     </div>
 </div>
-

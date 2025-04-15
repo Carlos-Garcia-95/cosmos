@@ -18,9 +18,15 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'nombre',
+        'apellidos',
         'email',
         'password',
+        'direccion',
+        'ciudad',
+        'codigo_postal',
+        'telefono',
+        'mayor_edad',
     ];
 
     /**
@@ -45,4 +51,17 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    //Guardar el nombre con la primera en mayúscula
+    public function setNombreAttribute($value)
+    {
+        $this->attributes['nombre'] = ucfirst(strtolower($value));
+    }
+
+    //Guardar el apellido con la primera en mayúscula
+    public function setApellidosAttribute($value)
+    {
+        $this->attributes['apellidos'] = ucfirst(strtolower($value));
+    }
+
 }
