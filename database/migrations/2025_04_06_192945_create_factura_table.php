@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('factura', function (Blueprint $table) {
             $table->id('id_factura');
-            $table->unsignedBigInteger('id_usuario');
+            $table->unsignedBigInteger('id_user');
             $table->double('monto_total');
             $table->unsignedBigInteger('id_impuesto');
-            $table->foreign('id_usuario')->references('id_usuario')->on('usuario');
+            $table->foreign('id_user')->references('id_user')->on('users');
             $table->foreign('id_impuesto')->references('id_impuesto')->on('impuesto');
         });
     }

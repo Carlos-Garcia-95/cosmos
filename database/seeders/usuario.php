@@ -5,16 +5,16 @@ namespace Database\Seeders;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
-class usuario extends Seeder
+class users extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('usuario')->insert([
+        DB::table('users')->insert([
             [
-                'nombre_usuario' => 'juan123',
+                'nombre_user' => 'juan123',
                 'nombre' => 'Juan',
                 'apellido' => 'Perez',
                 'email' => 'juan.perez@gmail.com',

@@ -21,12 +21,12 @@ return new class extends Migration
             $table->unsignedBigInteger('id_factura');
             $table->unsignedBigInteger('id_pelicula');
             $table->unsignedBigInteger('id_asiento');
-            $table->unsignedBigInteger('id_usuario');
+            $table->unsignedBigInteger('id_user');
             $table->foreign('id_tipo_entrada')->references('id_tipo_entrada')->on('tipo_entrada');
             $table->foreign('id_factura')->references('id_factura')->on('factura');
             $table->foreign('id_pelicula')->references('id_pelicula')->on('pelicula');
             $table->foreign('id_asiento')->references('id_asiento')->on('asiento');
-            $table->foreign('id_usuario')->references('id_usuario')->on('usuario');
+            $table->foreign('id_user')->references('id_user')->on('users');
         });
     }
 

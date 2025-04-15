@@ -14,7 +14,7 @@ class administrador extends Seeder
     {
         DB::table('administrador')->insert([
             [
-                'nombre_usuario_admin' => 'admin1',
+                'nombre_user_admin' => 'admin1',
                 'nombre' => 'Juan',
                 'apellido' => 'Perez',
                 'email' => 'juan.perez@admin.com',
@@ -24,7 +24,7 @@ class administrador extends Seeder
                 'codigo_administrador' => 'A001',
             ],
             [
-                'nombre_usuario_admin' => 'admin2',
+                'nombre_user_admin' => 'admin2',
                 'nombre' => 'Ana',
                 'apellido' => 'Gomez',
                 'email' => 'ana.gomez@admin.com',

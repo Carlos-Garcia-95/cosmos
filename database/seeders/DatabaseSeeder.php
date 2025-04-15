@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
             impuesto::class,
             descuento::class,
             administrador::class,
-            usuario::class,
+            users::class,
             pelicula::class,
             ppelicula_genero::class
         ]);

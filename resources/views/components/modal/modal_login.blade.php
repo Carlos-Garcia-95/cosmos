@@ -4,31 +4,29 @@
         <div class="logo-container">
             <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Cosmos Cinema Logo" class="logo">
         </div>
-        <form method="POST">
+        <!-- Action será la URL activa -->
+        <form method="POST" action='{{ route('login') }}'>
             @csrf
 
-            <div id="step1" class="form-step active">
-                <!-- Fila para el email -->
-                <div class="form-row">
-                    @if ($errors->has('email'))
-                    <div class="error-message">{{ $errors->first('email') }}</div>
-                    @endif
-                    <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required class="input">
-                </div>
+            <div class="form-row">
+                <input class="input" type="email" name="login_email" id='login_email' 
+                    placeholder="Email" value="{{ old('email') }}" required>
+                @error('email')
+                    <span>{{ $message }}</span>
+                @enderror
+            </div>
 
-                <!-- Fila para confirmar el email -->
-                <div class="form-row">
-                    @if ($errors->has('email_confirmation'))
-                    <div class="error-message">{{ $errors->first('email_confirmation') }}</div>
-                    @endif
-                    <input type="email" name="email_confirmation" placeholder="Confirmar tu email" value="{{ old('email_confirmation') }}" required class="input">
-                </div>
+            <div class="form-row">
+                <input class="input" type="password" name="login_password" id='login_password' 
+                    placeholder="**********" required>
+                @error('login_password')
+                    <span>{{ $message }}</span>
+                @enderror
+            </div>
 
-                <!-- Botones -->
-                <div class="button-group">
-                    <a href="{{ route('principal') }}" class="btn back-button">Volver</a>
-                    <button type="submit" class="btn">Login</button>
-                </div>
+            <div class="button-group">
+                <a href="{{ route('principal') }}" class="btn back-button">Volver</a>
+                <button type="submit" class="btn">Login</button>
             </div>
         </form>
     </div>
