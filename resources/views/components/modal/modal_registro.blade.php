@@ -88,7 +88,7 @@
                     @if ($errors->has('dni'))
                     <div class="error-message">{{ $errors->first('dni') }}</div>
                     @endif
-                    <input type="text" name="dni" placeholder="DNI" value="on" required class="input">
+                    <input type="text" name="dni" placeholder="DNI" value="{{ old('dni') }}" required class="input">
                 </div>
                 <div class="button-group">
                     <button type="button" class="btn prev-step">Anterior</button>
@@ -105,7 +105,7 @@
                     @if ($errors->has('mayor_edad'))
                     <div class="error-message">{{ $errors->first('mayor_edad') }}</div>
                     @endif
-                    <label><input type="checkbox" name="mayor_edad" required> Soy mayor de 14 años</label>
+                    <label><input type="checkbox" name="mayor_edad" value="on" required> Soy mayor de 14 años</label>
                 </div>
                 <div class="button-group">
                     <button type="button" class="btn prev-step">Anterior</button>
