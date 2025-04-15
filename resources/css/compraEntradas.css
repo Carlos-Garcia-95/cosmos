@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+.movie-container {
+    margin: 20px 0;
+}
+
+.movie-container select {
+    background-color: #444451;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-left: 10px;
+    padding: 8px 15px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.container {
+    perspective: 100px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+/* .seat {
+    background-color: #444451;
+    height: 12px;
+    width: 15px;
+    margin: 3px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    transition: transform 0.3s ease;
+} */
+
+.seat{
+    background-color: #444451;
+    height: 24px;
+    width: 30px;
+    margin: 3px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    transition: transform .3s ease;
+}
+
+
+.seat.selected {
+    background-color: #6feaf6;
+}
+
+.seat.occupied {
+    background-color: #fff;
+}
+
+.seat:not(.occupied):hover {
+    cursor: pointer;
+    transform: scale(1.2);
+}
+
+.showcase {
+    background: rgba(0, 0, 0, 0.1);
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #777;
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+}
+
+.showcase li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 10px;
+}
+
+.showcase li small {
+    margin-left: 2px;
+}
+
+.row {
+    display: flex;
+}
+
+.screen {
+    background-color: white;
+    height: 20px;
+    width: 75%;
+    margin: 5% 0;
+    transform: rotateX(-45deg);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.7);
+}
+
+p.text {
+    margin: 5px 0;
+}
+
+p.text span {
+    color: #6feaf6;
+}
+
+#seccionCompra {
+    width: 80%;
+    max-width: 600px;
+    height: 90vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    position: absolute; /* Posicionado debajo del slider */
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    border-radius: 10px;
+    padding: 20px;
+    z-index: 1000;
+
+    /* Animación suave */
+    transition: opacity 0.5s ease, visibility 0.5s ease, top 0.5s ease;
+}
+
+
+  /* Cuando se activa (por ejemplo, al hacer clic en el botón) */
+.visible {
+    display: block;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Botón de cerrar */
+.cerrar-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #ff3b3b;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.cerrar-btn:hover {
+    background-color: #d32f2f;
+}
+
+.text-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* separación entre el texto y el botón */
+    margin-top: 20px;
+}
+
+#confirmarCompra {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    color: black;
+    background-color: #6feaf6;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+#confirmarCompra:hover {
+    background-color: #4ac0d1;
+}
+
