@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('email', 50)->unique();
             $table->date('fecha_nacimiento');
             $table->string('numero_telefono', 15);
-            $table->string('contrasenia', 200);
+            $table->string('password', 200);
             $table->string('codigo_administrador', 20)->unique();
         });
     }

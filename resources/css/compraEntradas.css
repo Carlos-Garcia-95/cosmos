@@ -109,8 +109,8 @@ p.text span {
 #seccionCompra {
     width: 80%;
     max-width: 600px;
+    height: 90vh;
     background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -124,19 +124,20 @@ p.text span {
     padding: 20px;
     z-index: 1000;
 
-    /* Oculto inicialmente */
-    visibility: hidden;
-    opacity: 0;
-
     /* Animación suave */
     transition: opacity 0.5s ease, visibility 0.5s ease, top 0.5s ease;
 }
 
 
   /* Cuando se activa (por ejemplo, al hacer clic en el botón) */
-#seccionCompra.visible {
-    visibility: visible;
+.visible {
+    display: block;
     opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.hidden {
+    display: none;
 }
 
 /* Botón de cerrar */

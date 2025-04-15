@@ -6,7 +6,7 @@
     <title>Cosmos Cinema</title>
 
     <!--GSAPLaravel_8 No borrar, para entrar en GSAP. correo diegito866@gmail.com-->
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/slider.js', 'resources/css/slider.css', 'resources/js/registro.js', 'resources/js/login.js', 'resources/js/entradas.js', 'resources/css/compraEntradas.css', 'resources/js/compraEntradas.js'])
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/slider.css', 'resources/js/registro.js', 'resources/js/login.js', 'resources/js/entradas.js', 'resources/css/compraEntradas.css', 'resources/js/compraEntradas.js'])
     <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
 
 
@@ -49,8 +49,12 @@
         </div>
         <div class="main">
             <section class="header-section">
+                <div>
+                </div>
                 <div class="header-buttons">
-                    <a href="#seccionCompra"><button id="mostrarCompra">COMPRAR ENTRADAS</button></a> <!--Luego lo moveremos, lo de bajar con efecto hasta el div y donde colocarlo-->
+                    <a href="#seccionCompra">
+                        <button id="mostrarCompra">COMPRAR ENTRADAS</button>
+                    </a> <!--Luego lo moveremos, lo de bajar con efecto hasta el div y donde colocarlo-->
                     <button id="mostrarRegistro">ÚNETE A COSMOS</button>
                     <button id="mostrarLogin">INICIAR SESIÓN</button>
                 </div>
@@ -94,48 +98,48 @@
         </div>
     </section>
 
-    <section>
     <!-- Modal de compra de entradas oculto inicialmente -->
-    <div id="seccionCompra">
-        <div class="movie-container">
-            <label>Pick a Movie</label>
-            <!-- Ya haremos el select con las querys necesarias para sacar info de base de datos -->
-            <select id="movie">
-                <option value='8'>True Romance - $8</option>
-                <option value='8'>American History X - $8</option>
-                <option value='8'>A Beautiful Mind - $8</option>
-                <option value='10'>Joker - $10</option>
-            </select>
-        </div>
+    <section id="seccionCompra" class="pt-5 hidden">
 
-        <a href="#mostrarCompra"><button id="cerrarCompra" class="cerrar-btn">Cerrar</button></a>
+        <div>
+            <div class="movie-container">
+                <label>Pick a Movie</label>
+                <!-- Ya haremos el select con las querys necesarias para sacar info de base de datos -->
+                <select id="movie">
+                    <option value='8'>True Romance - $8</option>
+                    <option value='8'>American History X - $8</option>
+                    <option value='8'>A Beautiful Mind - $8</option>
+                    <option value='10'>Joker - $10</option>
+                </select>
+            </div>
 
-        <!-- Podemos meter los tres dentro de una tabla y juntarla a asiento-->
-        <ul class="showcase">
-            <li>
-                <div class="seat"></div>
-                <small>Available</small>
-            </li>
-            <li>
-                <div class="seat selected"></div>
-                <small>Selected</small>
-            </li>
-            <li>
-                <div class="seat occupied"></div>
-                <small>Occupied</small>
-            </li>
-        </ul>
+            <a href="#mostrarCompra"><button id="cerrarCompra" class="cerrar-btn">Cerrar</button></a>
 
-        <!-- Contenedor para los asientos -->
-        <div class="container">
-        <div class="screen"></div>
-            @for ($i = 0; $i < 8; $i++)
-                <div class="row">
-                    @for ($j = 0; $j < 8; $j++)
-                        <div class="seat"></div>
-                    @endfor
-                </div>
+            <!-- Podemos meter los tres dentro de una tabla y juntarla a asiento-->
+            <ul class="showcase">
+                <li>
+                    <div class="seat"></div>
+                    <small>Available</small>
+                </li>
+                <li>
+                    <div class="seat selected"></div>
+                    <small>Selected</small>
+                </li>
+                <li>
+                    <div class="seat occupied"></div>
+                    <small>Occupied</small>
+                </li>
+            </ul>
+
+            <!-- Contenedor para los asientos -->
+            <div class="container">
+                <div class="screen"></div>
+                @for ($i = 0; $i < 8; $i++) <div class="row">
+                    @for ($j = 0; $j < 8; $j++) <div class="seat">
+            </div>
             @endfor
+        </div>
+        @endfor
         </div>
 
         <!-- Información de los asientos seleccionados y precio -->
@@ -144,9 +148,11 @@
                 You have selected <span id="count">0</span> seats for a price of $<span id="total">0</span>
             </p>
             <button id="confirmarCompra">Comprar Entradas</button>
-</div>
-    </div>
-</section>
+        </div>
+        </div>
+    </section>
+
+
 
     <x-modal.modal_registro>
 

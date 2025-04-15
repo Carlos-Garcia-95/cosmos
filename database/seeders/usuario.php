@@ -24,7 +24,7 @@ class usuario extends Seeder
                 'direccion' => 'Av. Siempre Viva 123',
                 'ciudad' => 'Ciudad X',
                 'codigo_postal' => '12345',
-                'contrasena' => bcrypt('password123'),
+                'password' => bcrypt('password123'),
                 'id_descuento' => 1, // Esto debería existir previamente
             ],
         ]);

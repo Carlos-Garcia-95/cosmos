@@ -24,22 +24,6 @@
                     <input type="email" name="email_confirmation" placeholder="Confirmar tu email" value="{{ old('email_confirmation') }}" required class="input">
                 </div>
 
-                <!-- Fila para nombre y apellidos /creo que no hace falta/
-                <div class="form-row">
-                    <div class="half-width">
-                        @if ($errors->has('nombre'))
-                        <div class="error-message">{{ $errors->first('nombre') }}</div>
-                        @endif
-                        <input type="text" name="nombre" placeholder="Nombre" value="{{ old('nombre') }}" required class="input">
-                    </div>
-                    <div class="half-width">
-                        @if ($errors->has('apellidos'))
-                        <div class="error-message">{{ $errors->first('apellidos') }}</div>
-                        @endif
-                        <input type="text" name="apellidos" placeholder="Apellidos" value="{{ old('apellidos') }}" required class="input">
-                    </div>
-                </div> -->
-
                 <!-- Botones -->
                 <div class="button-group">
                     <a href="{{ route('principal') }}" class="btn back-button">Volver</a>

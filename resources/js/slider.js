@@ -6,7 +6,6 @@ gsap.registerPlugin(ScrollTrigger, Draggable);
 
 document.addEventListener("DOMContentLoaded", function () {
     // Referencias a los elementos del DOM
-    // Suponiendo que E es la instancia del slider, por ejemplo:
     const sliderContainer = document.querySelector('[data-slider="list"]');
     const slides = gsap.utils.toArray('[data-slider="slide"]');
     const prevBtn = document.querySelector('[data-slider="button-prev"]');
@@ -34,10 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
     prevBtn.addEventListener("click", () => {
         updateSlider(currentIndex - 1); // Ir al slide anterior
     });
-
-    // Asignar los event listeners a los botones
-    nextBtn.addEventListener("click", goNext);
-    prevBtn.addEventListener("click", goPrev);
 
     // Funcionalidad de ScrollTrigger (mover el slider con el scroll)
     ScrollTrigger.create({

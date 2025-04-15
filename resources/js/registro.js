@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const prevButtons = modalRegistro.querySelectorAll(".prev-step");
     const form = modalRegistro.querySelector("form");
     let currentStep = 0;
-
+    
     function showStep(stepIndex) {
         steps.forEach((step, index) => {
             step.classList.toggle("active", index === stepIndex);

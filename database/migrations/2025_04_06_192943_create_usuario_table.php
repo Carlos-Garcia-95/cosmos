@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('direccion', 150)->nullable();
             $table->string('ciudad', 30);
             $table->string('codigo_postal', 10);
-            $table->string('contrasenia', 200);
+            $table->string('password', 200);
             $table->timestamp('fecha_registro')->useCurrent();
             $table->unsignedBigInteger('id_descuento')->nullable();
             $table->foreign('id_descuento')->references('id_descuento')->on('descuento');

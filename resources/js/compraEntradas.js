@@ -3,7 +3,6 @@ const seats = document.querySelectorAll('.rowr .seat:not(.occupied)'); // Select
 const count = document.getElementById('count');
 const total = document.getElementById('total');
 const movieSelect = document.getElementById('movie');
-const botonCompra = document.getElementById('mostrarCompra');
 const seccionCompra = document.getElementById('seccionCompra');
 const cerrarCompraBtn = document.getElementById('cerrarCompra'); // Asegúrate de que este ID exista en tu HTML
 
@@ -19,7 +18,7 @@ function setMovieData(movieIndex, moviePrice) {
 }
 
 // Actualiza el total y la cantidad de asientos seleccionados
-function updateSelectedCount() {
+export function updateSelectedCount() {
     const selectedSeats = document.querySelectorAll('.rowr .seat.selected'); // Selector ajustado
     const seatsIndex = [...selectedSeats].map(seat => [...seats].indexOf(seat));
     localStorage.setItem('selectedSeats', JSON.stringify(seatsIndex));
