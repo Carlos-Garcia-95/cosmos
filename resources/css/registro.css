@@ -49,10 +49,6 @@ body {
     display: none;
 }
 
-.form-step.active {
-    display: block;
-}
-
 .input {
     width: calc(100% - 30px);
     padding: 12px;

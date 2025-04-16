@@ -9,7 +9,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/slider.css', 'resources/js/registro.js', 'resources/js/login.js', 'resources/js/entradas.js', 'resources/css/compraEntradas.css', 'resources/js/compraEntradas.js'])
     <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
 
-
 </head>
 
 <body>
@@ -55,8 +54,16 @@
                     <a href="#seccionCompra">
                         <button id="mostrarCompra">COMPRAR ENTRADAS</button>
                     </a> <!--Luego lo moveremos, lo de bajar con efecto hasta el div y donde colocarlo-->
-                    <button id="mostrarRegistro">ÚNETE A COSMOS</button>
-                    <button id="mostrarLogin">INICIAR SESIÓN</button>
+                    <!-- TODO -> Dar funcionalidad a estos botones -->
+                    <!-- TODO -> Almacenar y comprobar la sesión del usuario -->
+                    @if(session('success'))
+                        <button id="miCuenta">MI CUENTA</button>
+                        <button id="logout">LOGOUT</button>
+                    @else
+                        <button id="mostrarRegistro">ÚNETE A COSMOS</button>
+                        <button id="mostrarLogin">INICIAR SESIÓN</button>
+                    @endif
+                    
                 </div>
             </section>
             <div class="slider-wrap">
@@ -157,9 +164,11 @@
     <x-modal.modal_registro>
 
     </x-modal.modal_registro>
+
     <x-modal.modal_login>
 
     </x-modal.modal_login>
+
 
 </body>
 

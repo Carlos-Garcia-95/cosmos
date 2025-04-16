@@ -1,4 +1,4 @@
-<div class="modal" id="modalRegistro">
+<div class="modal hidden" id="modalRegistro">
     <div class="form-container">
         <button class="close-button" id="cerrarRegistro">&times;</button>
         <div class="logo-container">
