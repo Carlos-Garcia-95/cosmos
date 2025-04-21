@@ -9,7 +9,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/slider.css', 'resources/js/registro.js', 'resources/js/login.js', 'resources/js/entradas.js', 'resources/css/compraEntradas.css', 'resources/js/compraEntradas.js'])
     <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
 
-
 </head>
 
 <body>
@@ -49,16 +48,38 @@
         </div>
         <div class="main">
             <section class="header-section">
-                <div>
-                </div>
-                <div class="header-buttons">
+                <div class="header-buttons" style="display: flex; align-items: center;">
+                @if (session('mensaje'))
+                    <div id="success-message" class="success-message" style="color: #e50914; font-weight: bold;">
+                        {{ session('mensaje') }}
+                    </div>
+
+                    <script>
+                        // Eliminar el mensaje automáticamente después de 2 segundos
+                        setTimeout(function() {
+                            const message = document.getElementById('success-message');
+                            if (message) {
+                                message.style.display = 'none';
+                            }
+                        }, 2000);
+                    </script>
+                @endif
                     <a href="#seccionCompra">
                         <button id="mostrarCompra">COMPRAR ENTRADAS</button>
                     </a> <!--Luego lo moveremos, lo de bajar con efecto hasta el div y donde colocarlo-->
-                    <button id="mostrarRegistro">ÚNETE A COSMOS</button>
-                    <button id="mostrarLogin">INICIAR SESIÓN</button>
+                    <!-- TODO -> Dar funcionalidad a estos botones -->
+                    <!-- TODO -> Almacenar y comprobar la sesión del usuario -->
+                    @if(session('success'))
+                        <button id="miCuenta">MI CUENTA</button>
+                        <button id="logout">LOGOUT</button>
+                    @else
+                        <button id="mostrarRegistro">ÚNETE A COSMOS</button>
+                        <button id="mostrarLogin">INICIAR SESIÓN</button>
+                    @endif
+                    
                 </div>
             </section>
+            
             <div class="slider-wrap">
                 <div data-slider="list" class="slider-list">
                     <div data-slider="slide" class="slider-slide">
@@ -157,9 +178,11 @@
     <x-modal.modal_registro>
 
     </x-modal.modal_registro>
+
     <x-modal.modal_login>
 
     </x-modal.modal_login>
+
 
 </body>
 

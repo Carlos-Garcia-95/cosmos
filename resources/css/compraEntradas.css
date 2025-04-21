@@ -131,7 +131,7 @@ p.text span {
 
   /* Cuando se activa (por ejemplo, al hacer clic en el botón) */
 .visible {
-    display: block;
+    display: flex;
     opacity: 1;
     transition: opacity 0.5s ease;
 }
