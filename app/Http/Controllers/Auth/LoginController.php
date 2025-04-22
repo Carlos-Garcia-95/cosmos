@@ -21,14 +21,14 @@ class LoginController extends Controller
         
         if (!$user) {
             return back()->withErrors([
-                'login_email' => 'El email introducido no existe.'
+                'login_email' => 'La contraseña o el email introducido no es correcto.'
             ])->withInput();
         }
 
         // Comprobar password correcta
         if (!Hash::check($credentials['login_password'], $user->password)) {
             return back()->withErrors([
-                'login_password' => 'La contraseña introducida no es correcta.'
+                'login_password' => 'La contraseña o el email introducido no es correcto.'
             ])->withInput();
         }
 

@@ -14,16 +14,9 @@ class RegisterController extends Controller
 
     public function mostrarCiudades()
     {
-        // Obtener todas las ciudades desde la base de datos
-        $ciudades = [
-            'Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Zaragoza',
-            'Málaga', 'Murcia', 'Palma de Mallorca', 'Las Palmas de Gran Canaria', 'Lleida',
-            'Bilbao', 'Alicante', 'Córdoba', 'Valladolid', 'Cáceres',
-            'Salamanca', 'Girona', 'Toledo', 'Badajoz', 'Oviedo'
-        ]; 
-
-        // Pasar las ciudades a la vista
-        return view('principal', ['ciudades' => $ciudades]);
+        $ciudades = Ciudad::all();  // Obtiene todas las ciudades de la base de datos
+        dd($ciudades);
+        return view('principal', compact('ciudades'));  // Pasa las ciudades a la vista
 
     }
     public function registrar(Request $request)
@@ -47,10 +40,9 @@ class RegisterController extends Controller
 
         //Si falla la validación...
         if ($validator->fails()) {
-            dd($validator->errors()->toArray());
-            return redirect()->route('registro')
-                ->withErrors($validator)
-                ->withInput();
+            return redirect()->route('principal')
+            ->withErrors($validator, 'registro')
+            ->withInput();
         }
 
         // Crear el usuario

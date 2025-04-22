@@ -213,6 +213,39 @@ body {
     display: flex;
 }
 
+/*Scroll de ciudades*/
+.ciudad-scroll {
+    overflow-y: auto;
+    height: auto;
+}
+
+.invalid {
+    border: 2px solid red !important;
+    outline: none;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+}
+
+.error-messages {
+    color: red;
+    font-size: 1rem;
+    margin-top: 15px;
+}
+
+.error-messages ul {
+    list-style: none;
+    padding: 0;
+}
+
+.error-messages li {
+    margin-bottom: 5px;
+}
+
+
+
 .slider-list {
     flex-flow: row;
     justify-content: flex-start;
