@@ -69,7 +69,7 @@
                     </a> <!--Luego lo moveremos, lo de bajar con efecto hasta el div y donde colocarlo-->
                     <!-- TODO -> Dar funcionalidad a estos botones -->
                     <!-- TODO -> Almacenar y comprobar la sesión del usuario -->
-                    @if(session('success'))
+                    @if(Auth::check())
                         <button id="miCuenta">MI CUENTA</button>
                         <button id="logout">LOGOUT</button>
                     @else

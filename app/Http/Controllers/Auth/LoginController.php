@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Container\Attributes\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log as FacadesLog;
 
 class LoginController extends Controller
 {
@@ -33,9 +35,11 @@ class LoginController extends Controller
         }
 
         // Intentar login. Si es exitoso, vuelve a index con las sesión iniciada
-        if (Auth::attempt(['email' => $credentials['login_email'], 'password' => $credentials['login_password']])) {
+        if (Auth::attempt(['email' => $credentials['login_email'], 'password' => $credentials['login_password']], $request->has('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended('')->with('success', 'Login successful!');
+            \Log::info('Session data after Auth::attempt success:', $request->session()->all()); // Log the session data
+            return redirect()->intended('/')->with('success', 'Login successful!');
+            
         }
 
         return back()->withErrors([
@@ -45,6 +49,11 @@ class LoginController extends Controller
         // TODO -> Comprobar que el login es correcto
         // TODO -> Si es correcto, averiguar como mostrar el login correcto al usuario
         //         (quizás guardar en sesión)
+    }
+
+    public function showLoginForm()
+    {
+        return view('components.login'); // Assuming your login form view is at resources/views/auth/login.blade.php
     }
 
 }

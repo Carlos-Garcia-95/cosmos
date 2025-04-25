@@ -18,6 +18,12 @@
                     placeholder="**********" required>
             </div>
 
+            <div class="form-row">
+                <label>
+                    <input type="checkbox" name="remember"> Recordarme
+                </label>             
+            </div>
+
             @error('login_email')  
                 <div class="form-row">
                     <p>{{ $message }}</p>

@@ -61,7 +61,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id('id_user'); // Cambié el nombre del ID a id_usuario
+            $table->id('id'); // Cambié el nombre del ID a id_usuario
             $table->string('nombre', 50);
             $table->string('apellidos', 50);
             $table->string('email', 50)->unique();
