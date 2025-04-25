@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_user');
             $table->double('monto_total');
             $table->unsignedBigInteger('id_impuesto');
-            $table->foreign('id_user')->references('id_user')->on('users');
+            $table->foreign('id_user')->references('id')->on('users');
             $table->foreign('id_impuesto')->references('id_impuesto')->on('impuesto');
         });
     }

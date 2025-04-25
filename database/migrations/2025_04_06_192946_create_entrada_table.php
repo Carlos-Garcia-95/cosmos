@@ -26,7 +26,7 @@ return new class extends Migration
             $table->foreign('id_factura')->references('id_factura')->on('factura');
             $table->foreign('id_pelicula')->references('id_pelicula')->on('pelicula');
             $table->foreign('id_asiento')->references('id_asiento')->on('asiento');
-            $table->foreign('id_user')->references('id_user')->on('users');
+            $table->foreign('id_user')->references('id')->on('users');
         });
     }
 

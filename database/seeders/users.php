@@ -26,6 +26,19 @@ class users extends Seeder
                 'password' => bcrypt('password123'),
                 'id_descuento' => 1, // Esto debería existir previamente
             ],
+            [
+                'nombre' => 'Pepe',
+                'apellidos' => 'Tolini',
+                'email' => 'pepe@gmail.com',
+                'fecha_nacimiento' => '1998-07-19',
+                'numero_telefono' => '758694257',
+                'dni' => '55324856Y',
+                'direccion' => 'Av. Siempre Muerta 321',
+                'ciudad' => 'Ciudad Gotham',
+                'codigo_postal' => '65432',
+                'password' => bcrypt('123'),
+                'id_descuento' => 1,
+            ]
         ]);
     }
 }
