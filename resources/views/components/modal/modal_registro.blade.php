@@ -1,12 +1,3 @@
-<!--Cambiar más adelante-->
-@php
-$ciudades = [
-'Madrid', 'Barcelona', 'Valencia', 'Sevilla', 'Zaragoza',
-'Málaga', 'Murcia', 'Palma de Mallorca', 'Las Palmas de Gran Canaria', 'Lleida',
-'Bilbao', 'Alicante', 'Córdoba', 'Valladolid', 'Cáceres',
-'Salamanca', 'Girona', 'Toledo', 'Badajoz', 'Oviedo'
-];
-@endphp
 
 <div class="modal hidden" id="modalRegistro">
     <div class="form-container">
@@ -19,44 +10,50 @@ $ciudades = [
             @csrf
 
             <div id="step1" class="form-step active">
-                <!-- Fila para el email -->
-                <div class="form-row">
-                    @if ($errors->has('email'))
-                    <div class="error-message">{{ $errors->first('email') }}</div>
-                    @endif
-                    <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required class="input">
-                </div>
+    <div class="form-row">
+        @if ($errors->has('email'))
+        <div class="error-message">{{ $errors->first('email') }}</div>
+        @endif
+        <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required class="input">
+        <span class="client-side-field-error" style="color: red; display: none; margin-bottom: 2%; "></span>
+    </div>
 
-                <div class="form-row">
-                    @if ($errors->has('email_confirmation'))
-                    <div class="error-message">{{ $errors->first('email_confirmation') }}</div>
-                    @endif
-                    <input type="email" name="email_confirmation" placeholder="Confirmar tu email" value="{{ old('email_confirmation') }}" required class="input">
-                </div>
-
-
-                <!-- Fila para contraseña y confirmación -->
-                <div class="form-row">
-                    @if ($errors->has('password'))
-                    <div class="error-message">{{ $errors->first('password') }}</div>
-                    @endif
-                    <input type="password" name="password" placeholder="Contraseña" required class="input">
-                </div>
-
-                <div class="form-row">
-                    @if ($errors->has('password_confirmation'))
-                    <div class="error-message">{{ $errors->first('password_confirmation') }}</div>
-                    @endif
-                    <input type="password" name="password_confirmation" placeholder="Confirmar contraseña" required class="input">
-                </div>
+    <div class="form-row">
+        @if ($errors->has('email_confirmation'))
+        <div class="error-message">{{ $errors->first('email_confirmation') }}</div>
+        @endif
+        <input type="email" name="email_confirmation" placeholder="Confirmar tu email" value="{{ old('email_confirmation') }}" required class="input">
+        <span class="client-side-field-error" style="color: red; display: none; margin-bottom: 2%; "></span>
+    </div>
 
 
-                <!-- Botones -->
-                <div class="button-group">
-                    <a href="{{ route('principal') }}" class="btn back-button">Volver</a>
-                    <button type="button" class="btn next-step">Siguiente</button>
-                </div>
-            </div>
+    <div class="form-row">
+        @if ($errors->has('password'))
+        <div class="error-message">{{ $errors->first('password') }}</div>
+        @endif
+        <div class="password-input-container">
+            <input type="password" name="password" placeholder="Contraseña" required class="input">
+            <span class="toggle-password">👁️</span>
+        </div>
+        <span class="client-side-field-error" style="color: red; display: none; margin-bottom: 2%; "></span>
+    </div>
+
+    <div class="form-row">
+        @if ($errors->has('password_confirmation'))
+        <div class="error-message">{{ $errors->first('password_confirmation') }}</div>
+        @endif
+        <div class="password-input-container">
+            <input type="password" name="password_confirmation" placeholder="Confirmar contraseña" required class="input">
+            <span class="toggle-password">👁️</span>
+        </div>
+        <span class="client-side-field-error" style="color: red; display: none;"></span>
+    </div>
+
+    <div class="button-group">
+        <a href="{{ route('principal') }}" class="btn back-button">Volver</a>
+        <button type="button" class="btn next-step">Siguiente</button>
+    </div>
+</div>
 
             <div id="step2" class="form-step">
                 <div class="form-row" style="display: flex; justify-content: space-between;">
@@ -87,13 +84,14 @@ $ciudades = [
                         <select name="ciudad" id="ciudad" class="input ciudad-scroll" required>
                             <option value="" disabled selected>Selecciona tu ciudad</option>
                             @foreach($ciudades as $ciudad)
-                            <option value="{{ $ciudad }}">{{ $ciudad}}</option>
+                            <option value="{{ $ciudad->nombre }}">
+                                {{ $ciudad->nombre }}
+                            </option>
                             @endforeach
                         </select>
                         @error('ciudad', 'registro')
                         <div class="error-message">{{ $message }}</div>
                         @enderror
-
                     </div>
                     <div class="half-width">
                         @error('codigo_postal', 'registro')
@@ -109,6 +107,7 @@ $ciudades = [
                     @enderror
 
                     <input type="text" name="telefono" placeholder="Teléfono" value="{{ old('telefono') }}" required class="input" pattern="^\d{9}$" title="El teléfono debe tener 9 dígitos." maxlength="9" minlength="9">
+                    <span class="client-side-field-error" style="color: red; display: none; margin-bottom: 2%;"></span>
                 </div>
 
                 <div class="form-row">
@@ -117,6 +116,7 @@ $ciudades = [
                     @enderror
 
                     <input type="text" name="dni" placeholder="DNI" value="{{ old('dni') }}" required class="input" pattern="^\d{8}[A-Za-z]$" title="El DNI debe tener 8 dígitos seguidos de una letra." maxlength="9" minlength="9">
+                    <span class="client-side-field-error" style="color: red; display: none;"></span>
                 </div>
 
                 <div class="button-group">
@@ -133,6 +133,7 @@ $ciudades = [
                     @enderror
 
                     <input type="date" name="fecha_nacimiento" value="{{ old('fecha_nacimiento') }}" placeholder="Fecha de Nacimiento" required class="input">
+                    <span class="client-side-field-error" style="color: red; display: none; margin-bottom: 2%;"></span>
                 </div>
 
                 <div class="form-row">
@@ -144,6 +145,7 @@ $ciudades = [
                     @enderror
 
                     <label><input type="checkbox" name="mayor_edad" value="on" required> Soy mayor de 14 años</label>
+                    <span class="client-side-field-error" style="color: red; display: none;"></span>
                 </div>
                 <div class="button-group">
                     <button type="button" class="btn prev-step">Anterior</button>

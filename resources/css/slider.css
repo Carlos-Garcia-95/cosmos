@@ -244,6 +244,79 @@ body {
     margin-bottom: 5px;
 }
 
+.password-input-container {
+    position: relative; /* Para posicionar el icono absolutamente respecto a él */
+    width: 100%;
+    display: flex; /* Ayuda a alinear input y icono */
+    align-items: center; /* Centra verticalmente el contenido (input e icono) si el contenedor es flex */
+}
+
+.password-input-container input.input {
+    flex-grow: 1;
+    padding-right: 30px;
+}
+
+.toggle-password {
+    position: absolute; 
+    right: 10px;
+    transform: translateY(-50%); /* Lo sube la mitad de su altura para centrarlo verticalmente */
+    cursor: pointer;
+    user-select: none;
+    color: #888; /* Color del icono */
+    /* El centrado vertical se logra principalmente con top: 50% y transform: translateY(-50%); */
+    /* display: flex; y align-items: center; en el contenedor también ayudan a la alineación base */
+}
+
+input[type="password"]::-ms-reveal {
+    display: none; /* Oculta el icono en Microsoft Edge e Internet Explorer */
+}
+
+.input.invalid {
+    border-color: #e50914;
+}
+
+
+.next-step,
+.btn[type="submit"] {
+    background-color: #e50914; /* Rojo característico */
+}
+
+.next-step:hover,
+.btn[type="submit"]:hover {
+    background-color: #c40812;
+}
+
+.prev-step,
+.back-button {
+    background-color: #555;
+}
+
+.prev-step:hover,
+.back-button:hover {
+    background-color: #777;
+}
+
+label {
+    display: block;
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #ccc;
+    text-align: left;
+}
+
+label input[type="checkbox"] {
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.error-message {
+    color: #ff4d4d;
+    font-size: 0.9em;
+    margin-top: -15px;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
 
 
 .slider-list {

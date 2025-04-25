@@ -83,6 +83,38 @@ body {
     color: #fff;
 }
 
+
+.password-input-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center; 
+}
+
+.password-input-container input.input {
+    flex-grow: 1;
+    padding-right: 30px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    user-select: none;
+    font-size: 1.2em;
+    color: #888; 
+}
+
+
+
+
+.input.invalid {
+    border-color: #e50914;
+}
+
+
 .next-step,
 .btn[type="submit"] {
     background-color: #e50914; /* Rojo característico */

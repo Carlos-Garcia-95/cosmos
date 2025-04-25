@@ -175,7 +175,7 @@
 
 
 
-    <x-modal.modal_registro>
+    <x-modal.modal_registro :ciudades="$ciudades">
 
     </x-modal.modal_registro>
 

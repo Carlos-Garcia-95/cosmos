@@ -7,18 +7,11 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Ciudad;
+
 
 class RegisterController extends Controller
 {
 
-    public function mostrarCiudades()
-    {
-        $ciudades = Ciudad::all();  // Obtiene todas las ciudades de la base de datos
-        dd($ciudades);
-        return view('principal', compact('ciudades'));  // Pasa las ciudades a la vista
-
-    }
     public function registrar(Request $request)
     {
         // Validación de los datos del formulario
