@@ -1,17 +1,10 @@
-document.addEventListener("DOMContentLoaded", function () {
+/* document.addEventListener("DOMContentLoaded", function () {
     const modalLogin = document.getElementById("modalLogin");
     const mostrarLoginBtn = document.getElementById("mostrarLogin");
     const cerrarLoginBtn = document.getElementById("cerrarLogin");
     const steps = modalLogin.querySelectorAll(".form-step");
     const form = modalLogin.querySelector("form");
     let currentStep = 0;
-
-    /* function showStep(stepIndex) {
-        steps.forEach((step, index) => {
-            step.classList.toggle("active", index === stepIndex);
-        });
-        currentStep = stepIndex;
-    } */
 
     mostrarLoginBtn.addEventListener("click", () => {
         modalLogin.classList.remove('hidden');
@@ -23,18 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
         modalLogin.classList.remove('flex');
         modalLogin.classList.add('hidden');
     });
-    
-    /* form.addEventListener("submit", function (event) {
-        // Aquí puedes agregar validaciones adicionales en JavaScript si lo deseas
-        // La submission del formulario seguirá enviando los datos a la ruta 'login'
-    }); */
-
-    // Ocultar todos los pasos excepto el primero al cargar el modal
-    /* steps.forEach((step, index) => {
-        if (index !== 0) {
-            step.classList.remove("active");
-        }
-    }); */
 
     // Ocultar el modal después del envío exitoso
     form.addEventListener("submit", function () {
@@ -53,4 +34,159 @@ document.addEventListener("DOMContentLoaded", function () {
             step.classList.remove("active");
         }
     });
+}); */
+
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const modalLogin = document.getElementById("modalLogin");
+    const mostrarLoginBtn = document.getElementById("mostrarLogin");
+    const cerrarLoginBtn = modalLogin?.querySelector("#cerrarLogin");
+    const volverLoginModalBtn = modalLogin?.querySelector("#volverLoginModal");
+    const form = modalLogin?.querySelector("form");
+    const clientSideErrorArea = modalLogin?.querySelector('.client-side-errors');
+
+
+    function showErrorsJS(messages) {
+        if (!clientSideErrorArea) return;
+        clientSideErrorArea.innerHTML = messages.join('<br>');
+        clientSideErrorArea.style.display = 'block';
+    }
+
+    function hideErrorsJS() {
+        if (!clientSideErrorArea) return;
+        clientSideErrorArea.innerHTML = '';
+        clientSideErrorArea.style.display = 'none';
+    }
+
+    
+    function clearInvalidClassesLogin() {
+        modalLogin?.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+    }
+
+
+    // Funciones para abrir y cerrar el modal de LOGIN
+    function openLoginModal() {
+        if (modalLogin) {
+
+            modalLogin.classList.remove('hidden');
+            modalLogin.classList.add('flex');
+
+            const loginForm = modalLogin.querySelector('form');
+            const loginLaravelErrorsExist = loginForm && loginForm.querySelector('.error-message') !== null;
+
+            if (!loginLaravelErrorsExist) {
+                
+                if (loginForm) loginForm.reset();
+                hideErrorsJS();
+                clearInvalidClassesLogin();
+                modalLogin.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+            } else {
+                hideErrorsJS();
+                clearInvalidClassesLogin();
+            }
+
+
+            //Enfocar el primer campo del formulario al abrir
+            const firstInput = modalLogin.querySelector('input:not([type="hidden"]), select, textarea');
+            if (firstInput) {
+                setTimeout(() => firstInput.focus(), 50);
+            }
+        }
+    }
+
+    function closeLoginModal() {
+        if (modalLogin) {
+
+            modalLogin.classList.remove('flex');
+            modalLogin.classList.add('hidden');
+
+            const loginForm = modalLogin.querySelector('form');
+            if (loginForm) loginForm.reset();
+            hideErrorsJS();
+            clearInvalidClassesLogin();
+            modalLogin.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+        }
+    }
+
+    if (mostrarLoginBtn) {
+        mostrarLoginBtn.addEventListener("click", openLoginModal);
+    }
+
+    if (cerrarLoginBtn) {
+        cerrarLoginBtn.addEventListener("click", closeLoginModal);
+    }
+
+    if (volverLoginModalBtn) {
+        volverLoginModalBtn.addEventListener("click", closeLoginModal);
+    }
+
+
+    // Manejo del Envío del Formulario de Login
+    if (form) {
+        form.addEventListener("submit", function () {
+
+            const loginEmailInput = form.querySelector('input[name="login_email"]');
+            const loginPasswordInput = form.querySelector('input[name="login_password"]');
+
+            clearFieldError(loginEmailInput);
+            clearFieldError(loginPasswordInput);
+            loginEmailInput?.classList.remove('invalid');
+            loginPasswordInput?.classList.remove('invalid');
+
+            if (!loginEmailInput?.value.trim()) {
+                displayFieldError(loginEmailInput,"El campo Email es requerido.");
+                loginEmailInput?.classList.add('invalid');
+            }
+            //validación básica de formato de email con JS
+            else if (loginEmailInput?.value.trim() && !/\S+@\S+\.\S+/.test(loginEmailInput.value.trim())) {
+                displayFieldError(loginEmailInput,"El formato del email no es válido.");
+                loginEmailInput?.classList.add('invalid');
+            }
+
+
+            if (!loginPasswordInput?.value.trim()) {
+                displayFieldError(loginPasswordInput,"El campo Contraseña es requerido.");
+                loginPasswordInput?.classList.add('invalid');
+            }
+        });
+    }
+
+
+    const loginModalHasLaravelErrors = modalLogin && (modalLogin.classList.contains('flex'));
+
+    if (loginModalHasLaravelErrors) {
+        console.log("Modal de Login visible al cargar debido a errores de Laravel.")
+        hideErrorsJS();
+        clearInvalidClassesLogin();
+    } else {
+        if (modalLogin) {
+            modalLogin.classList.add('hidden');
+            modalLogin.classList.remove('flex');
+        }
+    }
+
+    function displayFieldError(inputElement, message) {
+        const formRow = inputElement?.closest(".form-row");
+        if (formRow) {
+            const errorElement = formRow.querySelector(".client-side-field-error");
+            if (errorElement) {
+                errorElement.innerHTML = message;
+                errorElement.style.display = "block";
+            } 
+        }
+    }
+    
+    function clearFieldError(inputElement) {
+        const formRow = inputElement?.closest(".form-row");
+        if (formRow) {
+            const errorElement = formRow.querySelector(".client-side-field-error");
+            if (errorElement) {
+                errorElement.innerHTML = "";
+                errorElement.style.display = "none";
+            }
+        }
+    }
+
+
 });

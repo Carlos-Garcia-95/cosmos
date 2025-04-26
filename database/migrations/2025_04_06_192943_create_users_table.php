@@ -77,6 +77,7 @@ return new class extends Migration
             $table->tinyInteger('mayor_edad')->default(0); 
             $table->unsignedBigInteger('id_descuento')->nullable(); 
             $table->foreign('id_descuento')->references('id_descuento')->on('descuento');
+            $table->rememberToken();
         });
     }
 

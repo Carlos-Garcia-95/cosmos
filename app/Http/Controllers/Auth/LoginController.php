@@ -4,11 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Container\Attributes\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log as FacadesLog;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -20,7 +19,7 @@ class LoginController extends Controller
 
         // Comprobar email correcto
         $user = User::where('email', $credentials['login_email'])->first();
-        
+
         if (!$user) {
             return back()->withErrors([
                 'login_email' => 'La contraseña o el email introducido no es correcto.'
@@ -37,8 +36,8 @@ class LoginController extends Controller
         // Intentar login. Si es exitoso, vuelve a index con las sesión iniciada
         if (Auth::attempt(['email' => $credentials['login_email'], 'password' => $credentials['login_password']], $request->has('remember'))) {
             $request->session()->regenerate();
-            \Log::info('Session data after Auth::attempt success:', $request->session()->all()); // Log the session data
-            return redirect()->intended('/')->with('success', 'Login successful!');
+            Log::info('Session data after Auth::attempt success:', $request->session()->all()); 
+            return redirect()->intended('/')->with('success', '¡Bienvenido!');
             
         }
 
@@ -46,14 +45,23 @@ class LoginController extends Controller
             'login_email' => 'El email o la contraseña no son correctos'
         ])->withInput();
 
-        // TODO -> Comprobar que el login es correcto
-        // TODO -> Si es correcto, averiguar como mostrar el login correcto al usuario
-        //         (quizás guardar en sesión)
     }
 
     public function showLoginForm()
     {
-        return view('components.login'); // Assuming your login form view is at resources/views/auth/login.blade.php
+        return view('components.login');
+    }
+
+     //Método para cerrar sesión
+    public function logout(Request $request)
+    {
+        Auth::logout();
+
+         // Invalida la sesión actual y regenera el token CSRF
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('success', '¡Sesión cerrada correctamente!');
     }
 
 }

@@ -56,7 +56,7 @@ class RegisterController extends Controller
 
         //Redireccionamos a principal con un mensaje
         return redirect()->route('principal')
-            ->with('mensaje', '¡Registro completado con éxito!');
+            ->with('success', '¡Registro completado con éxito!');
     }
 
     

@@ -1,4 +1,3 @@
-
 <div class="modal hidden" id="modalRegistro">
     <div class="form-container">
         <button class="close-button" id="cerrarRegistro">&times;</button>
@@ -10,66 +9,68 @@
             @csrf
 
             <div id="step1" class="form-step active">
-    <div class="form-row">
-        @if ($errors->has('email'))
-        <div class="error-message">{{ $errors->first('email') }}</div>
-        @endif
-        <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required class="input">
-        <span class="client-side-field-error" style="color: red; display: none; margin-bottom: 2%; "></span>
-    </div>
+                <div class="form-row">
+                    @if ($errors->has('email'))
+                    <div class="error-message">{{ $errors->first('email') }}</div>
+                    @endif
+                    <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required class="input">
+                    <span class="client-side-field-error" style="color: red; display: none; margin-bottom: 2%; "></span>
+                </div>
 
-    <div class="form-row">
-        @if ($errors->has('email_confirmation'))
-        <div class="error-message">{{ $errors->first('email_confirmation') }}</div>
-        @endif
-        <input type="email" name="email_confirmation" placeholder="Confirmar tu email" value="{{ old('email_confirmation') }}" required class="input">
-        <span class="client-side-field-error" style="color: red; display: none; margin-bottom: 2%; "></span>
-    </div>
+                <div class="form-row">
+                    @if ($errors->has('email_confirmation'))
+                    <div class="error-message">{{ $errors->first('email_confirmation') }}</div>
+                    @endif
+                    <input type="email" name="email_confirmation" placeholder="Confirmar tu email" value="{{ old('email_confirmation') }}" required class="input">
+                    <span class="client-side-field-error" style="color: red; display: none; margin-bottom: 2%; "></span>
+                </div>
 
 
-    <div class="form-row">
-        @if ($errors->has('password'))
-        <div class="error-message">{{ $errors->first('password') }}</div>
-        @endif
-        <div class="password-input-container">
-            <input type="password" name="password" placeholder="Contraseña" required class="input">
-            <span class="toggle-password">👁️</span>
-        </div>
-        <span class="client-side-field-error" style="color: red; display: none; margin-bottom: 2%; "></span>
-    </div>
+                <div class="form-row">
+                    @if ($errors->has('password'))
+                    <div class="error-message">{{ $errors->first('password') }}</div>
+                    @endif
+                    <div class="password-input-container">
+                        <input type="password" name="password" placeholder="Contraseña" required class="input">
+                        <span class="toggle-password">👁️</span>
+                    </div>
+                    <span class="client-side-field-error" style="color: red; display: none; margin-bottom: 2%; "></span>
+                </div>
 
-    <div class="form-row">
-        @if ($errors->has('password_confirmation'))
-        <div class="error-message">{{ $errors->first('password_confirmation') }}</div>
-        @endif
-        <div class="password-input-container">
-            <input type="password" name="password_confirmation" placeholder="Confirmar contraseña" required class="input">
-            <span class="toggle-password">👁️</span>
-        </div>
-        <span class="client-side-field-error" style="color: red; display: none;"></span>
-    </div>
+                <div class="form-row">
+                    @if ($errors->has('password_confirmation'))
+                    <div class="error-message">{{ $errors->first('password_confirmation') }}</div>
+                    @endif
+                    <div class="password-input-container">
+                        <input type="password" name="password_confirmation" placeholder="Confirmar contraseña" required class="input">
+                        <span class="toggle-password">👁️</span>
+                    </div>
+                    <span class="client-side-field-error" style="color: red; display: none;"></span>
+                </div>
 
-    <div class="button-group">
-        <a href="{{ route('principal') }}" class="btn back-button">Volver</a>
-        <button type="button" class="btn next-step">Siguiente</button>
-    </div>
-</div>
+                <div class="button-group">
+                    <a href="{{ route('principal') }}" class="btn back-button">Volver</a>
+                    <button type="button" class="btn next-step">Siguiente</button>
+                </div>
+            </div>
 
             <div id="step2" class="form-step">
                 <div class="form-row" style="display: flex; justify-content: space-between;">
-                    <div class="half-width">
-                        @error('email', 'registro')
-                        <div class="error-message">{{ $message }}</div>
-                        @enderror
+                    <div class="form-row two-columns-row">
+                        <div class="half-width">
+                            @error('email', 'registro')
+                            <div class="error-message">{{ $message }}</div>
+                            @enderror
 
-                        <input type="text" name="nombre" placeholder="Nombre" value="{{ old('nombre') }}" required class="input">
-                    </div>
-                    <div class="half-width">
-                        @error('apellidos', 'registro')
-                        <div class="error-message">{{ $message }}</div>
-                        @enderror
+                            <input type="text" name="nombre" placeholder="Nombre" value="{{ old('nombre') }}" required class="input">
+                        </div>
+                        <div class="half-width">
+                            @error('apellidos', 'registro')
+                            <div class="error-message">{{ $message }}</div>
+                            @enderror
 
-                        <input type="text" name="apellidos" placeholder="Apellidos" value="{{ old('apellidos') }}" required class="input">
+                            <input type="text" name="apellidos" placeholder="Apellidos" value="{{ old('apellidos') }}" required class="input">
+                        </div>
                     </div>
                 </div>
                 <div class="form-row">
@@ -80,25 +81,28 @@
                     <input type="text" name="direccion" placeholder="Dirección" value="{{ old('direccion') }}" required class="input">
                 </div>
                 <div class="form-row" style="display: flex; justify-content: space-between;">
-                    <div class="half-width">
-                        <select name="ciudad" id="ciudad" class="input ciudad-scroll" required>
-                            <option value="" disabled selected>Selecciona tu ciudad</option>
-                            @foreach($ciudades as $ciudad)
-                            <option value="{{ $ciudad->nombre }}">
-                                {{ $ciudad->nombre }}
-                            </option>
-                            @endforeach
-                        </select>
-                        @error('ciudad', 'registro')
-                        <div class="error-message">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="half-width">
-                        @error('codigo_postal', 'registro')
-                        <div class="error-message">{{ $message }}</div>
-                        @enderror
+                    <div class="form-row two-columns-row">
+                        <div class="half-width">
+                            <select name="ciudad" id="ciudad" class="input ciudad-scroll" required>
+                                <option value="" disabled selected>Selecciona tu ciudad</option>
+                                @foreach($ciudades as $ciudad)
+                                <option value="{{ $ciudad->nombre }}">
+                                    {{ $ciudad->nombre }}
+                                </option>
+                                @endforeach
+                            </select>
+                            @error('ciudad', 'registro')
+                            <div class="error-message">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="half-width">
+                            @error('codigo_postal', 'registro')
+                            <div class="error-message">{{ $message }}</div>
+                            @enderror
 
-                        <input type="text" name="codigo_postal" placeholder="Código Postal" value="{{ old('codigo_postal') }}" required class="input">
+                            <input class="input" type="text" name="codigo_postal" id="codigo_postal" placeholder="Código Postal" required pattern="^\d{5}$" title="El Código Postal debe tener exactamente 5 dígitos numéricos." maxlength="5" minlength="5">
+                            <span class="client-side-field-error" style="color: red; display: none; margin-bottom: 2%;"></span>
+                        </div>
                     </div>
                 </div>
                 <div class="form-row">

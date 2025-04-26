@@ -49,37 +49,44 @@
         <div class="main">
             <section class="header-section">
                 <div class="header-buttons" style="display: flex; align-items: center;">
-                @if (session('mensaje'))
-                    <div id="success-message" class="success-message" style="color: #e50914; font-weight: bold;">
-                        {{ session('mensaje') }}
+                    @if (session('success'))
+                    <div id="flash-message" class="success-message">
+                        {{ session('success') }}
                     </div>
-
+                    @push('scripts')
                     <script>
-                        // Eliminar el mensaje automáticamente después de 2 segundos
-                        setTimeout(function() {
-                            const message = document.getElementById('success-message');
-                            if (message) {
-                                message.style.display = 'none';
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const flashMessage = document.getElementById('flash-message');
+                            if (flashMessage) {
+                                setTimeout(function() {
+                                    flashMessage.style.display = 'none';
+                                }, 3000);
                             }
-                        }, 2000);
+                        });
                     </script>
-                @endif
+                    @endpush
+                    @endif
                     <a href="#seccionCompra">
                         <button id="mostrarCompra">COMPRAR ENTRADAS</button>
                     </a> <!--Luego lo moveremos, lo de bajar con efecto hasta el div y donde colocarlo-->
                     <!-- TODO -> Dar funcionalidad a estos botones -->
                     <!-- TODO -> Almacenar y comprobar la sesión del usuario -->
                     @if(Auth::check())
-                        <button id="miCuenta">MI CUENTA</button>
-                        <button id="logout">LOGOUT</button>
+                    <button id="miCuenta">MI CUENTA</button>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
+                        @csrf
+                        <button type="submit" id="logout">
+                            LOGOUT
+                        </button>
+                    </form>
                     @else
-                        <button id="mostrarRegistro">ÚNETE A COSMOS</button>
-                        <button id="mostrarLogin">INICIAR SESIÓN</button>
+                    <button id="mostrarRegistro">ÚNETE A COSMOS</button>
+                    <button id="mostrarLogin">INICIAR SESIÓN</button>
                     @endif
-                    
+
                 </div>
             </section>
-            
+
             <div class="slider-wrap">
                 <div data-slider="list" class="slider-list">
                     <div data-slider="slide" class="slider-slide">
@@ -183,6 +190,7 @@
 
     </x-modal.modal_login>
 
+    @stack('scripts')
 
 </body>
 

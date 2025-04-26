@@ -4,32 +4,54 @@ html {
 }
 
 body {
-    background-color: #000000; /* Color de fondo negro */
-    color: #f5f5f5; /* Color del texto (blanco claro) */
-    font-size: 16px; /* Tamaño de la fuente */
+    background-color: #000000;
+    color: #f5f5f5;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
+/* Estilos del encabezado */
 .header-section {
     display: flex;
-    justify-content: flex-end; /* Alinea los botones a la derecha */
+    justify-content: flex-end;
     padding: 20px;
-    background-color: #000000; /* Fondo oscuro */
+    background-color: #000000;
+    align-items: center;
+    flex-wrap: wrap;
+    /* gap: 15px; */
 }
 
 .header-buttons {
     display: flex;
     gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
+/* Estilo para el mensaje de éxito flasheado (LOGIN, LOGOUT, REGISTRO) */
+.success-message {
+    color: #e50914;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+/* Estilos de los botones en el encabezado */
 .header-buttons button {
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
     border: none;
-    background-color: #000000; /* Color de fondo del botón */
+    background-color: #000000;
     color: white;
     border-radius: 5px;
-    transition: background-color 1s ease, transform 1s ease, box-shadow 1s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    flex-shrink: 0;
 }
 
 .header-buttons button:hover {
@@ -39,33 +61,48 @@ body {
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
 }
 
+/* Estilos para el enlace de COMPRAR ENTRADAS que contiene un botón */
+.header-buttons a button {
+    display: inline-block;
+}
+
+/* Estilo para el formulario de logout */
+.header-buttons form {
+    display: inline;
+    flex-shrink: 0;
+}
+.header-buttons form button[type="submit"] {
+    /* Inherits styles from .header-buttons button */
+}
+
+
 /* Estilos para el contenedor clonable */
 .cloneable {
     padding: 20px;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    min-height: calc(100vh - 60px);
     display: flex;
     position: relative;
     font-size: 1.1vw;
 }
 
-/* Estilos para la capa de superposición */
+/* Estilos para la capa de superposición (overlay) */
 .overlay {
     z-index: 2;
     background-image: linear-gradient(
         90deg,
         #000000 85%,
-        #0000
-    ); /* Gradiente de superposición */
+        rgba(0, 0, 0, 0)
+    );
     justify-content: flex-start;
     align-items: center;
-    width: 37.5em;
+    width: min(37.5em, 90vw);
     height: 100%;
     padding-left: 2em;
     display: flex;
     position: absolute;
-    inset: 0% auto 0% 0%;
+    inset: 0 auto 0 0;
 }
 
 /* Estilos internos de la superposición */
@@ -100,7 +137,7 @@ body {
     width: 2ch;
     font-size: 1em;
     line-height: 1;
-    margin: 0px;
+    margin: 0;
 }
 
 .count-row-divider {
@@ -117,7 +154,7 @@ body {
     display: flex;
 }
 
-/* Estilos del botón */
+/* Estilos del botón (genérico, aplicado a botones dentro del overlay) */
 .button {
     background-color: transparent;
     color: #fff;
@@ -130,6 +167,7 @@ body {
     padding: 0;
     display: flex;
     position: relative;
+    cursor: pointer;
 }
 
 .button-arrow {
@@ -155,31 +193,29 @@ body {
     border-top-left-radius: 0.4em;
     width: 1em;
     height: 1em;
+    position: absolute;
 }
 
 .overlay-corner.top-right {
-    position: absolute;
-    inset: 0% 0% auto auto;
+    inset: 0 0 auto auto;
     transform: rotate(90deg);
 }
 
 .overlay-corner.bottom-left {
-    position: absolute;
-    inset: auto auto 0% 0%;
+    inset: auto auto 0 0;
     transform: rotate(-90deg);
 }
 
 .overlay-corner.bottom-right {
-    position: absolute;
-    inset: auto 0% 0% auto;
+    inset: auto 0 0 auto;
     transform: rotate(180deg);
 }
 
-/* Transiciones del botón */
+/* Transiciones del botón (overlay) */
 .button,
 .button-overlay {
     transition: transform 0.475s cubic-bezier(0.25, 0.8, 0.25, 1),
-        opacity 0.475s cubic-bezier(0.25, 0.8, 0.25, 1);
+    opacity 0.475s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .button:hover .button-overlay {
@@ -201,7 +237,7 @@ body {
     width: 100%;
     height: 100%;
     position: absolute;
-    inset: 0%;
+    inset: 0;
     overflow: hidden;
 }
 
@@ -217,108 +253,242 @@ body {
 .ciudad-scroll {
     overflow-y: auto;
     height: auto;
+    max-height: 150px;
 }
 
+/* Estilos para mensajes de error unificados */
+.error-text {
+    color: #e50914;
+    font-size: 0.9em;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* Estilo para campos inválidos */
 .invalid {
-    border: 2px solid red !important;
-    outline: none;
+    border-color: #e50914 !important;
+    box-shadow: 0 0 0 0.2rem rgba(229, 9, 20, 0.25);
 }
 
-.error-message {
-    color: red;
-    font-size: 0.9rem;
+/* Estilo para el contenedor de errores JS */
+.client-side-errors {
+    color: #e50914;
+    border: 1px solid #e50914;
+    background-color: #fdd;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    text-align: left;
 }
 
+/* Estilo para el contenedor de errores de Laravel de Registro */
 .error-messages {
-    color: red;
-    font-size: 1rem;
-    margin-top: 15px;
+    color: #e50914;
+    border: 1px solid #e50914;
+    background-color: #fdd;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    text-align: left;
 }
 
 .error-messages ul {
-    list-style: none;
+    margin: 0;
     padding: 0;
+    list-style: none;
 }
 
 .error-messages li {
+    color: #e50914;
     margin-bottom: 5px;
 }
 
-.password-input-container {
-    position: relative; /* Para posicionar el icono absolutamente respecto a él */
+/* Estilos del modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    display: flex; /* Ayuda a alinear input y icono */
-    align-items: center; /* Centra verticalmente el contenido (input e icono) si el contenedor es flex */
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
-.password-input-container input.input {
-    flex-grow: 1;
-    padding-right: 30px;
+/* Estilos del contenedor del formulario dentro del modal */
+.modal .form-container {
+    background-color: #1a1a1a;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    text-align: center;
+    width: 95%;
+    max-width: 500px;
+    position: relative;
+    color: #fff;
+    max-height: 95vh;
+    overflow-y: auto;
+    
+    /* Para Chrome, Edge, Safari */
+    &::-webkit-scrollbar {
+        display: none; /* Oculta la barra de scroll */
+    }
+
+    /* Para Firefox */
+    scrollbar-width: none; /* Oculta la barra de scroll */
+
+    /* Para Internet Explorer y Edge (legacy) */
+    -ms-overflow-style: none; /* Oculta la barra de scroll*/
 }
 
-.toggle-password {
-    position: absolute; 
+/* Estilo del botón de cerrar (X) */
+.modal .close-button {
+    position: absolute;
+    top: 10px;
     right: 10px;
-    transform: translateY(-50%); /* Lo sube la mitad de su altura para centrarlo verticalmente */
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 24px;
     cursor: pointer;
-    user-select: none;
-    color: #888; /* Color del icono */
-    /* El centrado vertical se logra principalmente con top: 50% y transform: translateY(-50%); */
-    /* display: flex; y align-items: center; en el contenedor también ayudan a la alineación base */
+    line-height: 1;
+    padding: 5px;
 }
 
-input[type="password"]::-ms-reveal {
-    display: none; /* Oculta el icono en Microsoft Edge e Internet Explorer */
+/* Estilo del contenedor del logo */
+.modal .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    width: 100%;
 }
 
-.input.invalid {
-    border-color: #e50914;
+.modal .logo {
+    max-width: 300px;
+    height: auto;
+}
+
+/* Estilo para los pasos del formulario en modal */
+.modal .form-step {
+    display: none;
+}
+
+.modal .form-step.active {
+    display: block;
+}
+
+/* Estilo para los inputs del formulario en modal */
+.modal .input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    box-sizing: border-box;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.modal .form-row.two-columns-row {
+    display: flex;
+    gap: 20px;
+    /* align-items: flex-start; */ /* Opcional: alinea los elementos en la parte superior si tienen alturas diferentes */
+    /* flex-wrap: wrap; */ /* Considera que se apilen en pantallas pequeñas si no caben */
+}
+
+/* Asegurar que los divs .half-width dentro de este flex container ocupen la mitad del espacio y se comporten correctamente */
+.modal .form-row.two-columns-row .half-width {
+    flex-basis: 0;
+    flex-grow: 1;
+    /* min-width: 150px; */ /* Opcional: evita que se hagan demasiado estrechos */
+}
+
+.modal .input::placeholder {
+    color: #777;
+}
+
+/* Estilo para la fila de formulario */
+.modal .form-row {
+    margin-bottom: 15px;
 }
 
 
-.next-step,
-.btn[type="submit"] {
-    background-color: #e50914; /* Rojo característico */
+/* Estilo para el grupo de botones */
+.modal .button-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
 }
 
-.next-step:hover,
-.btn[type="submit"]:hover {
+/* Estilos base para botones .btn en el modal */
+.modal .btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    color: #fff;
+    display: inline-block;
+}
+
+/* Estilos específicos por tipo de botón en el modal */
+.modal .next-step,
+.modal .btn[type="submit"] {
+    background-color: #e50914;
+}
+
+.modal .next-step:hover,
+.modal .btn[type="submit"]:hover {
     background-color: #c40812;
 }
 
-.prev-step,
-.back-button {
+.modal .prev-step,
+.modal .btn.back-button {
     background-color: #555;
 }
 
-.prev-step:hover,
-.back-button:hover {
+.modal .prev-step:hover,
+.modal .btn.back-button:hover {
     background-color: #777;
 }
 
-label {
+
+/* Estilo para etiquetas de formulario en el modal */
+.modal label {
     display: block;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     font-size: 16px;
     color: #ccc;
     text-align: left;
 }
 
-label input[type="checkbox"] {
+.modal label input[type="checkbox"] {
     margin-right: 10px;
     vertical-align: middle;
 }
 
-.error-message {
-    color: #ff4d4d;
-    font-size: 0.9em;
-    margin-top: -15px;
-    margin-bottom: 10px;
-    text-align: left;
+
+/* Fuente personalizada */
+@font-face {
+    font-family: "PP Neue Corp";
+    src: url("https://cdn.prod.website-files.com/6717aac16c9ea22eeef1e79e/6717de2d56e40b921572d2d9_PPNeueCorp-TightUltrabold.woff2")
+    format("woff2");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
 }
 
-
-
+/* Estilos del slider */
 .slider-list {
     flex-flow: row;
     justify-content: flex-start;
@@ -385,7 +555,7 @@ img {
 }
 
 .caption-dot {
-    background-color: #333333; /* Color oscuro */
+    background-color: #333333;
     border-radius: 10em;
     flex: none;
     width: 0.5em;
@@ -395,145 +565,14 @@ img {
 .caption {
     font-size: 0.75em;
     font-family: Arial, sans-serif;
-    margin: 0px;
+    margin: 0;
 }
 
 .slide-caption {
     transition: transform 0.525s cubic-bezier(0.25, 0.8, 0.25, 1),
-        opacity 0.525s cubic-bezier(0.25, 0.8, 0.25, 1);
+                opacity 0.525s cubic-bezier(0.25, 0.8, 0.25, 1);
     transition-delay: 0s;
 }
-
-.modal {
-    position: fixed; /* Para que flote sobre el contenido */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Asegura que esté por encima de otros elementos */
-}
-
-.modal .form-container {
-    background-color: #1a1a1a; /* Fondo del formulario */
-    padding: 40px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
-    text-align: center;
-    width: 90%;
-    max-width: 500px;
-    position: relative; /* Para el botón de cerrar */
-    color: #fff;
-}
-
-.modal .close-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.modal .logo {
-    max-width: 300px;
-    height: auto;
-}
-
-.modal .logo-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 30px;
-    width: 100%;
-}
-
-.modal .form-step {
-    display: none;
-}
-
-.modal .form-step.active {
-    display: block;
-}
-
-.modal .input {
-    width: calc(100% - 30px);
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 1px solid #333;
-    border-radius: 5px;
-    background-color: #333;
-    color: #fff;
-    box-sizing: border-box;
-    font-size: 16px;
-}
-
-.modal .input::placeholder {
-    color: #777;
-}
-
-.modal .button-group {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 30px;
-}
-
-.modal .btn {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    text-decoration: none;
-    color: #fff;
-}
-
-.modal .next-step,
-.modal .btn[type="submit"] {
-    background-color: #e50914; /* Rojo característico */
-}
-
-.modal .next-step:hover,
-.modal .btn[type="submit"]:hover {
-    background-color: #c40812;
-}
-
-.modal .prev-step {
-    background-color: #555;
-}
-
-.modal .prev-step:hover {
-    background-color: #777;
-}
-
-.modal label {
-    display: block;
-    margin-bottom: 20px;
-    font-size: 16px;
-    color: #ccc;
-    text-align: left;
-}
-
-.modal label input[type="checkbox"] {
-    margin-right: 10px;
-    vertical-align: middle;
-}
-
-.modal .error-message {
-    color: #ff4d4d;
-    font-size: 0.9em;
-    margin-top: -15px;
-    margin-bottom: 10px;
-    text-align: left;
-}
-
-
 
 html:not(.wf-design-mode) .slide-caption {
     opacity: 0;
@@ -545,12 +584,40 @@ html:not(.wf-design-mode) [data-slider="slide"].active .slide-caption {
     transform: translate(0%, 0px);
 }
 
-/* Fuente personalizada */
-@font-face {
-    font-family: "PP Neue Corp";
-    src: url("https://cdn.prod.website-files.com/6717aac16c9ea22eeef1e79e/6717de2d56e40b921572d2d9_PPNeueCorp-TightUltrabold.woff2")
-        format("woff2");
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
+/* Password input styles */
+.password-input-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-container input.input {
+    flex-grow: 1;
+    padding-right: 30px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    user-select: none;
+    color: #888;
+    z-index: 2;
+    font-size:0.9em;
+}
+
+input[type="password"]::-ms-reveal {
+    display: none;
+}
+
+
+/* Asegurar que la clase hidden funciona */
+.hidden {
+    display: none !important;
+}
+
+.flex {
+    display: flex !important;
 }

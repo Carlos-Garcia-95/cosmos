@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const modalRegistro = document.getElementById("modalRegistro");
     const checkUrlBase = '/check-';
     const passwordContainers = modalRegistro.querySelectorAll('.password-input-container');
+    const mostrarRegistroBt = document.getElementById("mostrarRegistro");
 
     const cerrarRegistroBtn = modalRegistro.querySelector("#cerrarRegistro");
     const form = modalRegistro.querySelector("form");
@@ -39,13 +40,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 2. Funciones para mostrar/ocultar el modal
     function openModal() {
-        modalRegistro.style.display = "flex";
-        showStep(0);
+        const modalRegistro = document.getElementById("modalRegistro");
+    
+        if (modalRegistro) {
+            modalRegistro.classList.remove('hidden');
+            modalRegistro.classList.add('flex'); 
+    
+            showStep(0); 
+    
+            //Enfocar el primer campo
+            const firstInput = modalRegistro.querySelector('input:not([type="hidden"]), select, textarea');
+            if (firstInput) {
+                setTimeout(() => firstInput.focus(), 50);
+            }
+    
+        } else {
+            console.error('>>> ERROR: modalRegistro no encontrado dentro de openModal.');
+        }
     }
 
     function closeModal() {
-        modalRegistro.style.display = "none";
-        resetForm();
+        const modalRegistro = document.getElementById("modalRegistro"); 
+
+        if (modalRegistro) {
+
+        modalRegistro.classList.remove('flex');
+        modalRegistro.classList.add('hidden');
+
+        resetForm(); 
+
+        hideErrors();
+        clearInvalidClasses();
+        modalRegistro.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+
+        } else {
+            console.error('>>> ERROR: modalRegistro no encontrado dentro de closeModal.');
+        }
     }
 
     // Añadir listeners al botón de cerrar y posiblemente al fondo del modal
@@ -348,8 +378,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!cpRegex.test(cpInput.value.trim())) {
                 displayFieldError(
                     cpInput,
-                    "El Código Postal debe tener 5 dígitos."
-                ); // Mensaje ajustado
+                    "El C.P debe tener 5 dígitos."
+                );
                 if (cpInput) cpInput.classList.add("invalid");
                 isStepValid = false;
             } else {

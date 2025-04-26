@@ -11,8 +11,6 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('pr
 //Registro
 Route::post('/register', [RegisterController::class, 'registrar'])->name('registro');
 
-// Rutas de Autenticación
-
 // Ruta para comprobar si el email existe
 Route::get('/check-email', [CheckController::class, 'checkEmail']);
 
@@ -22,8 +20,6 @@ Route::get('/check-dni', [CheckController::class, 'checkDni']);
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 
 Route::post('/login', [LoginController::class, 'login']);
-
-
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 

@@ -1,70 +1,428 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Draggable } from "gsap/Draggable";
+// Importar ScrollToPlugin
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 
-gsap.registerPlugin(ScrollTrigger, Draggable);
+// Asegúrate de que ScrollTrigger y ScrollToPlugin estén disponibles y registrados.
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Referencias a los elementos del DOM
     const sliderContainer = document.querySelector('[data-slider="list"]');
     const slides = gsap.utils.toArray('[data-slider="slide"]');
     const prevBtn = document.querySelector('[data-slider="button-prev"]');
     const nextBtn = document.querySelector('[data-slider="button-next"]');
+    // Seleccionar el botón de cerrar compra (si existe)
+    const cerrarCompraBtn = document.getElementById("cerrarCompraBtn");
 
-    let currentIndex = 0;
+    if (!sliderContainer || slides.length === 0) {
+        console.warn(
+            "Slider elements not found. Skipping slider initialization."
+        );
+        return;
+    }
+
+    const totalElement = document.querySelector('[data-slide-count="total"]');
+    const stepElement = document.querySelector('[data-slide-count="step"]');
+    const stepsParent = stepElement ? stepElement.parentElement : null;
+    let allSteps = [];
+
     const slideCount = slides.length;
 
-    // Función para actualizar el slider
-    const updateSlider = (index) => {
-        currentIndex = gsap.utils.wrap(0, slideCount, index); // Aseguramos que el índice sea infinito
-        gsap.to(sliderContainer, {
-            xPercent: -100 * currentIndex,
-            duration: 0.725,
-            ease: "power3.out",
+    if (totalElement) {
+        totalElement.textContent =
+            slideCount < 10 ? `0${slideCount}` : slideCount;
+    }
+
+    if (stepsParent && stepElement) {
+        stepsParent.innerHTML = "";
+        slides.forEach((_, index) => {
+            const stepClone = stepElement.cloneNode(true);
+            stepClone.textContent =
+                index + 1 < 10 ? `0${index + 1}` : index + 1;
+            stepsParent.appendChild(stepClone);
         });
+        allSteps = stepsParent.querySelectorAll('[data-slide-count="step"]');
+    }
+
+    // Implementación de horizontalLoop para crear un bucle infinito
+    function horizontalLoop(items, config) {
+        items = gsap.utils.toArray(items);
+        if (items.length === 0) {
+            console.warn("horizontalLoop: No items found.");
+            return null;
+        }
+        config = config || {};
+
+        let tl = gsap.timeline({
+                repeat: config.repeat === undefined ? 0 : config.repeat,
+                paused: config.paused,
+                defaults: { ease: "none" },
+            }),
+            length = items.length,
+            startX = items[0].offsetLeft,
+            times = [],
+            widths = [],
+            spaceBefore = [],
+            xPercents = [],
+            curIndex = 0,
+            indexIsDirty = false,
+            center = config.center,
+            pixelsPerSecond =
+                (config.speed === undefined ? 1 : config.speed) * 100,
+            snap =
+                config.snap === false
+                    ? (v) => v
+                    : gsap.utils.snap(config.snap || 1),
+            timeOffset = 0,
+            container =
+                center === true
+                    ? items[0].parentNode
+                    : gsap.utils.toArray(center)[0] || items[0].parentNode,
+            totalWidth,
+            getTotalWidth = () => {
+                let total = 0;
+                items.forEach((item) => {
+                    total +=
+                        item.offsetWidth * gsap.getProperty(item, "scaleX") +
+                        parseFloat(gsap.getProperty(item, "marginLeft", "px")) +
+                        parseFloat(gsap.getProperty(item, "marginRight", "px"));
+                });
+                return total;
+            },
+            populateWidths = () => {
+                let b1 = container.getBoundingClientRect(),
+                    b2;
+                items.forEach((el, i) => {
+                    widths[i] = parseFloat(gsap.getProperty(el, "width", "px"));
+                    xPercents[i] = snap(
+                        (parseFloat(gsap.getProperty(el, "x", "px")) /
+                            widths[i]) *
+                            100 +
+                            gsap.getProperty(el, "xPercent")
+                    );
+                    b2 = el.getBoundingClientRect();
+                    spaceBefore[i] = b2.left - (i ? b1.right : b1.left);
+                    b1 = b2;
+                });
+                gsap.set(items, { xPercent: (i) => xPercents[i] });
+                totalWidth = getTotalWidth();
+            },
+            timeWrap,
+            populateOffsets = () => {
+                timeOffset = center
+                    ? (tl.duration() * (container.offsetWidth / 2)) / totalWidth
+                    : 0;
+                center &&
+                    times.forEach((t, i) => {
+                        times[i] = timeWrap(
+                            tl.labels["label" + i] +
+                                (tl.duration() * widths[i]) / 2 / totalWidth -
+                                timeOffset
+                        );
+                    });
+            },
+            getClosest = (values, value, wrap) => {
+                let i = values.length,
+                    closest = 1e10,
+                    index = 0,
+                    d;
+                while (i--) {
+                    d = Math.abs(values[i] - value);
+                    if (d > wrap / 2) {
+                        d = wrap - d;
+                    }
+                    if (d < closest) {
+                        closest = d;
+                        index = i;
+                    }
+                }
+                return index;
+            },
+            populateTimeline = () => {
+                let i, item, curX, distanceToStart, distanceToLoop;
+                tl.clear();
+                totalWidth = getTotalWidth();
+                for (i = 0; i < length; i++) {
+                    item = items[i];
+                    curX = (xPercents[i] / 100) * widths[i];
+                    distanceToStart =
+                        item.offsetLeft + curX - startX + spaceBefore[0];
+                    distanceToLoop =
+                        distanceToStart +
+                        widths[i] * gsap.getProperty(item, "scaleX");
+                    tl.to(
+                        item,
+                        {
+                            xPercent: snap(
+                                ((curX - distanceToLoop) / widths[i]) * 100
+                            ),
+                            duration: distanceToLoop / pixelsPerSecond,
+                        },
+                        0
+                    )
+                        .fromTo(
+                            item,
+                            {
+                                xPercent: snap(
+                                    ((curX - distanceToLoop + totalWidth) /
+                                        widths[i]) *
+                                        100
+                                ),
+                            },
+                            {
+                                xPercent: xPercents[i],
+                                duration:
+                                    (curX -
+                                        distanceToLoop +
+                                        totalWidth -
+                                        curX) /
+                                    pixelsPerSecond,
+                                immediateRender: false,
+                            },
+                            distanceToLoop / pixelsPerSecond
+                        )
+                        .add("label" + i, distanceToStart / pixelsPerSecond);
+                    times[i] = distanceToStart / pixelsPerSecond;
+                }
+                timeWrap = gsap.utils.wrap(0, tl.duration());
+            },
+            refresh = (deep) => {
+                let progress = tl.progress();
+                tl.progress(0, true);
+                populateWidths();
+                deep && populateTimeline();
+                populateOffsets();
+                tl.time(timeWrap(times[curIndex]), true);
+            },
+            onResize = () => refresh(true);
+
+        gsap.set(items, { x: 0 });
+        populateWidths();
+        populateTimeline();
+        populateOffsets();
+
+        window.addEventListener("resize", onResize);
+
+        // Función para navegar a un índice específico
+        function toIndex(index, vars) {
+            vars = vars || {};
+            let targetIndexLeft = gsap.utils.wrap(0, length, index);
+            let time = times[targetIndexLeft];
+            let currentWrappedTime = timeWrap(tl.time());
+            let diff = time - currentWrappedTime;
+            if (Math.abs(diff) > tl.duration() / 2) {
+                diff += diff < 0 ? tl.duration() : -tl.duration();
+            }
+            time = currentWrappedTime + diff;
+
+            curIndex = targetIndexLeft;
+            indexIsDirty = false;
+
+            vars.overwrite = true;
+
+            return vars.duration === 0
+                ? tl.time(timeWrap(time))
+                : tl.tweenTo(timeWrap(time), vars);
+        }
+
+        // Métodos de la timeline para controlar el slider
+        tl.toIndex = (index, vars) => toIndex(index, vars);
+        tl.closestIndex = (setCurrent) => {
+            let index = getClosest(times, tl.time(), tl.duration());
+            if (setCurrent) {
+                curIndex = index;
+                indexIsDirty = false;
+            }
+            return index;
+        };
+        tl.current = () => (indexIsDirty ? tl.closestIndex(true) : curIndex);
+        tl.next = (vars) => {
+            toIndex(tl.current() + 1, vars);
+        };
+        tl.previous = (vars) => {
+            toIndex(tl.current() - 1, vars);
+        };
+        tl.times = times;
+
+        // Manejo de la clase 'active' y conteo de pasos
+        let lastActiveIndex = -1;
+        tl.eventCallback("onUpdate", () => {
+            const activeSlideIndex = gsap.utils.wrap(
+                0,
+                slideCount,
+                tl.closestIndex() + 1
+            );
+
+            if (activeSlideIndex !== lastActiveIndex) {
+                if (lastActiveIndex !== -1 && slides[lastActiveIndex]) {
+                    slides[lastActiveIndex].classList.remove("active");
+                }
+
+                if (slides[activeSlideIndex]) {
+                    slides[activeSlideIndex].classList.add("active");
+                }
+
+                if (allSteps.length > 0) {
+                    gsap.set(allSteps, { y: `${-100 * activeSlideIndex}%` });
+                }
+
+                lastActiveIndex = activeSlideIndex;
+            }
+        });
+
+        tl.progress(1, true).progress(0, true);
+
+        if (config.reversed) {
+            tl.vars.onReverseComplete();
+            tl.reverse();
+        }
+
+        // Posiciona el slider inicialmente para que el Layout 2 (índice 1) sea el activo.
+        // Esto se logra alineando el slide 0 (índice 0) a la izquierda.
+        tl.toIndex(0, { duration: 0 }); // Alinea el primer slide (índice 0) a la izquierda instantáneamente.
+
+        if (config.repeat === -1 && !config.paused) {
+            tl.play();
+        }
+
+        return tl;
+    }
+
+    // Objeto de configuración del slider
+    const mainSliderConfig = {
+        repeat: -1,
+        speed: 1.2, // Velocidad ajustada
+        paused: false,
     };
 
-    // Función para ir al siguiente slide
-    nextBtn.addEventListener("click", () => {
-        updateSlider(currentIndex + 1); // Ir al siguiente slide
-    });
+    const mainSlider = horizontalLoop(slides, mainSliderConfig);
 
-    // Función para ir al slide anterior
-    prevBtn.addEventListener("click", () => {
-        updateSlider(currentIndex - 1); // Ir al slide anterior
-    });
+    // Lógica de Reproducción Automática y Pausa
+    let autoPlayTimeout;
+    const autoPlayDelay = 5000;
 
-    // Funcionalidad de ScrollTrigger (mover el slider con el scroll)
-    ScrollTrigger.create({
-        trigger: sliderContainer,
-        start: "top top",
-        end: "+=2000",
-        scrub: true,
-        pin: true,
-        onUpdate: (self) => {
-            const progress = self.progress * slideCount;
-            updateSlider(Math.floor(progress));
-        },
-    });
+    const startAutoPlayTimeout = () => {
+        clearTimeout(autoPlayTimeout);
+        autoPlayTimeout = setTimeout(() => {
+            if (
+                mainSlider &&
+                mainSlider.paused() &&
+                mainSliderConfig.repeat === -1
+            ) {
+                mainSlider.play();
+                console.log("Resumed automatic movement.");
+            }
+        }, autoPlayDelay);
+        console.log("Auto-play timeout started.");
+    };
 
-    // Habilitar el arrastre (dragging) con GSAP Draggable
-    Draggable.create(sliderContainer, {
-        type: "x",
-        bounds: {
-            minX: -sliderContainer.offsetWidth + window.innerWidth,
-            maxX: 0,
-        },
-        onDrag() {
-            const progress = (this.x / window.innerWidth) * slideCount;
-            updateSlider(Math.floor(progress));
-        },
-        onRelease() {
-            const progress = (this.x / window.innerWidth) * slideCount;
-            updateSlider(Math.floor(progress));
-        },
-    });
+    const pauseAndRestartTimeout = () => {
+        if (
+            mainSlider &&
+            !mainSlider.paused() &&
+            mainSliderConfig.repeat === -1
+        ) {
+            mainSlider.pause();
+            console.log("Paused automatic movement.");
+        }
+        startAutoPlayTimeout();
+    };
+
+    if (mainSlider) {
+        if (nextBtn) {
+            nextBtn.addEventListener("click", () => {
+                pauseAndRestartTimeout();
+                mainSlider.next({ ease: "power3.out", duration: 0.725 });
+            });
+        }
+
+        if (prevBtn) {
+            prevBtn.addEventListener("click", () => {
+                pauseAndRestartTimeout();
+                mainSlider.previous({ ease: "power3.out", duration: 0.725 });
+            });
+        }
+
+        // Listeners para Clic en los Lados
+        const sliderMainArea = document.querySelector(".main");
+        if (sliderMainArea) {
+            sliderMainArea.addEventListener("click", (event) => {
+                if (
+                    event.target.closest('[data-slider="button-prev"]') ||
+                    event.target.closest('[data-slider="button-next"]') ||
+                    event.target.closest('[data-slider="slide"]')
+                ) {
+                    return;
+                }
+
+                pauseAndRestartTimeout();
+
+                const clickX = event.clientX;
+                const elementRect = sliderMainArea.getBoundingClientRect();
+                const elementMidpointX =
+                    elementRect.left + elementRect.width / 2;
+
+                if (clickX > elementMidpointX) {
+                    mainSlider.next({ ease: "power3.out", duration: 0.725 });
+                } else {
+                    mainSlider.previous({
+                        ease: "power3.out",
+                        duration: 0.725,
+                    });
+                }
+            });
+        }
+
+        // Listener para clic en los slides para navegar a ese slide
+        slides.forEach((slide, i) => {
+            slide.addEventListener("click", (event) => {
+                event.stopPropagation();
+                pauseAndRestartTimeout();
+                const targetLeftSlideIndex = gsap.utils.wrap(
+                    0,
+                    slideCount,
+                    i - 1
+                );
+                mainSlider.toIndex(targetLeftSlideIndex, {
+                    ease: "power3.out",
+                    duration: 0.725,
+                });
+            });
+        });
+
+        // Listener para Scroll de Rueda de Ratón
+        if (sliderMainArea) {
+            sliderMainArea.addEventListener("wheel", (event) => {
+                event.preventDefault();
+                pauseAndRestartTimeout();
+
+                if (event.deltaY > 0 || event.deltaX > 0) {
+                    mainSlider.next({ ease: "power3.out", duration: 0.725 });
+                } else if (event.deltaY < 0 || event.deltaX < 0) {
+                    mainSlider.previous({
+                        ease: "power3.out",
+                        duration: 0.725,
+                    });
+                }
+            });
+        }
+
+        if (mainSliderConfig.repeat === -1 && !mainSliderConfig.paused) {
+            startAutoPlayTimeout();
+        }
+    }
+
+    // ScrollTrigger (Comentado)
+    /*
+    if (mainSlider) {
+        ScrollTrigger.create({
+            trigger: sliderContainer.parentElement,
+            start: "top top",
+            end: "+=2000",
+            scrub: true,
+            pin: true,
+            animation: mainSlider
+        });
+    }
+    */
 });
-
-
-
-
