@@ -85,10 +85,8 @@
                         <div class="half-width">
                             <select name="ciudad" id="ciudad" class="input ciudad-scroll" required>
                                 <option value="" disabled selected>Selecciona tu ciudad</option>
-                                @foreach($ciudades as $ciudad)
-                                <option value="{{ $ciudad->nombre }}">
-                                    {{ $ciudad->nombre }}
-                                </option>
+                                @foreach ($ciudades as $ciudad)
+                                    <option value="{{ $ciudad->id }}">{{ $ciudad->nombre }}</option>
                                 @endforeach
                             </select>
                             @error('ciudad', 'registro')

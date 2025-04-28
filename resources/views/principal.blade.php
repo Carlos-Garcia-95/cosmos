@@ -6,7 +6,16 @@
     <title>Cosmos Cinema</title>
 
     <!--GSAPLaravel_8 No borrar, para entrar en GSAP. correo diegito866@gmail.com-->
-    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/slider.css', 'resources/js/registro.js', 'resources/js/login.js', 'resources/js/entradas.js', 'resources/css/compraEntradas.css', 'resources/js/compraEntradas.js'])
+    @vite([
+        'resources/css/app.css', 
+        'resources/js/app.js', 
+        'resources/css/slider.css', 
+        'resources/js/registro.js', 
+        'resources/js/login.js', 
+        'resources/js/entradas.js', 
+        'resources/css/compraEntradas.css', 
+        'resources/js/compraEntradas.js'
+    ])
     <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
 
 </head>
@@ -182,7 +191,7 @@
 
 
 
-    <x-modal.modal_registro :ciudades="$ciudades">
+    <x-modal.modal_registro :ciudades='$ciudades'>
 
     </x-modal.modal_registro>
 

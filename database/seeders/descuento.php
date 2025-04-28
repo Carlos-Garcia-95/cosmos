@@ -13,8 +13,11 @@ class descuento extends Seeder
     public function run(): void
     {
         DB::table('descuento')->insert([
-            ['descuento' => 10, 'tipo' => 'Estudiante'],
-            ['descuento' => 20, 'tipo' => 'Miembro'],
+            ['descuento' => 15, 'tipo' => 'estudiante'],
+            ['descuento' => 10, 'tipo' => 'miembro'],
+            ['descuento' => 30, 'tipo' => 'familia_numerosa'],
+            ['descuento' => 80, 'tipo' => 'jubilado'],
+            ['descuento' => 40, 'tipo' => 'discapacitado'],
         ]);
     }
 }

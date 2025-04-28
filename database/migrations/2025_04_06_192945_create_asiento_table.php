@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('asiento', function (Blueprint $table) {
             $table->id('id_asiento');
             $table->integer('estado');
+            $table->integer('columna');
+            $table->integer('fila');
             $table->unsignedBigInteger('id_sala');
             $table->unsignedBigInteger('id_tipo_asiento');
             $table->foreign('id_sala')->references('id_sala')->on('sala');

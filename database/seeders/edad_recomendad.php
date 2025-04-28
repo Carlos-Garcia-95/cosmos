@@ -13,9 +13,11 @@ class edad_recomendad extends Seeder
     public function run(): void
     {
         DB::table('edad_recomendada')->insert([
-            ['tipo' => 'Todos'],
-            ['tipo' => 'Mayores de 13'],
-            ['tipo' => 'Mayores de 18'],
+            ['tipo' => 'TP'],
+            ['tipo' => '7'],
+            ['tipo' => '12'],
+            ['tipo' => '16'],
+            ['tipo' => '18'],
         ]);
     }
 }

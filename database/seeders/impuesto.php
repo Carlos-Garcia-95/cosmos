@@ -13,7 +13,9 @@ class impuesto extends Seeder
     public function run(): void
     {
         DB::table('impuesto')->insert([
-            ['iva' => 21.00], // Ejemplo de IVA
+            ['cantidad' => 21.00],
+            ['cantidad' => 10.00],
+            ['cantidad' => 0],
         ]);
     }
 }

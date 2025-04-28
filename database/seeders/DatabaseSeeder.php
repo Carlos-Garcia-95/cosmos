@@ -14,13 +14,15 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            administrador::class,
+            ciudades::class,
             edad_recomendad::class,
             genero_pelicula::class,
             tipo_asiento::class,
             sala::class,
+            asiento::class,
             impuesto::class,
             descuento::class,
-            administrador::class,
             users::class,
             pelicula::class,
             ppelicula_genero::class
