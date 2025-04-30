@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Cosmos Cinema</title>
 
     <!--GSAPLaravel_8 No borrar, para entrar en GSAP. correo diegito866@gmail.com-->
@@ -14,7 +15,9 @@
         'resources/js/login.js', 
         'resources/js/entradas.js', 
         'resources/css/compraEntradas.css', 
-        'resources/js/compraEntradas.js'
+        'resources/js/compraEntradas.js',
+        'resources/js/user.js',
+        'resources/css/user_modal.css', 
     ])
     <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
 
@@ -191,13 +194,11 @@
 
 
 
-    <x-modal.modal_registro :ciudades='$ciudades'>
+    <x-modal.modal_registro :ciudades='$ciudades'/>
 
-    </x-modal.modal_registro>
+    <x-modal.modal_login/>
 
-    <x-modal.modal_login>
-
-    </x-modal.modal_login>
+    <x-modal.modal_usuario/>
 
     @stack('scripts')
 

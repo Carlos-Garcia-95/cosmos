@@ -446,6 +446,7 @@ today.getMonth(),
 );
 if (birthDate > ageLimitDate) {
 displayFieldError(fechaNacimientoInput, "Debes tener al menos 14 años.");
+fechaNacimientoInput.classList.add("invalid");
 if (fechaNacimientoInput)
 fechaNacimientoInput.classList.add("invalid");
 isStepValid = false;
@@ -478,7 +479,7 @@ isStepValid = false;
 
     // 6. Manejar el evento submit del formulario para la validación FINAL
 
-    form.addEventListener("submit", function (event) {
+    form.addEventListener("submit", async function (event) {
         // Detener el envío por defecto del formulario inicialmente
         event.preventDefault();
 
@@ -486,14 +487,17 @@ isStepValid = false;
         hideErrors();
         clearInvalidClasses();
 
-        const isStep1Valid = validateStep1();
-        const isStep2Valid = validateStep2();
-        const isStep3Valid = validateStep3();
+        steps.forEach(step => clearStepFieldErrors(step));
+
+        const isStep1Valid = await validateStep1();
+        const isStep2Valid = await validateStep2();
+        const isStep3Valid = await validateStep3();
 
         // Comprobar si TODOS los pasos son válidos
         const isFormValid = isStep1Valid && isStep2Valid && isStep3Valid;
 
         if (isFormValid) {
+            console.log("Validación final del formulario exitosa. Enviando...");
             event.target.submit();
         } else {
             console.log("Validación final del formulario fallida.");
@@ -531,7 +535,7 @@ isStepValid = false;
             const errorElement = formRow.querySelector(".client-side-field-error");
             if (errorElement) {
                 errorElement.innerHTML = "";
-                errorElement.style.display = "none"; // Oculta el elemento si está vacío
+                errorElement.style.display = "none"; 
             }
         }
     }

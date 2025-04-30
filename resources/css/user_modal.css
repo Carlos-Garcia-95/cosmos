@@ -1,0 +1,79 @@
+#modalCuenta .modal-content {
+    background-color: #1a1a1a;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+    text-align: left;
+    width: 95%;
+    max-width: 500px;
+    position: relative;
+    color: #f5f5f5;
+    max-height: 95vh;
+    overflow-y: auto;
+    
+    &::-webkit-scrollbar { display: none; } /* Chrome, Edge, Safari */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE y Edge Legacy */
+    }
+    
+    #modalCuenta .modal-header {
+        margin-bottom: 20px; 
+        border-bottom: 1px solid #333; 
+        padding-bottom: 15px;
+    }
+    
+    #modalCuenta .modal-title {
+        font-size: 1.8em; 
+        font-weight: bold;
+        color: #f5f5f5; 
+        margin: 0;
+        text-align: center; 
+    }
+    
+    #modalCuenta .modal-body {
+        padding: 20px;
+        text-align: center;
+    }
+    
+    #modalCuenta .user-info-item strong {
+        display: inline-block;
+        width: 120px;
+        margin-right: 10px;
+        color: #d12d10;
+        flex-shrink: 0;
+        text-align: right;
+    }
+    
+    #modalCuenta .user-info-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 15px;
+        line-height: 1.6;
+        word-wrap: break-word;
+    }
+    
+    #modalCuenta .user-info-item span {
+        color: #f5f5f5;
+        flex-grow: 1;
+        padding: 1px 8px;
+        display: inline-block;
+    }
+
+    #modalCuenta .modal-actions button{
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        background-color: #1a1a1a;
+        color: white; /* Texto blanco por defecto */
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    #modalCuenta button:hover {
+        background-color: #d12d10;
+        color: white; /* Mantén el texto blanco en hover */
+        transform: scale(1.05);
+        /* box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2); */
+    }

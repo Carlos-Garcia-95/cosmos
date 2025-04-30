@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Ciudad;
 
 class User extends Authenticatable
 {
@@ -66,5 +67,13 @@ class User extends Authenticatable
     {
         $this->attributes['apellidos'] = ucfirst(strtolower($value));
     }
+
+    //Sacar nombre de Ciudades
+    public function city()
+    {
+        // Indica que un Usuario 'pertenece a' (belongsTo) una Ciudad.
+        return $this->belongsTo(Ciudad::class, 'ciudad');
+    }
+
 
 }
