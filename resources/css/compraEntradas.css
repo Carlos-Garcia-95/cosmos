@@ -96,10 +96,6 @@ p.text span {
     color: #6feaf6;
 }
 
-#mostrarCompra{
-    transition: opacity 0.5s ease, visibility 0.5s ease, top 0.5s ease;
-}
-
 #seccionCompra {
     width: 80%;
     max-width: 600px;

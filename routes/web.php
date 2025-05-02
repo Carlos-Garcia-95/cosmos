@@ -29,6 +29,11 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 //Ruta para los datos del usuario
 Route::get('/perfil/datos', [UserController::class, 'datosUser'])->name('user.datosUser')->middleware('auth');
 
+//Ruta para modificar los datos del usuario en el modal de Mi Cuenta
+Route::patch('/perfil/modificar', [UserController::class, 'modificarUser'])->name('name.modificarUser')->middleware('auth');
+
+Route::get('/ciudades', [CiudadController::class, 'pasar_ciudades'])->name('ciudades.pasar_ciudades');
+
 //Login -> Pasa por middleware (para controlar sesión)
 // PROBAR SI ESTO VALE DE ALGO
 /* Route::middleware(['web'])->group(function () {

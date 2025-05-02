@@ -69,20 +69,21 @@
                     <script>
                         document.addEventListener('DOMContentLoaded', function() {
                             const flashMessage = document.getElementById('flash-message');
-                            if (flashMessage) {
-                                setTimeout(function() {
-                                    flashMessage.style.display = 'none';
+                            if (flashMessage && flashMessage.textContent.trim() !== '') {
+                                flashMessage.classList.add('show');
+                                setTimeout(function() {  
+                                    flashMessage.classList.remove('show');
+                                    setTimeout(() => {
+                                    flashMessage.textContent = '';
+                                    }, 500);
                                 }, 3000);
                             }
                         });
                     </script>
                     @endpush
                     @endif
-                    <a href="#seccionCompra">
-                        <button id="mostrarCompra">COMPRAR ENTRADAS</button>
-                    </a> <!--Luego lo moveremos, lo de bajar con efecto hasta el div y donde colocarlo-->
-                    <!-- TODO -> Dar funcionalidad a estos botones -->
-                    <!-- TODO -> Almacenar y comprobar la sesión del usuario -->
+                    <button id="mostrarMenus"> <a href="#seccionMenu">MENÚS COSMOS</a></button>
+                    <button id="mostrarCompra"> <a href="#seccionCompra">COMPRAR ENTRADAS</a></button>
                     @if(Auth::check())
                     <button id="miCuenta">MI CUENTA</button>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
@@ -96,6 +97,9 @@
                     <button id="mostrarLogin">INICIAR SESIÓN</button>
                     @endif
 
+                </div>
+                <div class="logo-container">
+                    <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Cosmos Cinema Logo" class="cinema-logo">
                 </div>
             </section>
 
