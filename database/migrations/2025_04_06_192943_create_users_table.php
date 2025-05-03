@@ -72,12 +72,12 @@ return new class extends Migration
             $table->string('ciudad', 30);
             $table->string('codigo_postal', 10); 
             $table->string('password', 200);
+            $table->rememberToken();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->nullable(); 
             $table->tinyInteger('mayor_edad')->default(0); 
             $table->unsignedBigInteger('id_descuento')->nullable(); 
             $table->foreign('id_descuento')->references('id_descuento')->on('descuento');
-            $table->rememberToken();
         });
     }
 
