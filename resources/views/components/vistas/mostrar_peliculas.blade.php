@@ -36,7 +36,7 @@
         @foreach ($peliculas as $pelicula)
             <div data-slider="slide" class="slider-slide">
                 <div class="slide-inner">
-                 @if (isset($pelicula['poster_url']))
+                @if (isset($pelicula['poster_url']))
                     <img class='movie_poster' src="{{ $pelicula['backdrop_url'] }}" loading="lazy" alt="{{ $pelicula['title'] }}">
                 @else
                     <p>No poster available</p>
