@@ -35,11 +35,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (stepsParent && stepElement) {
         stepsParent.innerHTML = "";
+        let aux = true;
         slides.forEach((_, index) => {
-            const stepClone = stepElement.cloneNode(true);
-            stepClone.textContent =
-                index + 1 < 10 ? `0${index + 1}` : index + 1;
-            stepsParent.appendChild(stepClone);
+            if (aux) {
+                const stepClone = document.createElement('div');  //create a div
+                stepClone.classList.add('count-column'); // add the class
+                stepClone.innerHTML = `<h2 data-slide-count="step" class="count-heading"></h2>`; // add the h2
+                const stepContent = stepClone.querySelector('[data-slide-count="step"]'); //select the h2
+                stepContent.textContent =  index + 1 < 10 ? `0${index + 1}` : index + 1;
+                stepsParent.appendChild(stepClone);
+                 aux = false;
+            }
+            
         });
         allSteps = stepsParent.querySelectorAll('[data-slide-count="step"]');
     }
@@ -252,23 +259,34 @@ document.addEventListener("DOMContentLoaded", function () {
                 slideCount,
                 tl.closestIndex() + 1
             );
-
+        
             if (activeSlideIndex !== lastActiveIndex) {
-                if (lastActiveIndex !== -1 && slides[lastActiveIndex]) {
+                if (
+                    lastActiveIndex !== -1 &&
+                    slides[lastActiveIndex]
+                ) {
                     slides[lastActiveIndex].classList.remove("active");
                 }
-
+        
                 if (slides[activeSlideIndex]) {
                     slides[activeSlideIndex].classList.add("active");
                 }
-
+        
                 if (allSteps.length > 0) {
-                    gsap.set(allSteps, { y: `${-100 * activeSlideIndex}%` });
+                    // Update the content of the steps
+                    allSteps.forEach((step, index) => {
+                        const movie = peliculas[activeSlideIndex]; // Access the movie data
+                        console.log(activeSlideIndex)
+                        step.innerHTML = `<h2 data-slide-count="step" class="count-heading">${movie.title}</h2>`;   
+                    });
                 }
-
+        
                 lastActiveIndex = activeSlideIndex;
             }
         });
+        
+        
+        
 
         tl.progress(1, true).progress(0, true);
 
@@ -344,7 +362,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Listeners para Clic en los Lados
-        const sliderMainArea = document.querySelector(".main");
+        const sliderMainArea = document.querySelector(".list");
         if (sliderMainArea) {
             sliderMainArea.addEventListener("click", (event) => {
                 if (

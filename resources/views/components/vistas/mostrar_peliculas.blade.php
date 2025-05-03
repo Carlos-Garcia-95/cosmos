@@ -1,12 +1,12 @@
+<script>
+    var peliculas = @JSON($peliculas)
+</script>
+
 <div class="overlay">
     <div class="overlay-inner">
         <div class="overlay-count-row">
             <div class="count-column">
-                <h2 data-slide-count="step" class="count-heading">01</h2>
-            </div>
-            <div class="count-row-divider"></div>
-            <div class="count-column">
-                <h2 data-slide-count="total" class="count-heading">04</h2>
+                <h2 data-slide-count="step" class="count-heading"></h2>
             </div>
         </div>
         <div class="overlay-nav-row"><button aria-label="previous slide" data-slider="button-prev" class="button"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewbox="0 0 17 12" fill="none" class="button-arrow">
@@ -32,14 +32,14 @@
 </div>
 
 <div class="slider-wrap">
-    <div data-slider="list" class="slider-list">
+    <div data-slider="list" class="slider-list" id='list'>
         @foreach ($peliculas as $pelicula)
             <div data-slider="slide" class="slider-slide">
                 <div class="slide-inner">
                  @if (isset($pelicula['poster_url']))
                     <img class='movie_poster' src="{{ $pelicula['backdrop_url'] }}" loading="lazy" alt="{{ $pelicula['title'] }}">
                 @else
-                    <p>No poster available</p>
+                    <p>Póster no disponible</p>
                 @endif
                     <div class="slide-caption">
                         <div class="caption-dot"></div>
