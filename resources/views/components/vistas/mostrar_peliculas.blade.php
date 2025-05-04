@@ -41,9 +41,6 @@
                 @else
                     <p>Póster no disponible</p>
                 @endif
-                    <div class="slide-caption">
-                        <div class="caption-dot"></div>
-                    </div>
                 </div>
             </div>
         @endforeach
