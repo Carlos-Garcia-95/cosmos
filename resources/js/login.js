@@ -122,37 +122,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    // Manejo del Envío del Formulario de Login
-    if (form) {
-        form.addEventListener("submit", function () {
-
-            const loginEmailInput = form.querySelector('input[name="login_email"]');
-            const loginPasswordInput = form.querySelector('input[name="login_password"]');
-
-            clearFieldError(loginEmailInput);
-            clearFieldError(loginPasswordInput);
-            loginEmailInput?.classList.remove('invalid');
-            loginPasswordInput?.classList.remove('invalid');
-
-            if (!loginEmailInput?.value.trim()) {
-                displayFieldError(loginEmailInput,"El campo Email es requerido.");
-                loginEmailInput?.classList.add('invalid');
-            }
-            //validación básica de formato de email con JS
-            else if (loginEmailInput?.value.trim() && !/\S+@\S+\.\S+/.test(loginEmailInput.value.trim())) {
-                displayFieldError(loginEmailInput,"El formato del email no es válido.");
-                loginEmailInput?.classList.add('invalid');
-            }
-
-
-            if (!loginPasswordInput?.value.trim()) {
-                displayFieldError(loginPasswordInput,"El campo Contraseña es requerido.");
-                loginPasswordInput?.classList.add('invalid');
-            }
-        });
-    }
-
-
     const loginModalHasLaravelErrors = modalLogin && (modalLogin.classList.contains('flex'));
 
     if (loginModalHasLaravelErrors) {
