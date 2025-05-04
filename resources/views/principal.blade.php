@@ -23,7 +23,7 @@
 
 </head>
 
-<body>
+<body id="general">
 
     <section class="cloneable">
         
@@ -51,7 +51,7 @@
                     </script>
                     @endpush
                     @endif
-                    <button id="mostrarMenus"> <a href="#seccionMenu">MENÚS COSMOS</a></button>
+                    <button id="mostrarMenus"> <a href="#seccionMenu">CARTA COSMOS</a></button>
                     <button id="mostrarCompra"> <a href="#seccionCompra">COMPRAR ENTRADAS</a></button>
                     @if(Auth::check())
                     <button id="miCuenta">MI CUENTA</button>
@@ -92,7 +92,7 @@
                 </select>
             </div>
 
-            <a href="#mostrarCompra"><button id="cerrarCompra" class="cerrar-btn">Cerrar</button></a>
+            <button id="cerrarCompra" class="cerrar-btn"><a href="#general">Cerrar</a></button>
 
             <!-- Podemos meter los tres dentro de una tabla y juntarla a asiento-->
             <ul class="showcase">

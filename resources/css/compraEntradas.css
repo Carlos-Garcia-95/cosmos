@@ -104,16 +104,13 @@ p.text span {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
     position: absolute; /* Posicionado debajo del slider */
     top: 100%;
     left: 50%;
     transform: translateX(-50%);
-
     border-radius: 10px;
     padding: 20px;
     z-index: 1000;
-
     transition: opacity 0.5s ease, visibility 0.5s ease, top 0.5s ease;
 }
 

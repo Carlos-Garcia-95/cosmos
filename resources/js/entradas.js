@@ -29,10 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         
         cerrarCompraBtn.addEventListener('click', () => {
-            setTimeout(() => {
                 seccionCompra.classList.add('hidden');
-                seccionCompra.classList.remove('visible');
-            }, 500);
+                setTimeout(() => {
+                seccionCompra.style.display = 'none'; // Ahora sí ponemos display: none;
+                }, 500);
         });
     }
 

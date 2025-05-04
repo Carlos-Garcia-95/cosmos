@@ -25,7 +25,8 @@ class DatabaseSeeder extends Seeder
             descuento::class,
             users::class,
             pelicula::class,
-            ppelicula_genero::class
+            ppelicula_genero::class,
+            MenuSeeder::class
         ]);
     }
 }

@@ -108,13 +108,15 @@ body {
         rgba(0, 0, 0, 0)
     );
     justify-content: flex-start;
-    align-items: center;
     width: 37.5em;
     height: 100%;
     padding-left: 2em;
     display: flex;
     position: absolute;
     inset: 0 auto 0 0;
+    flex-direction: column;
+    padding-top: 8em;
+    gap: 0;
 }
 
 /* Estilos internos de la superposición */
@@ -124,6 +126,7 @@ body {
     align-items: flex-start;
     height: 28.125em;
     display: flex;
+    gap:86%;
 }
 
 /* Fila de contador */
@@ -137,6 +140,9 @@ body {
     font-size: 4.5em;
     font-weight: 700;
     display: flex;
+    margin-bottom: 4.5em;
+    width: 100%;
+    margin-bottom: 4.5em;
 }
 
 /* Estilos de los contadores */
@@ -155,6 +161,7 @@ body {
     grid-column-gap: 2em;
     grid-row-gap: 2em;
     display: flex;
+    margin-top:0;
 }
 
 /* Estilos del botón (genérico, aplicado a botones dentro del overlay) */
