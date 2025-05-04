@@ -42,11 +42,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 stepClone.classList.add('count-column'); // add the class
                 stepClone.innerHTML = `<h2 data-slide-count="step" class="count-heading"></h2>`; // add the h2
                 const stepContent = stepClone.querySelector('[data-slide-count="step"]'); //select the h2
-                stepContent.textContent =  index + 1 < 10 ? `0${index + 1}` : index + 1;
+                stepContent.textContent = index + 1 < 10 ? `0${index + 1}` : index + 1;
                 stepsParent.appendChild(stepClone);
-                 aux = false;
+                aux = false;
             }
-            
+
         });
         allSteps = stepsParent.querySelectorAll('[data-slide-count="step"]');
     }
@@ -61,10 +61,10 @@ document.addEventListener("DOMContentLoaded", function () {
         config = config || {};
 
         let tl = gsap.timeline({
-                repeat: config.repeat === undefined ? 0 : config.repeat,
-                paused: config.paused,
-                defaults: { ease: "none" },
-            }),
+            repeat: config.repeat === undefined ? 0 : config.repeat,
+            paused: config.paused,
+            defaults: { ease: "none" },
+        }),
             length = items.length,
             startX = items[0].offsetLeft,
             times = [],
@@ -104,8 +104,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     xPercents[i] = snap(
                         (parseFloat(gsap.getProperty(el, "x", "px")) /
                             widths[i]) *
-                            100 +
-                            gsap.getProperty(el, "xPercent")
+                        100 +
+                        gsap.getProperty(el, "xPercent")
                     );
                     b2 = el.getBoundingClientRect();
                     spaceBefore[i] = b2.left - (i ? b1.right : b1.left);
@@ -123,8 +123,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     times.forEach((t, i) => {
                         times[i] = timeWrap(
                             tl.labels["label" + i] +
-                                (tl.duration() * widths[i]) / 2 / totalWidth -
-                                timeOffset
+                            (tl.duration() * widths[i]) / 2 / totalWidth -
+                            timeOffset
                         );
                     });
             },
@@ -157,6 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     distanceToLoop =
                         distanceToStart +
                         widths[i] * gsap.getProperty(item, "scaleX");
+
                     tl.to(
                         item,
                         {
@@ -165,19 +166,20 @@ document.addEventListener("DOMContentLoaded", function () {
                             ),
                             duration: distanceToLoop / pixelsPerSecond,
                         },
-                        0
+                        0 // Start this tween at the beginning of the timeline segment for this item
                     )
                         .fromTo(
                             item,
                             {
+                                // Calculate the starting xPercent for when this item wraps around
                                 xPercent: snap(
                                     ((curX - distanceToLoop + totalWidth) /
                                         widths[i]) *
-                                        100
+                                    100
                                 ),
                             },
                             {
-                                xPercent: xPercents[i],
+                                xPercent: xPercents[i], // The target xPercent for the fromTo (original position)
                                 duration:
                                     (curX -
                                         distanceToLoop +
@@ -186,7 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                     pixelsPerSecond,
                                 immediateRender: false,
                             },
-                            distanceToLoop / pixelsPerSecond
+                            distanceToLoop / pixelsPerSecond // This is the position on the timeline where this fromTo tween starts
                         )
                         .add("label" + i, distanceToStart / pixelsPerSecond);
                     times[i] = distanceToStart / pixelsPerSecond;
@@ -213,23 +215,18 @@ document.addEventListener("DOMContentLoaded", function () {
         // Función para navegar a un índice específico
         function toIndex(index, vars) {
             vars = vars || {};
-            let targetIndexLeft = gsap.utils.wrap(0, length, index);
-            let time = times[targetIndexLeft];
-            let currentWrappedTime = timeWrap(tl.time());
-            let diff = time - currentWrappedTime;
-            if (Math.abs(diff) > tl.duration() / 2) {
-                diff += diff < 0 ? tl.duration() : -tl.duration();
+            Math.abs(index - curIndex) > length / 2 &&
+                (index += index > curIndex ? -length : length); // always go in the shortest direction
+            let newIndex = gsap.utils.wrap(0, length, index),
+                time = times[newIndex];
+            if (time > tl.time() !== index > curIndex) {
+                // if we're wrapping the timeline's playhead, make the proper adjustments
+                vars.modifiers = { time: gsap.utils.wrap(0, tl.duration()) };
+                time += tl.duration() * (index > curIndex ? 1 : -1);
             }
-            time = currentWrappedTime + diff;
-
-            curIndex = targetIndexLeft;
-            indexIsDirty = false;
-
+            curIndex = newIndex;
             vars.overwrite = true;
-
-            return vars.duration === 0
-                ? tl.time(timeWrap(time))
-                : tl.tweenTo(timeWrap(time), vars);
+            return tl.tweenTo(time, vars);
         }
 
         // Métodos de la timeline para controlar el slider
@@ -259,7 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 slideCount,
                 tl.closestIndex() + 1
             );
-        
+
             if (activeSlideIndex !== lastActiveIndex) {
                 if (
                     lastActiveIndex !== -1 &&
@@ -267,26 +264,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 ) {
                     slides[lastActiveIndex].classList.remove("active");
                 }
-        
+
                 if (slides[activeSlideIndex]) {
                     slides[activeSlideIndex].classList.add("active");
                 }
-        
+
                 if (allSteps.length > 0) {
                     // Update the content of the steps
                     allSteps.forEach((step, index) => {
                         const movie = peliculas[activeSlideIndex]; // Access the movie data
-                        console.log(activeSlideIndex)
-                        step.innerHTML = `<h2 data-slide-count="step" class="count-heading">${movie.title}</h2>`;   
+                        step.innerHTML = `<h2 data-slide-count="step" class="count-heading">${movie.title}</h2>`;
                     });
                 }
-        
+
                 lastActiveIndex = activeSlideIndex;
             }
         });
-        
-        
-        
+
+
+
 
         tl.progress(1, true).progress(0, true);
 
@@ -305,6 +301,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         return tl;
     }
+
+        
+
+        
 
     // Objeto de configuración del slider
     const mainSliderConfig = {
@@ -328,10 +328,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 mainSliderConfig.repeat === -1
             ) {
                 mainSlider.play();
-                console.log("Resumed automatic movement.");
             }
         }, autoPlayDelay);
-        console.log("Auto-play timeout started.");
     };
 
     const pauseAndRestartTimeout = () => {
@@ -341,7 +339,6 @@ document.addEventListener("DOMContentLoaded", function () {
             mainSliderConfig.repeat === -1
         ) {
             mainSlider.pause();
-            console.log("Paused automatic movement.");
         }
         startAutoPlayTimeout();
     };
