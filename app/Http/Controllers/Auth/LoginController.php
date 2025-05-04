@@ -12,10 +12,18 @@ use Illuminate\Support\Facades\Log;
 class LoginController extends Controller
 {
     public function login(Request $request) {
+
+        $mensajes = [
+            'login_email.required' => 'Por favor, introduce tu dirección de email.',
+            'login_email.email' => 'Por favor, introduce una dirección de email válida.',
+            'login_password.required' => 'Por favor, introduce tu contraseña.',
+        ];
+
+        // Comprueba que los campos se han rellenado correctamente
         $credentials = $request->validate([
             'login_email' => ['required', 'email'],
             'login_password' => ['required']
-        ]);
+        ], $mensajes);
 
         // Comprobar email correcto
         $user = User::where('email', $credentials['login_email'])->first();
