@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pelicula_genero', function (Blueprint $table) {
             $table->unsignedBigInteger('id_pelicula');
             $table->unsignedBigInteger('id_genero_pelicula');
-            $table->foreign('id_pelicula')->references('id_pelicula')->on('pelicula');
+            $table->foreign('id_pelicula')->references('id')->on('pelicula');
             $table->foreign('id_genero_pelicula')->references('id_genero_pelicula')->on('genero_pelicula');
         });
     }

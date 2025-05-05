@@ -61,24 +61,5 @@ container.addEventListener('click', e => {
     }
 });
 
-// Event listener para el botón "Comprar Entradas" (mostrar/ocultar el div)
-// La lógica ahora está directamente dentro del primer event listener DOMContentLoaded
-
-// Event listener para el botón de cerrar (si existe)
-if (cerrarCompraBtn && seccionCompra) {
-    cerrarCompraBtn.addEventListener('click', () => {
-        seccionCompra.classList.add('hidden');
-        seccionCompra.classList.remove('visible');
-    });
-}
-
-// Para cerrar el div haciendo clic fuera de él (si quieres este comportamiento)
-window.addEventListener('click', (event) => {
-    if (event.target === seccionCompra) {
-        seccionCompra.classList.add('hidden');
-        seccionCompra.classList.remove('visible');
-    }
-});
-
 // Actualiza el total y la cantidad de asientos seleccionados al cargar la página
 updateSelectedCount();

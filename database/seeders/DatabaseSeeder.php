@@ -17,16 +17,15 @@ class DatabaseSeeder extends Seeder
             administrador::class,
             ciudades::class,
             edad_recomendad::class,
-            genero_pelicula::class,
             tipo_asiento::class,
             sala::class,
             asiento::class,
             impuesto::class,
             descuento::class,
             users::class,
-            pelicula::class,
-            ppelicula_genero::class,
-            MenuSeeder::class
+            genero_pelicula::class,
+            MenuSeeder::class,
+            horario::class
         ]);
     }
 }

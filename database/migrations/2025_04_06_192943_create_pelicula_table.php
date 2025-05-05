@@ -12,20 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pelicula', function (Blueprint $table) {
-            $table->id('id_pelicula');
-            $table->string('nombre', 50);
-            $table->integer('duracion');
-            $table->string('director', 150);
-            $table->string('actor', 250);
+            $table->id('id');
+            $table->boolean('adult');
+            $table->string('backdrop_ruta');
+            $table->smallInteger('generos');
+            $table->unsignedBigInteger('id_api');
+            $table->string('lenguaje_original');
+            $table->string('titulo_original');
             $table->text('sinopsis');
-            $table->date('fecha_estreno');
-            $table->timestamp('fecha_alta')->useCurrent();
-            $table->date('fecha_baja')->nullable();
-            $table->unsignedBigInteger('id_edad_recomendada')->nullable();
-            $table->foreign('id_edad_recomendada')->references('id_edad_recomendada')->on('edad_recomendada');
-            $table->unsignedBigInteger('id_sala')->nullable();
+            $table->string('poster_ruta');
+            $table->string('fecha_estreno');
+            $table->string('titulo');
+            $table->boolean('video');
+            $table->timestamp('creacion')->useCurrent();
+            
+            $table->unsignedBigInteger('id_sala')->nullable();              // id sala
             $table->foreign('id_sala')->references('id_sala')->on('sala');
-
         });
     }
 

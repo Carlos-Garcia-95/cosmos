@@ -24,7 +24,7 @@
 </head>
 
 <body id="general">
-
+    <div id='top'></div>
     <section class="cloneable">
         
         <div class="main">
@@ -81,6 +81,10 @@
     <section id="seccionCompra" class="pt-5 hidden">
 
         <div>
+            <div id='cerrar-button' class='header-buttons cerrar-button'>
+                <button id="cerrarCompra">VOLVER</button>
+            </div>
+
             <div class="movie-container">
                 <label>Pick a Movie</label>
                 <!-- Ya haremos el select con las querys necesarias para sacar info de base de datos -->
@@ -91,8 +95,6 @@
                     <option value='10'>Joker - $10</option>
                 </select>
             </div>
-
-            <button id="cerrarCompra" class="cerrar-btn"><a href="#general">Cerrar</a></button>
 
             <!-- Podemos meter los tres dentro de una tabla y juntarla a asiento-->
             <ul class="showcase">

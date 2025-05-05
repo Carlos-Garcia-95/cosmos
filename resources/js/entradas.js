@@ -1,4 +1,4 @@
-//import { updateSelectedCount } from './compraEntradas.js';
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const botonCompra = document.getElementById('mostrarCompra');
@@ -15,11 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 seccionCompra.classList.add('visible');
             }
             
-            // Si el modal se muestra, actualizamos el conteo de asientos seleccionados
-            // Creo que es innecesario, y rompe la funcionalidad
-            /* if (seccionCompra.style.display === 'flex') {
-                updateSelectedCount();
-            } */
         });
     }
 
@@ -27,20 +22,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // TODO -> Transición más suave al cerrar el div de comprar entradas
     if (cerrarCompraBtn && seccionCompra) {
         
-        
         cerrarCompraBtn.addEventListener('click', () => {
-                seccionCompra.classList.add('hidden');
+            event.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+                
                 setTimeout(() => {
-                seccionCompra.style.display = 'none'; // Ahora sí ponemos display: none;
+                    seccionCompra.classList.add('hidden');
                 }, 500);
         });
     }
-
-    // Para cerrar el modal al hacer clic fuera de él
-    window.addEventListener('click', (event) => {
-        if (event.target === seccionCompra) {
-            seccionCompra.classList.add('hidden');
-            seccionCompra.classList.remove('visible');
-        }
-    });
 });
