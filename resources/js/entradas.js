@@ -14,12 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 seccionCompra.classList.remove('hidden');
                 seccionCompra.classList.add('visible');
             }
-            
-            // Si el modal se muestra, actualizamos el conteo de asientos seleccionados
-            // Creo que es innecesario, y rompe la funcionalidad
-            /* if (seccionCompra.style.display === 'flex') {
-                updateSelectedCount();
-            } */
+        
         });
     }
 
@@ -30,17 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         cerrarCompraBtn.addEventListener('click', () => {
                 seccionCompra.classList.add('hidden');
-                setTimeout(() => {
-                seccionCompra.style.display = 'none'; // Ahora sí ponemos display: none;
-                }, 500);
         });
     }
 
-    // Para cerrar el modal al hacer clic fuera de él
-    window.addEventListener('click', (event) => {
-        if (event.target === seccionCompra) {
-            seccionCompra.classList.add('hidden');
-            seccionCompra.classList.remove('visible');
-        }
-    });
 });

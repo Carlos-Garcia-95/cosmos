@@ -3,7 +3,7 @@
 </script>
 
 <div class="overlay">
-    <!-- <div class="overlay-inner"> -->
+    <div class="overlay-inner">
         <div class="overlay-count-row">
             <div class="count-column">
                 <h2 data-slide-count="step" class="count-heading"></h2>
@@ -28,7 +28,7 @@
                     <div class="overlay-corner bottom-right"></div>
                 </div>
             </button></div>
-    <!-- </div> -->
+    </div>
 </div>
 
 <div class="slider-wrap">

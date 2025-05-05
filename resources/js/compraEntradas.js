@@ -72,13 +72,5 @@ if (cerrarCompraBtn && seccionCompra) {
     });
 }
 
-// Para cerrar el div haciendo clic fuera de él (si quieres este comportamiento)
-window.addEventListener('click', (event) => {
-    if (event.target === seccionCompra) {
-        seccionCompra.classList.add('hidden');
-        seccionCompra.classList.remove('visible');
-    }
-});
-
 // Actualiza el total y la cantidad de asientos seleccionados al cargar la página
 updateSelectedCount();

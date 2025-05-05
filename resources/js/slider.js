@@ -419,79 +419,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    //Funcionalidad de Menús
-
-    // Asegurando que el código se ejecuta después de que el DOM esté completamente cargado
-    document.addEventListener("DOMContentLoaded", () => {
-        const mostrarMenusBtn = document.getElementById("mostrarMenus");
-        const seccionMenus = document.getElementById("seccionMenus");
-        const cerrarMenusBtn = document.getElementById("cerrarMenus");
-        const targetScrollElement = document.getElementById("top-content");
-        
-        if (seccionMenus) {
-            seccionMenus.style.display = "none";
-            seccionMenus.classList.add("hidden");
-        }
-
-        // Event Listener para el Botón de Mostrar Menús (#mostrarMenus)
-        if (mostrarMenusBtn && seccionMenus) {
-            mostrarMenusBtn.addEventListener("click",() => {
-
-                if (seccionMenus.classList.contains("hidden")) {
-                    seccionMenus.style.display = "flex";
-
-                    document.body.classList.add("overflow-hidden");
-
-                    setTimeout(() => {
-                        seccionMenus.classList.remove("hidden");
-                    }, 50);
-                }
-            });
-        }
-
-        // Event Listener para el Botón de Cerrar Menús (#cerrarMenus)
-        if (cerrarMenusBtn && seccionMenus) {
-            cerrarMenusBtn.addEventListener("click", () => {
-                seccionMenus.classList.add("hidden");
-
-                document.body.classList.remove("overflow-hidden");
-
-                setTimeout(() => {
-                    seccionMenus.style.display = "none";
-                }, 500);
-
-                if (targetScrollElement) {
-                    targetScrollElement.scrollIntoView({ behavior: "smooth" });
-                } else if (document.body) {
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                }
-            });
-        }
-
-        // Event Listener para Cerrar Menús al hacer clic fuera de la sección
-        window.addEventListener("click", (event) => {
-            if (
-                !seccionMenus.contains(event.target) &&
-                !seccionMenus.classList.contains("hidden")
-            ) {
-                seccionMenus.classList.add("hidden");
-
-                document.body.classList.remove("overflow-hidden");
-
-                setTimeout(() => {
-                    seccionMenus.style.display = "none";
-                }, 500);
-
-                if (targetScrollElement) {
-                    targetScrollElement.scrollIntoView({ behavior: "smooth" });
-                } else if (document.body) {
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                }
-            }
-        });
-
-        // Aquí puedes añadir el JavaScript para el efecto de volteo de las tarjetas si no lo tienes en otro archivo
-    }); // Cierre del listener DOMContentLoaded
+    });
 
     // ScrollTrigger (Comentado)
     /*
@@ -506,4 +434,3 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
     */
-});

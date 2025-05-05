@@ -18,6 +18,8 @@ export default defineConfig({
                 "resources/js/compraEntradas.js",
                 "resources/css/user_modal.css",
                 "resources/js/user.js",
+                "resources/js/cartaCosmos.js",
+                "resources/css/cartaCosmos.css",
             ],
             refresh: true,
             manifest: 'manifest.json',

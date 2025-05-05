@@ -18,6 +18,8 @@
         'resources/js/compraEntradas.js',
         'resources/js/user.js',
         'resources/css/user_modal.css', 
+        "resources/js/cartaCosmos.js",
+        "resources/css/cartaCosmos.css"
     ])
     <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
 
@@ -51,10 +53,10 @@
                     </script>
                     @endpush
                     @endif
-                    <button id="mostrarMenus"> <a href="#seccionMenus">CARTA COSMOS</a></button>
-                    <button id="mostrarCompra"> <a href="#seccionCompra">COMPRAR ENTRADAS</a></button>
+                    <button id="mostrarMenus"> <a class="botones" href="#seccionMenus">CARTA COSMOS</a></button>
+                    <button id="mostrarCompra"> <a class="botones" href="#seccionCompra">COMPRAR ENTRADAS</a></button>
                     @if(Auth::check())
-                    <button id="miCuenta">MI CUENTA</button>
+                    <button id="miCuenta"><a class="botones">MI CUENTA</a></button>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf
                         <button type="submit" id="logout">
@@ -62,8 +64,8 @@
                         </button>
                     </form>
                     @else
-                    <button id="mostrarRegistro">ÚNETE A COSMOS</button>
-                    <button id="mostrarLogin">INICIAR SESIÓN</button>
+                    <button id="mostrarRegistro"><a class="botones">ÚNETE A COSMOS</a></button>
+                    <button id="mostrarLogin"><a class="botones">INICIAR SESIÓN</a></button>
                     @endif
 
                 </div>
@@ -90,9 +92,8 @@
                     <option value='8'>A Beautiful Mind - $8</option>
                     <option value='10'>Joker - $10</option>
                 </select>
+                <button id="cerrarCompra" class="cerrar-btn"><a href="#general">Cerrar</a></button>
             </div>
-
-            <button id="cerrarCompra" class="cerrar-btn"><a href="#general">Cerrar</a></button>
 
             <!-- Podemos meter los tres dentro de una tabla y juntarla a asiento-->
             <ul class="showcase">
@@ -133,9 +134,11 @@
 
     <!-- Section para los menus -->
     <section id="seccionMenus" class="py-5 hidden">
+    <div class="centrar">
+        <button id="cerrarMenus" class="cerrar-btn"><a href="#general">Cerrar</a></button>
+    </div>
     <div class="container">
-    <button id="cerrarMenus" class="cerrar-btn"><a href="#general">Cerrar Menú</a></button>
-        <h2 class="text-center mb-4">Nuestra Carta Estelar</h2>
+        <h2 class="text-center mb-4 grande">Nuestra Carta Estelar</h2>
         <div class="menus-grid">
             {{-- ****** Bucle para mostrar cada menú de la base de datos ****** --}}
             @foreach($menus as $menu)
@@ -160,9 +163,6 @@
                     </div>
                 </div>
             @endforeach
-
-            <p class="text-center">Preparando los menús espaciales...</p>
-
         </div>
     </div>
 </section>
