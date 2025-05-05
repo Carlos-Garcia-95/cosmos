@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\CheckController;
+use App\Http\Controllers\Auth\MenuController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PeliculasController;
@@ -33,7 +34,9 @@ Route::get('/perfil/datos', [UserController::class, 'datosUser'])->name('user.da
 //Ruta para modificar los datos del usuario en el modal de Mi Cuenta
 Route::patch('/perfil/modificar', [UserController::class, 'modificarUser'])->name('name.modificarUser')->middleware('auth');
 
+//Ruta para devolver las ciudades
 Route::get('/ciudades', [CiudadController::class, 'pasar_ciudades'])->name('ciudades.pasar_ciudades');
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
