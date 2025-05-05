@@ -51,7 +51,7 @@
                     </script>
                     @endpush
                     @endif
-                    <button id="mostrarMenus"> <a href="#seccionMenu">CARTA COSMOS</a></button>
+                    <button id="mostrarMenus"> <a href="#seccionMenus">CARTA COSMOS</a></button>
                     <button id="mostrarCompra"> <a href="#seccionCompra">COMPRAR ENTRADAS</a></button>
                     @if(Auth::check())
                     <button id="miCuenta">MI CUENTA</button>
@@ -130,6 +130,42 @@
         </div>
         </div>
     </section>
+
+    <!-- Section para los menus -->
+    <section id="seccionMenus" class="py-5 hidden">
+    <div class="container">
+    <button id="cerrarMenus" class="cerrar-btn"><a href="#general">Cerrar Menú</a></button>
+        <h2 class="text-center mb-4">Nuestra Carta Estelar</h2>
+        <div class="menus-grid">
+            {{-- ****** Bucle para mostrar cada menú de la base de datos ****** --}}
+            @foreach($menus as $menu)
+                <div class="menu-item">
+                    <div class="menu-item-inner">
+                        {{-- Cara frontal: Imagen y Nombre --}}
+                        <div class="menu-item-front">
+                            @if(isset($menu->imagen_url) && $menu->imagen_url)
+                                <img src="{{ asset($menu->imagen_url) }}" alt="{{ $menu->nombre }}" class="menu-item-image">
+                            @else
+                                <img src="{{ asset('images/placeholder-menu.jpg') }}" alt="{{ $menu->nombre }} - Sin imagen" class="menu-item-image">
+                            @endif
+
+                            <h3 class="menu-item-name">{{ $menu->nombre }}</h3>
+                        </div>
+                        {{-- Cara trasera: Descripción y Precio --}}
+                        
+                        <div class="menu-item-back">
+                            <p class="menu-item-description">{{ $menu->descripcion }}</p>
+                            <p class="menu-item-price">Precio: {{ number_format($menu->precio, 2) }}€</p>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+
+            <p class="text-center">Preparando los menús espaciales...</p>
+
+        </div>
+    </div>
+</section>
 
 
 

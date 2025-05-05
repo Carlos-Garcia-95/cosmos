@@ -598,3 +598,147 @@ input[type="password"]::-ms-reveal {
 .flex {
     display: flex !important;
 }
+
+/* Estilos para el contenedor de la cuadrícula de menús */
+.menus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+    justify-items: center;
+    align-items: center;
+}
+
+/* Estilos para cada item individual del menú (La Tarjeta Volteable) */
+.menu-item {
+    background-color: transparent;
+    width: 250px; /* Ajusta el tamaño si es necesario */
+    height: 300px; /* Ajusta el tamaño si es necesario */
+    perspective: 1000px; /* Define la perspectiva 3D */
+    cursor: pointer;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Estilos para el div interior que contiene las caras y realiza la rotación */
+.menu-item-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s; /* Duración de la animación de volteo */
+    transform-style: preserve-3d;
+    border-radius: 10px;
+}
+
+/* Estilos base para las caras frontal y trasera */
+.menu-item-front,
+.menu-item-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #1a1a1a; /* Color de fondo de las tarjetas */
+    color: #f5f5f5; /* Color de texto */
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Estilos específicos para la cara frontal */
+.menu-item-front {
+    transform: rotateY(0deg);
+}
+
+/* Estilos específicos para la cara trasera */
+.menu-item-back {
+    transform: rotateY(180deg); /* Inicialmente volteada */
+}
+
+/* Estilo para la imagen dentro de la cara frontal */
+.menu-item-image {
+    width: 100%;
+    height: 70%; /* Ajusta para dejar espacio para el nombre */
+    object-fit: cover;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-bottom: 10px;
+}
+
+/* Estilos para el nombre, descripción y precio */
+.menu-item-name {
+    font-size: 1.2em;
+    margin: 0;
+    padding: 0 10px;
+    text-align: center;
+}
+
+.menu-item-description {
+    font-size: 0.9em;
+    margin: 0 0 10px 0;
+    padding: 0 10px;
+    text-align: center;
+}
+
+.menu-item-price {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin: 0;
+    padding: 0 10px;
+    text-align: center;
+    color: #6feaf6; /* O un color que resalte */
+}
+
+/* ESTADO VOLTEADO (Activado por JavaScript al añadir la clase 'is-flipped') */
+.menu-item.is-flipped .menu-item-inner {
+    transform: rotateY(180deg); /* Rota para mostrar la cara trasera */
+}
+
+#seccionMenus {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+#seccionMenus.hidden {
+    opacity: 0;
+    visibility: hidden;
+    display: none;
+}
+
+.menus-grid {
+    display: grid;
+    gap: 20px;
+    padding: 20px;
+    justify-items: center;
+    align-items: center;
+    width: 95%;
+    max-width: 1000px;
+    margin: auto;
+    grid-template-columns: repeat(3, 1fr);
+}
+

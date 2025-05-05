@@ -38,15 +38,17 @@ document.addEventListener("DOMContentLoaded", function () {
         let aux = true;
         slides.forEach((_, index) => {
             if (aux) {
-                const stepClone = document.createElement('div');  //create a div
-                stepClone.classList.add('count-column'); // add the class
+                const stepClone = document.createElement("div"); //create a div
+                stepClone.classList.add("count-column"); // add the class
                 stepClone.innerHTML = `<h2 data-slide-count="step" class="count-heading"></h2>`; // add the h2
-                const stepContent = stepClone.querySelector('[data-slide-count="step"]'); //select the h2
-                stepContent.textContent = index + 1 < 10 ? `0${index + 1}` : index + 1;
+                const stepContent = stepClone.querySelector(
+                    '[data-slide-count="step"]'
+                ); //select the h2
+                stepContent.textContent =
+                    index + 1 < 10 ? `0${index + 1}` : index + 1;
                 stepsParent.appendChild(stepClone);
                 aux = false;
             }
-
         });
         allSteps = stepsParent.querySelectorAll('[data-slide-count="step"]');
     }
@@ -61,10 +63,10 @@ document.addEventListener("DOMContentLoaded", function () {
         config = config || {};
 
         let tl = gsap.timeline({
-            repeat: config.repeat === undefined ? 0 : config.repeat,
-            paused: config.paused,
-            defaults: { ease: "none" },
-        }),
+                repeat: config.repeat === undefined ? 0 : config.repeat,
+                paused: config.paused,
+                defaults: { ease: "none" },
+            }),
             length = items.length,
             startX = items[0].offsetLeft,
             times = [],
@@ -104,8 +106,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     xPercents[i] = snap(
                         (parseFloat(gsap.getProperty(el, "x", "px")) /
                             widths[i]) *
-                        100 +
-                        gsap.getProperty(el, "xPercent")
+                            100 +
+                            gsap.getProperty(el, "xPercent")
                     );
                     b2 = el.getBoundingClientRect();
                     spaceBefore[i] = b2.left - (i ? b1.right : b1.left);
@@ -123,8 +125,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     times.forEach((t, i) => {
                         times[i] = timeWrap(
                             tl.labels["label" + i] +
-                            (tl.duration() * widths[i]) / 2 / totalWidth -
-                            timeOffset
+                                (tl.duration() * widths[i]) / 2 / totalWidth -
+                                timeOffset
                         );
                     });
             },
@@ -175,7 +177,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 xPercent: snap(
                                     ((curX - distanceToLoop + totalWidth) /
                                         widths[i]) *
-                                    100
+                                        100
                                 ),
                             },
                             {
@@ -258,10 +260,7 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
             if (activeSlideIndex !== lastActiveIndex) {
-                if (
-                    lastActiveIndex !== -1 &&
-                    slides[lastActiveIndex]
-                ) {
+                if (lastActiveIndex !== -1 && slides[lastActiveIndex]) {
                     slides[lastActiveIndex].classList.remove("active");
                 }
 
@@ -281,9 +280,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
 
-
-
-
         tl.progress(1, true).progress(0, true);
 
         if (config.reversed) {
@@ -301,10 +297,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         return tl;
     }
-
-        
-
-        
 
     // Objeto de configuración del slider
     const mainSliderConfig = {
@@ -426,6 +418,80 @@ document.addEventListener("DOMContentLoaded", function () {
             startAutoPlayTimeout();
         }
     }
+
+    //Funcionalidad de Menús
+
+    // Asegurando que el código se ejecuta después de que el DOM esté completamente cargado
+    document.addEventListener("DOMContentLoaded", () => {
+        const mostrarMenusBtn = document.getElementById("mostrarMenus");
+        const seccionMenus = document.getElementById("seccionMenus");
+        const cerrarMenusBtn = document.getElementById("cerrarMenus");
+        const targetScrollElement = document.getElementById("top-content");
+        
+        if (seccionMenus) {
+            seccionMenus.style.display = "none";
+            seccionMenus.classList.add("hidden");
+        }
+
+        // Event Listener para el Botón de Mostrar Menús (#mostrarMenus)
+        if (mostrarMenusBtn && seccionMenus) {
+            mostrarMenusBtn.addEventListener("click",() => {
+
+                if (seccionMenus.classList.contains("hidden")) {
+                    seccionMenus.style.display = "flex";
+
+                    document.body.classList.add("overflow-hidden");
+
+                    setTimeout(() => {
+                        seccionMenus.classList.remove("hidden");
+                    }, 50);
+                }
+            });
+        }
+
+        // Event Listener para el Botón de Cerrar Menús (#cerrarMenus)
+        if (cerrarMenusBtn && seccionMenus) {
+            cerrarMenusBtn.addEventListener("click", () => {
+                seccionMenus.classList.add("hidden");
+
+                document.body.classList.remove("overflow-hidden");
+
+                setTimeout(() => {
+                    seccionMenus.style.display = "none";
+                }, 500);
+
+                if (targetScrollElement) {
+                    targetScrollElement.scrollIntoView({ behavior: "smooth" });
+                } else if (document.body) {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+            });
+        }
+
+        // Event Listener para Cerrar Menús al hacer clic fuera de la sección
+        window.addEventListener("click", (event) => {
+            if (
+                !seccionMenus.contains(event.target) &&
+                !seccionMenus.classList.contains("hidden")
+            ) {
+                seccionMenus.classList.add("hidden");
+
+                document.body.classList.remove("overflow-hidden");
+
+                setTimeout(() => {
+                    seccionMenus.style.display = "none";
+                }, 500);
+
+                if (targetScrollElement) {
+                    targetScrollElement.scrollIntoView({ behavior: "smooth" });
+                } else if (document.body) {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+            }
+        });
+
+        // Aquí puedes añadir el JavaScript para el efecto de volteo de las tarjetas si no lo tienes en otro archivo
+    }); // Cierre del listener DOMContentLoaded
 
     // ScrollTrigger (Comentado)
     /*
