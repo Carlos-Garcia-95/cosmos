@@ -96,7 +96,6 @@
                     <option value='8'>A Beautiful Mind - $8</option>
                     <option value='10'>Joker - $10</option>
                 </select>
-                <button id="cerrarCompra" class="cerrar-btn"><a href="#general">Cerrar</a></button>
             </div>
 
             <!-- Podemos meter los tres dentro de una tabla y juntarla a asiento-->
