@@ -44,15 +44,5 @@
 
 
         </form>
-
-        @if ($errors->registro->any())
-        <div class="error-messages">
-            <ul>
-                @foreach ($errors->registro->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
     </div>
 </div>
