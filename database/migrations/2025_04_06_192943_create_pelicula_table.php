@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id('id');
             $table->boolean('adult');
             $table->string('backdrop_ruta');
-            $table->smallInteger('generos');
             $table->unsignedBigInteger('id_api');
             $table->string('lenguaje_original');
             $table->string('titulo_original');
@@ -24,7 +23,8 @@ return new class extends Migration
             $table->string('fecha_estreno');
             $table->string('titulo');
             $table->boolean('video');
-            $table->timestamp('creacion')->useCurrent();
+            $table->boolean('activa');
+            $table->timestamp('created_at')->useCurrent();
             
             $table->unsignedBigInteger('id_sala')->nullable();              // id sala
             $table->foreign('id_sala')->references('id_sala')->on('sala');

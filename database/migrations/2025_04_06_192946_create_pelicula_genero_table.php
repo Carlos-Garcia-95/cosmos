@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_genero_pelicula');
             $table->foreign('id_pelicula')->references('id')->on('pelicula');
             $table->foreign('id_genero_pelicula')->references('id_genero_pelicula')->on('genero_pelicula');
+            $table->timestamps();
         });
     }
 

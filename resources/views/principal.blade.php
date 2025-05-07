@@ -74,7 +74,7 @@
                 </div>
             </section>
 
-            <x-vistas.mostrar_peliculas :peliculas='$peliculas' :generos='$generos'/>
+            <x-vistas.mostrar_peliculas :peliculas='$peliculas'/>
 
         </div>
     </section>
