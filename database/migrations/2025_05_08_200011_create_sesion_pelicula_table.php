@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('horario', function (Blueprint $table) {
+        Schema::create('sesion_pelicula', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_sala');      // id sala
             $table->unsignedBigInteger('id_pelicula');  // id pelicula
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('horario');
+        Schema::dropIfExists('sesion_pelicula');
     }
 };

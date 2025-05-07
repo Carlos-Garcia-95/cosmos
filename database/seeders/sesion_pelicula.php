@@ -6,15 +6,15 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class horario extends Seeder
+class sesion_pelicula extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        for ($i = 1; $i <= 5; $i++) {
-            DB::table('horario')->insert([
+        for ($i = 1; $i <= 7; $i++) {
+            DB::table('sesion_pelicula')->insert([
                 [
                     'id_sala' => 1,
                     'id_pelicula' => 1,
