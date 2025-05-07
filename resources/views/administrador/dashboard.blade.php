@@ -56,7 +56,7 @@
 
             <main class="dashboard-content-area">
                 <section id="add-movies-section" class="content-section">
-                    <h3>Añadir peliculas desde API (TMDb)</h3>
+                    <h3>Añadir peliculas</h3>
 
                     <div class="api-search-filters">
                         <input type="text" id="api-search-input" placeholder="Buscar película por título en TMDb">
