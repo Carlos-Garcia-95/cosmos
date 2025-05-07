@@ -17,12 +17,12 @@ class RegisterController extends Controller
         // Validación de los datos del formulario
 
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|unique:users,email',
-            'email_confirmation' => 'required|email|same:email',
+            'email' => 'required|string|email|unique:users,email,regex:/^[^<>]*$/',
+            'email_confirmation' => 'required|string|email|same:email',
             'password' => 'required|string|min:8|confirmed',
-            'nombre' => 'required|string|max:255',
-            'apellidos' => 'required|string|max:255',
-            'direccion' => 'required|string|max:255',
+            'nombre' => 'required|string|max:255|alpha',
+            'apellidos' => 'required|string|max:255|alpha',
+            'direccion' => 'required|string|max:255|regex:/^[a-zA-Z0-9\s\/\-#.,]*$/',
             'ciudad' => 'required',
             'codigo_postal' => 'required|string|max:10',
             'telefono' => 'required|digits:9',

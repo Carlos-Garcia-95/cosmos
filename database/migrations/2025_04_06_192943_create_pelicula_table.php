@@ -16,13 +16,17 @@ return new class extends Migration
             $table->boolean('adult');
             $table->string('backdrop_ruta');
             $table->unsignedBigInteger('id_api');
-            $table->string('lenguaje_original');
+            $table->string('lenguaje_original')->nullable();
             $table->string('titulo_original');
             $table->text('sinopsis');
             $table->string('poster_ruta');
             $table->string('fecha_estreno');
             $table->string('titulo');
             $table->boolean('video');
+            $table->unsignedInteger('duracion')->nullable();
+            $table->double('puntuacion_promedio', 8, 2)->nullable();
+            $table->unsignedInteger('numero_votos')->nullable();
+            $table->double('popularidad', 15, 5)->nullable();
             $table->boolean('activa');
             $table->timestamp('created_at')->useCurrent();
             

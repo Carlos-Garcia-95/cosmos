@@ -241,7 +241,7 @@ body {
 }
 
 .add-movie-btn:hover {
-    background-color: #d32f2f;
+    background-color: rgb(47, 145, 211);
 }
 
 .add-movie-btn:disabled {

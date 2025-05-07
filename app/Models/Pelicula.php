@@ -12,7 +12,7 @@ class Pelicula extends Model
 
     protected $table = 'pelicula';
     protected $primaryKey = 'id';
-    public $timestamps = false; // Since you have 'creacion'
+    public $timestamps = false;
 
     protected $fillable = [
         'adult',
@@ -26,6 +26,11 @@ class Pelicula extends Model
         'titulo',
         'video',
         'id_sala',
+        'activa',
+        'duracion',
+        'puntuacion_promedio',
+        'numero_votos',
+        'popularidad',
     ];
 
     protected $casts = [

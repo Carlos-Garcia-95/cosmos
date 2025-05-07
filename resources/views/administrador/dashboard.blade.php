@@ -4,28 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Cosmos Cinema</title>
-    @vite(['resources/css/dashboard.css'])
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    {{-- Aquí podrías enlazar archivos JavaScript específicos del dashboard más adelante --}}
-    {{-- @vite(['resources/js/adminDashboard.js']) --}}
+    @vite(['resources/css/dashboard.css'])
+    @vite(['resources/js/adminDashboard.js'])
+
 </head>
 <body>
-    {{-- Contenedor principal del Dashboard: usaremos Flexbox o Grid en CSS para la distribución --}}
     <div class="dashboard-layout">
-
-        {{-- Barra Superior (Header) --}}
         <header class="dashboard-header">
-            {{-- Contenedor para los elementos de la derecha (Nombre del admin y Logo) --}}
             <div class="header-right-elements">
-                {{-- Nombre del Administrador --}}
-                {{-- Auth::user() accede al modelo del admin logueado (tu modelo Administrator) --}}
-                {{-- Muestra el nombre_user_admin, o el nombre, o el email si los anteriores no existen --}}
                 <span class="admin-name">{{ Auth::user()->nombre_user_admin ?? Auth::user()->nombre ?? Auth::user()->email ?? 'Admin' }}</span>
-
-                {{-- Logo de la Empresa --}}
-                {{-- Reemplaza con la ruta real de tu logo --}}
                 <div class="company-logo">
-                    {{-- Ajusta la ruta asset() a la ubicación de tu logo --}}
                     <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Logo Empresa Cosmos Cinema">
                 </div>
             </div>
@@ -59,11 +49,17 @@
                     <h3>Añadir peliculas</h3>
 
                     <div class="api-search-filters">
-                        <input type="text" id="api-search-input" placeholder="Buscar película por título en TMDb">
 
-                        <input type="number" id="api-year-input" placeholder="Año de lanzamiento (Opcional)">
+                        <input type="text" id="api-search-input" placeholder="Buscar por título">
 
-                        
+                        <select id="api-list-type-select">
+                            <option value="search">Buscar por Título</option>
+                            <option value="popular">Populares</option>
+                            <option value="upcoming">Próximas</option>
+                            <option value="now_playing">En cines</option>
+                            {{-- Podríamos añadir 'top_rated' (mejor valoradas) si quieres --}}
+                        </select>
+
                         <select id="api-genre-select">
                             <option value="">Todos los géneros</option>
                             @foreach ($generos_tmdb ?? [] as $genero)
@@ -71,29 +67,36 @@
                             @endforeach
                         </select>
 
-                        <input type="number" id="api-page-input" value="1" min="1" placeholder="Página">
+                        <select id="api-quantity-select">
+                            <option value="1">20 películas (1 página)</option>
+                            <option value="2">40 películas (2 páginas)</option>
+                            <option value="3">60 películas (3 páginas)</option>
+                            <option value="4">80 películas (4 páginas)</option>
+                            
+                        </select>
 
                         <select id="api-language-select">
                             <option value="es">Español</option>
                             <option value="en">Inglés</option>
                         </select>
-                        
+                        {{-- <input type="number" id="api-page-input" value="1" min="1" placeholder="Página"> --}}
 
+
+                        
                         <button id="api-search-button">Buscar</button>
                     </div>
 
                     <hr>
 
                     <div class="api-results-area">
-                        <p>Introduce un título y haz clic en "Buscar" para encontrar películas en TMDb.</p>
-                        <div class="api-movie-item">
-                            <img src="URL_DEL_POSTER" alt="Poster de la película">
-                            <div class="movie-details">
-                                <h4>Nombre de la Película (Año)</h4>
-                                <p>Sinopsis corta...</p>
-                            </div>
-                            <button class="add-movie-btn" data-tmdb-id="ID_DE_TMDB_AQUI">Añadir pelicula</button>
-                        </div>
+                        <p>Haz clic en "Buscar" para encontrar películas en TMDb.</p>
+                        
+                    </div>
+
+                    <div class="api-pagination-controls" style="text-align: center; margin-top: 20px;">
+                        <button id="prev-page-btn" disabled>Anterior</button>
+                        <span id="page-info">Página 1 de 1</span> {{-- Texto informativo de la página --}}
+                        <button id="next-page-btn" disabled>Siguiente</button>
                     </div>
 
                 </section>

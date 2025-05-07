@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class pelicula extends Seeder
 {
@@ -28,7 +29,11 @@ class pelicula extends Seeder
                 'video' => false,
                 'activa' => true,
                 'id_sala' => 1,
-                'created_at' => now()
+                'created_at' => Carbon::now(),
+                'duracion' => 120,
+                'puntuacion_promedio' => 7.5,
+                'numero_votos' => 1500,
+                'popularidad' => 123.45,
             ],
             [
                 'id' => 2,
@@ -44,7 +49,11 @@ class pelicula extends Seeder
                 'video' => false,
                 'activa' => true,
                 'id_sala' => 1,
-                'created_at' => now()
+                'created_at' => Carbon::now(),
+                'duracion' => 95,
+                'puntuacion_promedio' => 6.8,
+                'numero_votos' => 500,
+                'popularidad' => 55.67,
             ],
             [
                 'id' => 3,
@@ -60,7 +69,11 @@ class pelicula extends Seeder
                 'video' => false,
                 'activa' => true,
                 'id_sala' => 1,
-                'created_at' => now()
+                'created_at' => Carbon::now(),
+                'duracion' => 110,
+                'puntuacion_promedio' => 7.0,
+                'numero_votos' => 800,
+                'popularidad' => 88.99,
             ],
             [
                 'id' => 4,
@@ -76,7 +89,11 @@ class pelicula extends Seeder
                 'video' => false,
                 'activa' => true,
                 'id_sala' => 1,
-                'created_at' => now()
+                'created_at' => Carbon::now(),
+                'duracion' => 90,
+                'puntuacion_promedio' => 7.2,
+                'numero_votos' => 1200,
+                'popularidad' => 150.10,
             ],
             [
                 'id' => 5,
@@ -92,7 +109,11 @@ class pelicula extends Seeder
                 'video' => false,
                 'activa' => true,
                 'id_sala' => 1,
-                'created_at' => now()
+                'created_at' => Carbon::now(),
+                'duracion' => 105,
+                'puntuacion_promedio' => 6.5,
+                'numero_votos' => 300,
+                'popularidad' => 40.20,
             ],
             [
                 'id' => 6,
@@ -108,8 +129,12 @@ class pelicula extends Seeder
                 'video' => false,
                 'activa' => true,
                 'id_sala' => 1,
-                'created_at' => now()
-            ]
+                'created_at' => Carbon::now(),
+                'duracion' => 98,
+                'puntuacion_promedio' => 7.1,
+                'numero_votos' => 650,
+                'popularidad' => 75.80,
+            ],
         ]);
     }
 }

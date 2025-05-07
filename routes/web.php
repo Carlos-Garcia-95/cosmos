@@ -52,6 +52,12 @@ Route::post('/administrador', [AdminController::class, 'login'])->name('admin.lo
 //Logout
 Route::post('/administrador/logout', [AdminController::class, 'logout'])->name('administrador.logout');
 
+//Ruta para buscar películas en la API
+Route::get('/administrador/buscar-peliculas-api', [AdminController::class, 'searchTMDb'])->name('admin.searchTMDb');
+
+//Ruta para añadir pelicula
+Route::post('/administrador/movies', [AdminController::class, 'storeMovie'])->name('admin.storeMovie');
+
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
