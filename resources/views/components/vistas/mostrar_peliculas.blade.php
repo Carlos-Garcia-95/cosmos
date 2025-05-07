@@ -37,7 +37,7 @@
             <div data-slider="slide" class="slider-slide">
                 <div class="slide-inner">
                 @if (isset($pelicula['poster_url']))
-                    <img class='movie_poster' src="{{ $pelicula['backdrop_url'] }}" loading="lazy" alt="{{ $pelicula['title'] }}">
+                    <img class='movie_poster' src="{{ $pelicula['poster_url'] }}" loading="lazy" alt="{{ $pelicula['title'] }}">
                 @else
                     <p>Póster no disponible</p>
                 @endif

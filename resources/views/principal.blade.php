@@ -60,7 +60,7 @@
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
                         @csrf
                         <button type="submit" id="logout">
-                            LOGOUT
+                        <a class="botones">LOGOUT</a>
                         </button>
                     </form>
                     @else
@@ -137,10 +137,10 @@
 
     <!-- Section para los menus -->
     <section id="seccionMenus" class="py-5 hidden">
-    <div class="centrar">
-        <button id="cerrarMenus" class="cerrar-btn"><a href="#general">Cerrar</a></button>
-    </div>
     <div class="container">
+        <div id="cerrarMenus" class="header-buttons cerrar-button centrar">
+                    <button id="cerrarCompra">VOLVER</button>
+        </div>
         <h2 class="text-center mb-4 grande">Nuestra Carta Estelar</h2>
         <div class="menus-grid">
             {{-- ****** Bucle para mostrar cada menú de la base de datos ****** --}}

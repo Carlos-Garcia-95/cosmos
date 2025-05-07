@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\CheckController;
+use App\Http\Controllers\Auth\AdminController;
 use App\Http\Controllers\Auth\MenuController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\HomeController;
@@ -36,6 +37,20 @@ Route::patch('/perfil/modificar', [UserController::class, 'modificarUser'])->nam
 
 //Ruta para devolver las ciudades
 Route::get('/ciudades', [CiudadController::class, 'pasar_ciudades'])->name('ciudades.pasar_ciudades');
+
+//Ruta para ir al login de administradores
+Route::get('/administrador',[AdminController::class, 'mostrarLogin'])->name('administrador.loginAdministrador');
+
+//Ruta para el dashboard
+Route::get('/administrador/dashboard', [AdminController::class, 'index'])
+    ->name('administrador.dashboard')
+    ->middleware('auth');
+
+//Login
+Route::post('/administrador', [AdminController::class, 'login'])->name('admin.login.submit');
+
+//Logout
+Route::post('/administrador/logout', [AdminController::class, 'logout'])->name('administrador.logout');
 
 
 Route::middleware(['auth'])->group(function () {

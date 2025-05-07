@@ -24,7 +24,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_user');
             $table->foreign('id_tipo_entrada')->references('id_tipo_entrada')->on('tipo_entrada');
             $table->foreign('id_factura')->references('id_factura')->on('factura');
-            $table->foreign('id_pelicula')->references('id')->on('pelicula');
+            //$table->foreign('id_pelicula')->references('id')->on('pelicula');
             $table->foreign('id_asiento')->references('id_asiento')->on('asiento');
             $table->foreign('id_user')->references('id')->on('users');
         });

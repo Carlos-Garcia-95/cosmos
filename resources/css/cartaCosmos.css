@@ -9,7 +9,6 @@ html {
     color: #f5f5f5;
     display: block;
     overflow-y: auto;
-    margin-left: 9%;
     &::-webkit-scrollbar {
     display: none;
     }
@@ -18,7 +17,7 @@ html {
 }
 
 .botones{
-    font-size: xx-large;
+    font-size: x-large;
 }
 
 .centrar{

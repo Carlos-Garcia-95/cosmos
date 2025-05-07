@@ -3,16 +3,21 @@
 document.addEventListener('DOMContentLoaded', () => {
     const botonCompra = document.getElementById('mostrarCompra');
     const seccionCompra = document.getElementById('seccionCompra');
-    const cerrarCompraBtn = document.getElementById('cerrarCompra'); // Ahora este botón existe
+    const cerrarCompraBtn = document.getElementById('cerrarCompra');
+    const seccionMenus = document.getElementById('seccionMenus');
 
     // Mostrar el modal al hacer clic en "COMPRAR ENTRADAS"
-    if (botonCompra && seccionCompra) {
-        botonCompra.addEventListener('click', (event) => {
-            //event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+    if (botonCompra && seccionCompra && seccionMenus) {
+        botonCompra.addEventListener('click', () => {
             
             if (seccionCompra.classList.contains('hidden')) {
                 seccionCompra.classList.remove('hidden');
                 seccionCompra.classList.add('visible');
+            }
+
+            if (seccionMenus.classList.contains('visible')) {
+                seccionMenus.classList.remove('visible');
+                seccionMenus.classList.add('hidden');
             }
             
         });
@@ -23,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cerrarCompraBtn && seccionCompra) {
         
         cerrarCompraBtn.addEventListener('click', () => {
-            event.preventDefault();
+            
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth'
