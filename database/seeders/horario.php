@@ -13,43 +13,57 @@ class horario extends Seeder
      */
     public function run(): void
     {
-        DB::table('horario')->insert([
-            [
-                'id_sala' => 1,
-                'id_pelicula' => 1471014,
-                'hora' => '12:30:00',
-                'activo' => 1
-            ],
-            [
-                'id_sala' => 1,
-                'id_pelicula' => 950387,
-                'hora' => '14:00:00',
-                'activo' => 1
-            ],
-            [
-                'id_sala' => 1,
-                'id_pelicula' => 822119,
-                'hora' => '18:30:00',
-                'activo' => 1
-            ],
-            [
-                'id_sala' => 1,
-                'id_pelicula' => 1225915,
-                'hora' => '21:00:00',
-                'activo' => 1
-            ],
-            [
-                'id_sala' => 1,
-                'id_pelicula' => 1233069,
-                'hora' => '23:30:00',
-                'activo' => 1
-            ],
-            [
-                'id_sala' => 1,
-                'id_pelicula' => 324544,
-                'hora' => '01:00:00',
-                'activo' => 1
-            ]
-        ]);
+        for ($i = 1; $i <= 5; $i++) {
+            DB::table('horario')->insert([
+                [
+                    'id_sala' => 1,
+                    'id_pelicula' => 1,
+                    'hora' => 21,
+                    'fecha' => $i,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ],
+                [
+                    'id_sala' => 1,
+                    'id_pelicula' => 2,
+                    'hora' => 27,
+                    'fecha' => $i,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ],
+                [
+                    'id_sala' => 1,
+                    'id_pelicula' => 3,
+                    'hora' => 33,
+                    'fecha' => $i,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ],
+                [
+                    'id_sala' => 1,
+                    'id_pelicula' => 4,
+                    'hora' => 39,
+                    'fecha' => $i,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ],
+                [
+                    'id_sala' => 1,
+                    'id_pelicula' => 5,
+                    'hora' => 45,
+                    'fecha' => $i,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ],
+                [
+                    'id_sala' => 1,
+                    'id_pelicula' => 6,
+                    'hora' => 3,
+                    'fecha' => $i,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]
+            ]);
+        }
     }
 }
