@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
             pelicula::class,
             pelicula_genero::class,
             hora::class,
+            fecha::class,
             horario::class
         ]);
     }

@@ -16,11 +16,13 @@ return new class extends Migration
             $table->unsignedBigInteger('id_sala');      // id sala
             $table->unsignedBigInteger('id_pelicula');  // id pelicula
             $table->unsignedBigInteger('hora');         // hora de la pelicula
+            $table->unsignedBigInteger('fecha');
             $table->timestamps();
 
             $table->foreign('id_sala')->references('id_sala')->on('sala');      // id sala
             $table->foreign('id_pelicula')->references('id')->on('pelicula');   // id pelicula
             $table->foreign('hora')->references('id')->on('hora');              // id hora
+            $table->foreign('fecha')->references('id')->on('fecha');            // id fecha
         });
     }
 
