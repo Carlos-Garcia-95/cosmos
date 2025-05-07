@@ -19,7 +19,6 @@ class DatabaseSeeder extends Seeder
             edad_recomendad::class,
             tipo_asiento::class,
             sala::class,
-            asiento::class,
             impuesto::class,
             descuento::class,
             users::class,
@@ -29,7 +28,9 @@ class DatabaseSeeder extends Seeder
             pelicula_genero::class,
             hora::class,
             fecha::class,
-            horario::class
+            sesion_pelicula::class,
+            asiento_estado::class,
+            asiento::class,
         ]);
     }
 }

@@ -2,9 +2,9 @@
     var peliculas = @JSON($peliculas)
 </script>
 
-@php
+{{-- @php
     var_dump($peliculas)
-@endphp
+@endphp --}}
 
 <div class="overlay">
     <div class="overlay-inner">
