@@ -16,12 +16,11 @@ class HomeController extends Controller
         $ciudades = Ciudad::all();
         $menus = DB::table('menus')->get();
 
-        // Se realiza la petición de películas y géneros a la API
-        $peliculas = PeliculasController::peticion_peliculas();
-        $generos = PeliculasController::peticion_generos();
+        // Se recuperan las películas activas de la BBDD
+        $peliculas = PeliculasController::recuperar_peliculas_activas();
         
         // Se devuelve la vista principal con los distintos arrays que necesitaremos
-        return view('principal', compact('ciudades', 'peliculas', 'generos','menus')); 
+        return view('principal', compact('ciudades', 'peliculas','menus')); 
 
     }
 

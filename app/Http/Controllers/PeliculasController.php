@@ -2,60 +2,59 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
+use App\Models\Pelicula;
+use Illuminate\Http\Request;
 
 class PeliculasController extends Controller
 {
-    public static function peticion_peliculas() {
-        // Recogemos los datos de las películas. 
-        // Si la petición es exitosa, se procesa la respuesta y se devuelve. Si no, se muestra un mensaje de error
-        $api_key = env("API_KEY_TMDB");
-        $response = Http::get("https://api.themoviedb.org/3/movie/popular?api_key={$api_key}&language=es");
+    // Recuperar películas y sus generos asociados
+    public static function recuperar_peliculas_activas() {
+        $peliculas_objeto = Pelicula::with('generos')->where('activa', true)->get();
 
-        if ($response->successful()) {
-            $peliculas = $response->json()['results'];
-            $peliculas = PeliculasController::formatear_url($peliculas);
+        $peliculas = $peliculas_objeto->map(function ($pelicula) {
+            return [
+                'id' => $pelicula->id,
+                'adult' => $pelicula->adult,
+                'backdrop_ruta' => $pelicula->backdrop_ruta,
+                'backdrop_url' => self::formatear_url_backdrop($pelicula->backdrop_ruta),
+                'id_api' => $pelicula->id_api,
+                'lenguaje_original' => $pelicula->lenguaje_original,
+                'titulo_original' => $pelicula->titulo_original,
+                'sinopsis' => $pelicula->sinopsis,
+                'poster_ruta' => $pelicula->poster_ruta,
+                'poster_url' => self::formatear_url_poster($pelicula->poster_ruta),
+                'fecha_estreno' => $pelicula->fecha_estreno,
+                'titulo' => $pelicula->titulo,
+                'video' => $pelicula->video,
+                'activa' => $pelicula->activa,
+                'creacion' => $pelicula->creacion,
+                'id_sala' => $pelicula->id_sala,
+                'generos' => $pelicula->generos->pluck('genero')->toArray(),
+            ];
+        });
 
-            return $peliculas;
-        } else {
-            $peliculas = ['No se pudieron recuperar peliculas'];
-            return $peliculas;
-        }
+        return $peliculas->toArray();
     }
 
-    // Recuperamos las URL de las imágenes desde la propia API
-    private static function formatear_url($peliculas) {
-        $url = "https://image.tmdb.org/t/p/original/";
+    private static function formatear_url_backdrop($ruta) {
+        $url_api = "https://image.tmdb.org/t/p/original/";
+        $url = "";
 
-        foreach ($peliculas as &$pelicula) {
-            if (isset($pelicula['poster_path'])) {
-                $pelicula['poster_url'] = $url . $pelicula['poster_path'];
-            }
-            if (isset($pelicula['backdrop_path'])) {
-                $pelicula['backdrop_url'] = $url . $pelicula['backdrop_path'];
-            }
+        if (isset($ruta)) {
+            $url = $url_api . $ruta;
         }
 
-        return $peliculas;
+        return $url;
     }
 
-    // Recogemos los géneros de las películas. 
-    // Si la petición es exitosa, se procesa la respuesta y se devuelve. Si no, se muestra un mensaje de error
-    public static function peticion_generos() {
-        $api_key = env("API_KEY_TMDB");
-        $response = Http::get("https://api.themoviedb.org/3/genre/movie/list?api_key={$api_key}&language=es");
+    private static function formatear_url_poster($ruta) {
+        $url_api = "https://image.tmdb.org/t/p/original/";
+        $url = "";
 
-        if ($response->successful()) {
-            $generos = $response->json()['genres'];
-
-            return $generos;
-        } else {
-            $generos = ['No se pudieron recuperar los géneros'];
-            return $generos;
+        if (isset($ruta)) {
+            $url = $url_api . $ruta;
         }
+
+        return $url;
     }
-
-
 }
-

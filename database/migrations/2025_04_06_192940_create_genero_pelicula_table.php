@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('genero_pelicula', function (Blueprint $table) {
             $table->id('id_genero_pelicula');
             $table->string('genero', 30);
+            $table->timestamps();
         });
     }
 

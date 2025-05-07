@@ -272,7 +272,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Update the content of the steps
                     allSteps.forEach((step, index) => {
                         const movie = peliculas[activeSlideIndex]; // Access the movie data
-                        step.innerHTML = `<h2 data-slide-count="step" class="count-heading">${movie.title}</h2>`;
+                        step.innerHTML = `<h2 data-slide-count="step" class="count-heading">${movie.titulo}</h2>`;
                     });
                 }
 
