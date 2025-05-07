@@ -16,39 +16,45 @@ class horario extends Seeder
         DB::table('horario')->insert([
             [
                 'id_sala' => 1,
-                'id_pelicula' => 1471014,
-                'hora' => '12:30:00',
-                'activo' => 1
+                'id_pelicula' => 1,
+                'hora' => 3,
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'id_sala' => 1,
-                'id_pelicula' => 950387,
-                'hora' => '14:00:00',
-                'activo' => 1
+                'id_pelicula' => 2,
+                'hora' => 9,
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'id_sala' => 1,
-                'id_pelicula' => 822119,
-                'hora' => '18:30:00',
-                'activo' => 1
+                'id_pelicula' => 3,
+                'hora' => 15,
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'id_sala' => 1,
-                'id_pelicula' => 1225915,
-                'hora' => '21:00:00',
-                'activo' => 1
+                'id_pelicula' => 4,
+                'hora' => 21,
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'id_sala' => 1,
-                'id_pelicula' => 1233069,
-                'hora' => '23:30:00',
-                'activo' => 1
+                'id_pelicula' => 5,
+                'hora' => 27,
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'id_sala' => 1,
-                'id_pelicula' => 324544,
-                'hora' => '01:00:00',
-                'activo' => 1
+                'id_pelicula' => 6,
+                'hora' => 33,
+                'created_at' => now(),
+                'updated_at' => now()
             ]
         ]);
     }

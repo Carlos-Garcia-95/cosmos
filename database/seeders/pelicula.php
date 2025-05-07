@@ -27,7 +27,8 @@ class pelicula extends Seeder
                 'titulo' => 'Thunderbolts*',
                 'video' => false,
                 'activa' => true,
-                'id_sala' => 1
+                'id_sala' => 1,
+                'created_at' => now()
             ],
             [
                 'id' => 2,
@@ -42,7 +43,8 @@ class pelicula extends Seeder
                 'titulo' => 'A Working Man',
                 'video' => false,
                 'activa' => true,
-                'id_sala' => 1
+                'id_sala' => 1,
+                'created_at' => now()
             ],
             [
                 'id' => 3,
@@ -57,7 +59,8 @@ class pelicula extends Seeder
                 'titulo' => 'Estragos',
                 'video' => false,
                 'activa' => true,
-                'id_sala' => 1
+                'id_sala' => 1,
+                'created_at' => now()
             ],
             [
                 'id' => 4,
@@ -72,7 +75,8 @@ class pelicula extends Seeder
                 'titulo' => 'Una película de Minecraft',
                 'video' => false,
                 'activa' => true,
-                'id_sala' => 1
+                'id_sala' => 1,
+                'created_at' => now()
             ],
             [
                 'id' => 5,
@@ -87,7 +91,8 @@ class pelicula extends Seeder
                 'titulo' => 'Rust',
                 'video' => false,
                 'activa' => true,
-                'id_sala' => 1
+                'id_sala' => 1,
+                'created_at' => now()
             ],
             [
                 'id' => 6,
@@ -102,7 +107,8 @@ class pelicula extends Seeder
                 'titulo' => 'Extraterritorial',
                 'video' => false,
                 'activa' => true,
-                'id_sala' => 1
+                'id_sala' => 1,
+                'created_at' => now()
             ]
         ]);
     }
