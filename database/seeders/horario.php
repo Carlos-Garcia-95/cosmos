@@ -17,42 +17,42 @@ class horario extends Seeder
             [
                 'id_sala' => 1,
                 'id_pelicula' => 1,
-                'hora' => 3,
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id_sala' => 1,
-                'id_pelicula' => 2,
-                'hora' => 9,
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id_sala' => 1,
-                'id_pelicula' => 3,
-                'hora' => 15,
-                'created_at' => now(),
-                'updated_at' => now()
-            ],
-            [
-                'id_sala' => 1,
-                'id_pelicula' => 4,
                 'hora' => 21,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'id_sala' => 1,
-                'id_pelicula' => 5,
+                'id_pelicula' => 2,
                 'hora' => 27,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
             [
                 'id_sala' => 1,
-                'id_pelicula' => 6,
+                'id_pelicula' => 3,
                 'hora' => 33,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id_sala' => 1,
+                'id_pelicula' => 4,
+                'hora' => 39,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id_sala' => 1,
+                'id_pelicula' => 5,
+                'hora' => 45,
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id_sala' => 1,
+                'id_pelicula' => 6,
+                'hora' => 3,
                 'created_at' => now(),
                 'updated_at' => now()
             ]
