@@ -19,7 +19,10 @@
         'resources/js/user.js',
         'resources/css/user_modal.css', 
         "resources/js/cartaCosmos.js",
-        "resources/css/cartaCosmos.css"
+        "resources/css/cartaCosmos.css",
+        "resources/css/cartelera.css",
+        'resources/css/detalle_pelicula.css',
+        'resources/js/detalle_pelicula.js',
     ])
     <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
 
@@ -74,9 +77,17 @@
                 </div>
             </section>
 
-            <x-vistas.mostrar_peliculas :peliculas='$peliculas'/>
+            <x-vistas.mostrar_peliculas_slider :peliculas='$peliculas'/>
+            
 
         </div>
+    </section>
+
+    <!-- Sección de Cartelera -->
+    <section id="seccion_cartelera" class="seccion_cartelera">
+        <form action='' method='POST' id='comprar_cartelera'>
+            <x-vistas.mostrar_peliculas_cartelera :peliculas='$peliculas'/>
+        </form>
     </section>
 
     <!-- Modal de compra de entradas oculto inicialmente -->
@@ -136,39 +147,9 @@
     </section>
 
     <!-- Section para los menus -->
-    <section id="seccionMenus" class="py-5 hidden">
-    <div class="centrar">
-        <button id="cerrarMenus" class="cerrar-btn"><a href="#general">Cerrar</a></button>
-    </div>
-    <div class="container">
-        <h2 class="text-center mb-4 grande">Nuestra Carta Estelar</h2>
-        <div class="menus-grid">
-            {{-- ****** Bucle para mostrar cada menú de la base de datos ****** --}}
-            @foreach($menus as $menu)
-                <div class="menu-item">
-                    <div class="menu-item-inner">
-                        {{-- Cara frontal: Imagen y Nombre --}}
-                        <div class="menu-item-front">
-                            @if(isset($menu->imagen_url) && $menu->imagen_url)
-                                <img src="{{ asset($menu->imagen_url) }}" alt="{{ $menu->nombre }}" class="menu-item-image">
-                            @else
-                                <img src="{{ asset('images/placeholder-menu.jpg') }}" alt="{{ $menu->nombre }} - Sin imagen" class="menu-item-image">
-                            @endif
-
-                            <h3 class="menu-item-name">{{ $menu->nombre }}</h3>
-                        </div>
-                        {{-- Cara trasera: Descripción y Precio --}}
-                        
-                        <div class="menu-item-back">
-                            <p class="menu-item-description">{{ $menu->descripcion }}</p>
-                            <p class="menu-item-price">Precio: {{ number_format($menu->precio, 2) }}€</p>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
+    <section id="seccionMenus" class="py-5">
+        <x-vistas.mostrar_menu :menus='$menus'/>
+    </section>
 
 
 
@@ -177,6 +158,8 @@
     <x-modal.modal_login/>
 
     <x-modal.modal_usuario/>
+
+    <x-modal.modal_detalle_pelicula/>
 
     @stack('scripts')
 
