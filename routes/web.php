@@ -64,6 +64,8 @@ Route::get('/administrador/manage-movies', [AdminController::class, 'obtenerPeli
 // Ruta para cambiar el estado 'activa' de una película específica por su ID
 Route::patch('administrador/movies/{id}/estadoActivo', [AdminController::class, 'estadoPelicula'])->name('estadoPelicula');
 
+//Ruta para cambiar de estreno a cartelera
+Route::patch('administrador/movies/{id}/estrenoActivo', [AdminController::class, 'EstrenoStatus'])->name('EstrenoEstado');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {

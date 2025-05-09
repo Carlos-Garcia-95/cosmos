@@ -48,6 +48,8 @@ class AdminController extends Controller
         }
     }
 
+    
+
     //Conparar peliculas de la base de datos con las que nos muestra la api para saber cual tenemos ya en la base de datos.
     public function searchTMDb(Request $request)
     {
@@ -218,6 +220,7 @@ class AdminController extends Controller
 
             $movieToSave->id_sala = $request->input('id_sala', 1);
             $movieToSave->activa = $request->input('activa', false);
+            $movieToSave->estreno = $request->input('estreno', true);
 
             /* $genreIds = collect($movieDetails['genres'] ?? [])->pluck('id')->toArray();
             $movieToSave->genre_ids = json_encode($genreIds); */
@@ -283,6 +286,8 @@ class AdminController extends Controller
         return response()->json($paginatedMovies);
     }
 
+    
+
     public function estadoPelicula(Request $request, $id)
     {
         // 1. Validar que la película con el ID proporcionado existe
@@ -300,6 +305,25 @@ class AdminController extends Controller
             'new_status' => $movie->activa,
             'movie_id' => $movie->id
         ]);
+    }
+
+    //Estrenos
+    public function EstrenoStatus($id)
+    {
+            $movie = Pelicula::findOrFail($id);
+
+            $movie->estreno = !$movie->estreno;
+
+            $movie->save();
+
+            $newStatusText = $movie->estreno ? 'Estreno' : 'Cartelera';
+
+            // Devolver una respuesta de éxito al frontend
+            return response()->json([
+                'message' => "Estado de cartelera/estreno actualizado a '{$newStatusText}'.",
+                'new_status' => $movie->estreno, // Devolver el nuevo valor booleano (false=Estreno, true=Cartelera)
+                'new_status_text' => $newStatusText // Devolver el texto del nuevo estado
+            ]);
     }
 
 

@@ -1,4 +1,4 @@
-
+/* En tu archivo CSS de administrador (ej: adminLogin.css o adminDashboard.css) */
 body {
     margin: 0;
     padding: 0;
@@ -92,6 +92,7 @@ body {
 .sidebar-bottom {
     margin-top: auto;
     padding-top: 20px;
+    text-align: center;
 }
 
 .sidebar-link
@@ -111,7 +112,7 @@ body {
 }
 
 .sidebar-logout-btn {
-    display: block; 
+    display: block;
     padding: 10px 15px;
     color: #f5f5f5;
     text-decoration: none;
@@ -152,7 +153,6 @@ body {
 
 .content-section {
     margin-bottom: 30px;
-    /* Eliminado padding/border/background aquí para usarlo en los ítems */
 }
 
 .content-section.hidden {
@@ -160,7 +160,7 @@ body {
 }
 
 .dashboard-content-area h3 {
-    color: white; /* Mantenemos el título de sección blanco sobre el fondo oscuro del área de contenido */
+    color: white;
     margin-top: 0;
     margin-bottom: 20px;
     text-align: center;
@@ -175,8 +175,8 @@ body {
     align-items: center;
     flex-wrap: wrap;
     justify-content: center;
-    padding: 15px; /* Añadido padding */
-    border-radius: 8px; /* Borde redondeado */
+    padding: 15px;
+    border-radius: 8px;
 }
 
 /* Estilos para inputs, selects dentro de los filtros */
@@ -186,10 +186,10 @@ body {
 .manage-filters input[type="text"],
 .manage-filters select {
     padding: 10px;
-    border: 1px solid #ccc; /* Borde claro */
+    border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: #f9f9f9; /* Fondo blanco ligeramente grisáceo */
-    color: #333; /* Texto oscuro */
+    background-color: #f9f9f9;
+    color: black;
     font-size: 1rem;
 }
 
@@ -197,7 +197,7 @@ body {
 .api-search-filters button,
 .manage-filters button {
     padding: 10px 20px;
-    border: none; /* Eliminado borde */
+    border: none;
     border-radius: 5px;
     font-size: 1rem;
     cursor: pointer;
@@ -207,15 +207,15 @@ body {
 
 /* Colores específicos para botones de filtro */
 .api-search-filters button {
-     background-color: #007bff; /* Azul */
-     color: white;
+    background-color: #007bff;
+    color: white;
 }
- .api-search-filters button:hover:not(:disabled) {
-     background-color: #0056b3;
- }
+.api-search-filters button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
 
 .manage-filters button {
-    background-color: #28a745; /* Verde */
+    background-color: #28a745;
     color: white;
 }
 .manage-filters button:hover:not(:disabled) {
@@ -225,8 +225,8 @@ body {
 /* Estilo para botones de filtro deshabilitados */
 .api-search-filters button:disabled,
 .manage-filters button:disabled {
-    background-color: #ccc; /* Gris claro */
-    color: #666; /* Texto gris oscuro */
+    background-color: #ccc;
+    color: #666;
     cursor: not-allowed;
 }
 
@@ -241,24 +241,24 @@ body {
 .api-results-area,
 .manage-movies-area {
     margin-top: 20px;
-    padding: 15px; /* Añadido padding */
-    border-radius: 8px; /* Borde redondeado */
-    color: white; /* Color de texto por defecto para esta área */
+    padding: 15px;
+    border-radius: 8px;
+    color: white;
 }
 
 /* Estilos para los ítems de película (aplicados a ambas secciones) */
 .api-movie-item,
 .managed-movie-item {
     display: flex;
-    background-color: #f9f9f9; /* Fondo blanco ligeramente grisáceo para ítems */
+    background-color: #f9f9f9;
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 8px;
     align-items: center;
     gap: 20px;
     flex-wrap: wrap;
-    border: 1px solid #eee; /* Borde más claro */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Sombra más suave */
+    border: 1px solid #eee;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* Estilos para las imágenes de poster */
@@ -281,36 +281,45 @@ body {
 .api-movie-item .movie-details h4,
 .managed-movie-item .movie-details h4 {
     margin: 0 0 5px 0;
-    color: #333; /* Texto oscuro */
+    color: #333;
     font-size: 1.1rem;
 }
 
-/* Estilos para la sinopsis */
  .api-movie-item .movie-details p,
  .managed-movie-item .movie-details p {
     margin: 0;
-    color: #555; /* Texto gris oscuro */
+    color: #555;
     font-size: 0.9rem;
 }
 
+/* Estilos para el contenedor de botones si lo añadiste */
+.managed-movie-item .movie-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+
 /* Estilos específicos de botones de acción */
 .add-movie-btn,
-.toggle-status-btn {
+.toggle-status-btn,
+.toggle-estreno-btn {
      padding: 8px 15px;
      border: none;
      border-radius: 5px;
      cursor: pointer;
-     color: white; /* Texto blanco por defecto en botones de acción */
+     color: white;
      font-size: 0.9rem;
      transition: background-color 0.3s ease;
      white-space: nowrap;
-     margin-left: auto;
      flex-shrink: 0;
+     text-align: center;
 }
 
 /* Estilo para el botón 'Añadir pelicula' (en sección API) */
 .add-movie-btn {
-    background-color: #0961e5; /* Azul */
+    background-color: #0961e5;
 }
 .add-movie-btn:hover:not(:disabled) {
     background-color: rgb(47, 145, 211);
@@ -319,40 +328,66 @@ body {
 /* Estilo para el botón 'Añadida' (cuando la película ya está añadida) */
 .add-movie-btn.added,
 .add-movie-btn:disabled {
-    background-color: #ccc; /* Gris claro */
-    color: #666; /* Texto gris oscuro */
+    background-color: #ccc;
+    color: #666;
     cursor: not-allowed;
 }
 
 
-/* Estilos para los botones de estado (Activar/Desactivar) en sección Gestión */
+/* Estilos específicos para el botón Activar/Desactivar */
 .toggle-status-btn.activate {
-    background-color: #38a169; /* Verde */
+    background-color: #38a169;
 }
 .toggle-status-btn.activate:hover:not(:disabled) {
     background-color: #2f855a;
 }
 .toggle-status-btn.deactivate {
-    background-color: #e53e3e; /* Rojo */
+    background-color: #e53e3e;
 }
 .toggle-status-btn.deactivate:hover:not(:disabled) {
      background-color: #c53030;
 }
 
- /* Estilo general para botones de estado deshabilitados (si no se usa .add-movie-btn:disabled) */
- .toggle-status-btn:disabled {
-     opacity: 0.7;
-     cursor: not-allowed;
- }
+/* Estilos para el botón Estreno/Cartelera */
+.toggle-estreno-btn.activate {
+    background-color: #0961e5;
+}
+.toggle-estreno-btn.activate:hover:not(:disabled) {
+    background-color: rgb(47, 145, 211);
+}
+.toggle-estreno-btn.deactivate {
+    background-color: #f6993f;
+    color: #333;
+}
+.toggle-estreno-btn.deactivate:hover:not(:disabled) {
+     background-color: #de751f;
+}
 
 
-/* Estilos para los spans que muestran el estado "Activa" o "Inactiva" (opcional) */
+/* Estilo para cualquier botón de acción cuando está deshabilitado */
+.toggle-status-btn:disabled,
+.toggle-estreno-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Estilos para los spans que muestran el estado "Activa" o "Inactiva" */
 .status-active {
-    color: #38a169; /* Verde */
+    color: #38a169;
     font-weight: bold;
 }
 .status-inactive {
-    color: #e53e3e; /* Rojo */
+    color: #e53e3e;
+    font-weight: bold;
+}
+
+/* Estilos para los spans de estado Estreno/Cartelera */
+.status-estreno {
+    color: #f6993f;
+    font-weight: bold;
+}
+.status-cartelera {
+    color: #0961e5;
     font-weight: bold;
 }
 
@@ -365,45 +400,41 @@ body {
     justify-content: center;
     align-items: center;
     gap: 10px;
-    color: white; /* Color de texto oscuro para la info de página */
+    color: white;
 }
 
-/* Estilos para los botones de paginación */
 .api-pagination-controls button,
 .manage-pagination-controls button {
-     padding: 8px 16px;
-     border: 1px solid #ccc; /* Borde claro */
-     border-radius: 4px;
-     background-color: #f9f9f9; /* Fondo blanco ligeramente grisáceo */
-     color: #333; /* Color de texto oscuro */
-     cursor: pointer;
-     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    padding: 8px 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .api-pagination-controls button:hover:not(:disabled),
 .manage-pagination-controls button:hover:not(:disabled) {
-    background-color: #ddd; /* Fondo gris claro al pasar el ratón */
-    color: #000; /* Texto negro */
+    background-color: #ddd;
+    color: #000;
     border-color: #bbb;
 }
 
-/* Estilos para botones de paginación deshabilitados */
 .api-pagination-controls button:disabled,
 .manage-pagination-controls button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    background-color: #eee; /* Fondo gris muy claro */
-    color: #999; /* Texto gris */
+    background-color: #eee;
+    color: #999;
     border-color: #eee;
 }
 
-/* Estilos para el texto de información de paginación */
 .api-pagination-controls span,
 .manage-pagination-controls span {
     font-weight: bold;
 }
 
-/* Estilos para el formulario de logout (si no los tienes ya) */
 .logout-form {
     text-align: center;
     margin-top: 30px;
