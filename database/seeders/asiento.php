@@ -25,8 +25,8 @@ class asiento extends Seeder
 
             $sesiones_pelicula = DB::table('sesion_pelicula')->get();
 
+            // Genera los asientos para la sesión actual
             foreach ($sesiones_pelicula as $sesion) {
-                // Genera los asientos para la sesión actual
                 $asientos = array();
 
                 // Se recupera el número total de filas y columnas
@@ -49,7 +49,7 @@ class asiento extends Seeder
                                 'created_at' => now(),
                                 'updated_at' => now(),
                             ];
-                        } else { // Si no hay fila o columna, se introduce un hueco (false)
+                        } else {            // Si no hay fila o columna, se introduce un hueco (false)
                             $asientos[] = [
                                 'id_sesion_pelicula' => $sesion->id,
                                 'estado' => $estado_defecto,

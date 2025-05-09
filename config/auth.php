@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'admin' => [
+            'driver' => 'session', // Usamos el driver 'session' para autenticación web
+            'provider' => 'administrators', // <== Usamos el proveedor 'administrators' (definido abajo)
+        ],
     ],
 
     /*
@@ -63,6 +67,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+        'administrators' => [ // <== Nombre del proveedor (usado por el guard 'admin')
+            'driver' => 'eloquent', // Usamos el driver 'eloquent' para interactuar con un modelo
+            'model' => App\Models\Administrator::class, // <== La clase de tu modelo de administrador
         ],
 
         // 'users' => [

@@ -1,4 +1,4 @@
-/* En tu archivo CSS de administrador (ej: adminLogin.css o adminDashboard.css) */
+
 body {
     margin: 0;
     padding: 0;
@@ -23,6 +23,7 @@ body {
     justify-content: flex-end;
     align-items: center;
     border-bottom: 1px solid white;
+    padding: 10px 20px;
 }
 
 .header-right-elements {
@@ -34,7 +35,7 @@ body {
 .admin-name {
     font-size: 1.1rem;
     font-weight: bold;
-    color: #0961e5;
+    color: white;
 }
 
 .company-logo img {
@@ -54,6 +55,7 @@ body {
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
+    width: 250px;
 }
 
 .sidebar-nav {
@@ -92,8 +94,8 @@ body {
     padding-top: 20px;
 }
 
-.sidebar-link,
-.sidebar-logout-btn {
+.sidebar-link
+{
     display: block;
     padding: 10px 15px;
     color: #f5f5f5;
@@ -106,6 +108,27 @@ body {
     cursor: pointer;
     font-size: 1rem;
     margin-bottom: 0;
+}
+
+.sidebar-logout-btn {
+    display: block; 
+    padding: 10px 15px;
+    color: #f5f5f5;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: transparent;
+    border: none;
+    text-align: center;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-bottom: 0;
+    width: auto;
+    max-width: 180px;
+    margin: 0 auto;
+
+    background-color: #dc3545;
+    color: white;
 }
 
 .sidebar-link:hover,
@@ -129,6 +152,7 @@ body {
 
 .content-section {
     margin-bottom: 30px;
+    /* Eliminado padding/border/background aquí para usarlo en los ítems */
 }
 
 .content-section.hidden {
@@ -136,41 +160,44 @@ body {
 }
 
 .dashboard-content-area h3 {
-    color: white;
+    color: white; /* Mantenemos el título de sección blanco sobre el fondo oscuro del área de contenido */
     margin-top: 0;
     margin-bottom: 20px;
+    text-align: center;
 }
 
-/*Búsque de peliculas*/
-
-/* En tu archivo CSS de administrador */
-
-.api-search-filters {
+/* Estilos para los filtros (aplicados a ambas secciones) */
+.api-search-filters,
+.manage-filters {
     display: flex;
     gap: 15px;
     margin-bottom: 20px;
     align-items: center;
     flex-wrap: wrap;
+    justify-content: center;
+    padding: 15px; /* Añadido padding */
+    border-radius: 8px; /* Borde redondeado */
 }
 
+/* Estilos para inputs, selects dentro de los filtros */
 .api-search-filters input[type="text"],
 .api-search-filters input[type="number"],
-.api-search-filters select {
+.api-search-filters select,
+.manage-filters input[type="text"],
+.manage-filters select {
     padding: 10px;
-    border: 1px solid #555;
+    border: 1px solid #ccc; /* Borde claro */
     border-radius: 5px;
-    background-color: #444;
-    color: #f5f5f5;
+    background-color: #f9f9f9; /* Fondo blanco ligeramente grisáceo */
+    color: #333; /* Texto oscuro */
     font-size: 1rem;
-    flex-grow: 1;
-    max-width: 300px;
 }
 
-.api-search-filters button {
+/* Estilos para los botones de filtro */
+.api-search-filters button,
+.manage-filters button {
     padding: 10px 20px;
-    background-color: white;
-    color: black;
-    border: none;
+    border: none; /* Eliminado borde */
     border-radius: 5px;
     font-size: 1rem;
     cursor: pointer;
@@ -178,10 +205,31 @@ body {
     flex-shrink: 0;
 }
 
-.api-search-filters button:hover {
-    background-color: #ddd;
-    color: black;
+/* Colores específicos para botones de filtro */
+.api-search-filters button {
+     background-color: #007bff; /* Azul */
+     color: white;
 }
+ .api-search-filters button:hover:not(:disabled) {
+     background-color: #0056b3;
+ }
+
+.manage-filters button {
+    background-color: #28a745; /* Verde */
+    color: white;
+}
+.manage-filters button:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+/* Estilo para botones de filtro deshabilitados */
+.api-search-filters button:disabled,
+.manage-filters button:disabled {
+    background-color: #ccc; /* Gris claro */
+    color: #666; /* Texto gris oscuro */
+    cursor: not-allowed;
+}
+
 
 .dashboard-content-area hr {
     border: none;
@@ -189,66 +237,188 @@ body {
     margin: 20px 0;
 }
 
-.api-results-area {
+/* Estilos para las áreas de resultados (aplicados a ambas secciones) */
+.api-results-area,
+.manage-movies-area {
     margin-top: 20px;
+    padding: 15px; /* Añadido padding */
+    border-radius: 8px; /* Borde redondeado */
+    color: white; /* Color de texto por defecto para esta área */
 }
 
-.api-movie-item {
+/* Estilos para los ítems de película (aplicados a ambas secciones) */
+.api-movie-item,
+.managed-movie-item {
     display: flex;
-    background-color: #333;
+    background-color: #f9f9f9; /* Fondo blanco ligeramente grisáceo para ítems */
     padding: 15px;
     margin-bottom: 15px;
     border-radius: 8px;
     align-items: center;
     gap: 20px;
     flex-wrap: wrap;
+    border: 1px solid #eee; /* Borde más claro */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Sombra más suave */
 }
 
-.api-movie-item img {
+/* Estilos para las imágenes de poster */
+.api-movie-item img,
+.managed-movie-item img {
     width: 80px;
     height: auto;
     border-radius: 5px;
     flex-shrink: 0;
+    object-fit: cover;
 }
 
-.api-movie-item .movie-details {
+/* Estilos para los detalles de la película */
+.api-movie-item .movie-details,
+.managed-movie-item .movie-details {
     flex: 1;
 }
 
-.api-movie-item .movie-details h4 {
+/* Estilos para los títulos de película */
+.api-movie-item .movie-details h4,
+.managed-movie-item .movie-details h4 {
     margin: 0 0 5px 0;
-    color: black;
+    color: #333; /* Texto oscuro */
     font-size: 1.1rem;
 }
 
-.api-movie-item .movie-details p {
+/* Estilos para la sinopsis */
+ .api-movie-item .movie-details p,
+ .managed-movie-item .movie-details p {
     margin: 0;
-    color: #bbb;
+    color: #555; /* Texto gris oscuro */
     font-size: 0.9rem;
 }
 
+/* Estilos específicos de botones de acción */
+.add-movie-btn,
+.toggle-status-btn {
+     padding: 8px 15px;
+     border: none;
+     border-radius: 5px;
+     cursor: pointer;
+     color: white; /* Texto blanco por defecto en botones de acción */
+     font-size: 0.9rem;
+     transition: background-color 0.3s ease;
+     white-space: nowrap;
+     margin-left: auto;
+     flex-shrink: 0;
+}
+
+/* Estilo para el botón 'Añadir pelicula' (en sección API) */
 .add-movie-btn {
-    padding: 8px 15px;
-    background-color: #0961e5;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    flex-shrink: 0;
-    margin-left: auto;
+    background-color: #0961e5; /* Azul */
 }
-
-.add-movie-btn:hover {
+.add-movie-btn:hover:not(:disabled) {
     background-color: rgb(47, 145, 211);
 }
 
+/* Estilo para el botón 'Añadida' (cuando la película ya está añadida) */
+.add-movie-btn.added,
 .add-movie-btn:disabled {
-    background-color: #555;
+    background-color: #ccc; /* Gris claro */
+    color: #666; /* Texto gris oscuro */
     cursor: not-allowed;
 }
 
-.content-section.hidden {
-    display: none;
+
+/* Estilos para los botones de estado (Activar/Desactivar) en sección Gestión */
+.toggle-status-btn.activate {
+    background-color: #38a169; /* Verde */
 }
+.toggle-status-btn.activate:hover:not(:disabled) {
+    background-color: #2f855a;
+}
+.toggle-status-btn.deactivate {
+    background-color: #e53e3e; /* Rojo */
+}
+.toggle-status-btn.deactivate:hover:not(:disabled) {
+     background-color: #c53030;
+}
+
+ /* Estilo general para botones de estado deshabilitados (si no se usa .add-movie-btn:disabled) */
+ .toggle-status-btn:disabled {
+     opacity: 0.7;
+     cursor: not-allowed;
+ }
+
+
+/* Estilos para los spans que muestran el estado "Activa" o "Inactiva" (opcional) */
+.status-active {
+    color: #38a169; /* Verde */
+    font-weight: bold;
+}
+.status-inactive {
+    color: #e53e3e; /* Rojo */
+    font-weight: bold;
+}
+
+
+/* Estilos para los controles de paginación (aplicados a ambas secciones) */
+.api-pagination-controls,
+.manage-pagination-controls {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: white; /* Color de texto oscuro para la info de página */
+}
+
+/* Estilos para los botones de paginación */
+.api-pagination-controls button,
+.manage-pagination-controls button {
+     padding: 8px 16px;
+     border: 1px solid #ccc; /* Borde claro */
+     border-radius: 4px;
+     background-color: #f9f9f9; /* Fondo blanco ligeramente grisáceo */
+     color: #333; /* Color de texto oscuro */
+     cursor: pointer;
+     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.api-pagination-controls button:hover:not(:disabled),
+.manage-pagination-controls button:hover:not(:disabled) {
+    background-color: #ddd; /* Fondo gris claro al pasar el ratón */
+    color: #000; /* Texto negro */
+    border-color: #bbb;
+}
+
+/* Estilos para botones de paginación deshabilitados */
+.api-pagination-controls button:disabled,
+.manage-pagination-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #eee; /* Fondo gris muy claro */
+    color: #999; /* Texto gris */
+    border-color: #eee;
+}
+
+/* Estilos para el texto de información de paginación */
+.api-pagination-controls span,
+.manage-pagination-controls span {
+    font-weight: bold;
+}
+
+/* Estilos para el formulario de logout (si no los tienes ya) */
+.logout-form {
+    text-align: center;
+    margin-top: 30px;
+}
+.logout-form button {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+.logout-form button:hover {
+    background-color: #c82333;
+}
+

@@ -8,7 +8,7 @@
 
     @vite(['resources/css/dashboard.css'])
     @vite(['resources/js/adminDashboard.js'])
-
+    @vite(['resources/js/adminDashboardGestionarPelicula.js'])
 </head>
 <body>
     <div class="dashboard-layout">
@@ -57,7 +57,6 @@
                             <option value="popular">Populares</option>
                             <option value="upcoming">Próximas</option>
                             <option value="now_playing">En cines</option>
-                            {{-- Podríamos añadir 'top_rated' (mejor valoradas) si quieres --}}
                         </select>
 
                         <select id="api-genre-select">
@@ -95,14 +94,50 @@
 
                     <div class="api-pagination-controls" style="text-align: center; margin-top: 20px;">
                         <button id="prev-page-btn" disabled>Anterior</button>
-                        <span id="page-info">Página 1 de 1</span> {{-- Texto informativo de la página --}}
+                        <span id="page-info">Página 1 de 1</span>
                         <button id="next-page-btn" disabled>Siguiente</button>
                     </div>
 
                 </section>
                 <section id="manage-movies-section" class="content-section hidden">
                     <h3>Gestionar películas en BD</h3>
-                    <p>Contenido para listar y gestionar películas de nuestra base de datos...</p>
+
+                    <div class="manage-filters">
+
+                        <input type="text" id="manage-search-input" placeholder="Buscar por título">
+
+                        <select id="manage-genre-select">
+                            <option value="">Todos los géneros</option>
+                            @foreach ($generos_tmdb ?? [] as $genero)
+                                <option value="{{ $genero['id'] }}">{{ $genero['name'] }}</option>
+                            @endforeach
+                        </select>
+
+                        <select id="manage-status-select">
+                            <option value="all">Todos los estados</option>
+                            <option value="active">Activas</option>
+                            <option value="inactive">Inactivas</option>
+                        </select>
+
+                        <select id="manage-items-per-page-select">
+                            <option value="5">5 por página</option>
+                            <option value="10">10 por página</option>
+                            <option value="15">15 por página</option>
+                            <option value="20">20 por página</option>
+                        </select>
+
+                        <button id="manage-filter-button">Aplicar Filtros</button>
+                    </div>
+
+                    <div class="manage-movies-area">
+                        <p>Selecciona filtros y haz clic en "Aplicar Filtros" para cargar la lista.</p>
+                    </div>
+
+                    <div class="manage-pagination-controls">
+                        <button id="manage-prev-page-btn" disabled>Anterior</button>
+                        <span id="manage-page-info">Página 0 de 0 (0 películas en total)</span>
+                        <button id="manage-next-page-btn" disabled>Siguiente</button>
+                    </div>
                 </section>
             </main>
         </div>

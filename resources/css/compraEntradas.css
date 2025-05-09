@@ -104,7 +104,6 @@ p.text span {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: absolute; /* Posicionado debajo del slider */
     top: 100%;
     left: 50%;
     transform: translateX(-50%);

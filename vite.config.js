@@ -21,8 +21,11 @@ export default defineConfig({
                 "resources/js/cartaCosmos.js",
                 "resources/css/cartaCosmos.css",
                 "resources/css/adminLogin.css",
+                "resources/js/user.js",
                 "resources/js/loginAdmin.js",
                 "resources/css/dashboard.css",
+                "resources/js/adminDashboardGestionarPelicula.js",
+
             ],
             refresh: true,
             manifest: 'manifest.json',

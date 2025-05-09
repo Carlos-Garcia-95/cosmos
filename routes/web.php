@@ -44,7 +44,7 @@ Route::get('/administrador',[AdminController::class, 'mostrarLogin'])->name('adm
 //Ruta para el dashboard
 Route::get('/administrador/dashboard', [AdminController::class, 'index'])
     ->name('administrador.dashboard')
-    ->middleware('auth');
+    ->middleware('auth:admin');
 
 //Login
 Route::post('/administrador', [AdminController::class, 'login'])->name('admin.login.submit');
@@ -57,6 +57,12 @@ Route::get('/administrador/buscar-peliculas-api', [AdminController::class, 'sear
 
 //Ruta para añadir pelicula
 Route::post('/administrador/movies', [AdminController::class, 'storeMovie'])->name('admin.storeMovie');
+
+//Ruta para obtener las peliculas de la base de datos
+Route::get('/administrador/manage-movies', [AdminController::class, 'obtenerPeliculas'])->name('obtenerPeliculas');
+
+// Ruta para cambiar el estado 'activa' de una película específica por su ID
+Route::patch('administrador/movies/{id}/estadoActivo', [AdminController::class, 'estadoPelicula'])->name('estadoPelicula');
 
 
 Route::middleware(['auth'])->group(function () {

@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    const sidebarLinks = document.querySelectorAll('.sidebar-link[data-section]');
+    const contentSections = document.querySelectorAll('.content-section');
+
     const searchInput = document.getElementById('api-search-input');
     const listTypeSelect = document.getElementById('api-list-type-select');
     const genreSelect = document.getElementById('api-genre-select');
@@ -52,6 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const posterBaseUrl = 'https://image.tmdb.org/t/p/w200/';
         const posterUrl = movie.poster_path ? `${posterBaseUrl}${movie.poster_path}` : 'https://via.placeholder.com/80x120?text=No+Poster';
 
+        const buttonText = movie.is_added ? 'Añadida' : 'Añadir pelicula';
+        const buttonDisabled = movie.is_added ? 'disabled' : '';
+        const buttonClass = movie.is_added ? 'add-movie-btn added' : 'add-movie-btn';
+
         return `
             <div class="api-movie-item">
                 <img src="${posterUrl}" alt="Poster de ${movie.title || 'Película sin título'}">
@@ -59,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h4>${movie.title || 'Película sin título'} (${movie.release_date ? movie.release_date.split('-')[0] : 'Año desconocido'})</h4>
                     <p>${movie.overview ? movie.overview.substring(0, 150) + '...' : 'Sinopsis no disponible.'}</p>
                 </div>
-                <button class="add-movie-btn" data-tmdb-id="${movie.id}">Añadir pelicula</button>
+                <button class="${buttonClass}" data-tmdb-id="${movie.id}" ${buttonDisabled}>${buttonText}</button>
             </div>
         `;
     };
@@ -81,8 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resultsArea.innerHTML += buildMovieItemHtml(movie);
         });
 
-        // Add listeners to 'Add Movie' buttons after rendering
-        const addMovieButtons = resultsArea.querySelectorAll('.add-movie-btn');
+        const addMovieButtons = resultsArea.querySelectorAll('.add-movie-btn:not(.added)');
 
         addMovieButtons.forEach(button => {
             button.addEventListener('click', async (event) => {
@@ -105,27 +111,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     const result = await response.json();
 
                     if (response.ok) {
-                        if (response.status === 409) { // Si el backend devolvió 409 Conflict
-                            alert(result.message); // Mostrar el mensaje de duplicado del backend
-                            button.textContent = 'Ya añadida'; // Cambiar texto del botón
-                            // El botón ya está deshabilitado
-                        }else if (result.status === 'success') {
-                            alert(result.message);
-                            button.textContent = 'Añadida';
-                        } else if (result.status === 'duplicate') {
-                            alert(result.message);
+                        if (response.status === 409) {
                             button.textContent = 'Ya añadida';
+                             button.classList.add('added'); // Add 'added' class for styling
+                        } else if (result.status === 'success') {
+                            button.textContent = 'Añadida';
+                            button.classList.add('added'); // Add 'added' class for styling
+                        } else if (result.status === 'duplicate') {
+                            button.textContent = 'Ya añadida';
+                             button.classList.add('added'); // Add 'added' class for styling
                         } else {
                             console.warn('Respuesta exitosa con estado desconocido:', result);
                             alert(result.message || 'Operación completada con estado desconocido.');
                             button.textContent = originalButtonText;
                             button.disabled = false;
+                            button.classList.remove('added');
                         }
                     } else {
-                        alert('Error: ' + (result.error || 'Error desconocido en el servidor.'));
+                        alert('Error: ' + (result.error || `Error desconocido en el servidor (Estado ${response.status}).`));
                         console.error('Error response from backend:', result);
                         button.textContent = originalButtonText;
                         button.disabled = false;
+                        button.classList.remove('added');
                     }
 
                 } catch (error) {
@@ -133,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('Error al intentar añadir la película: ' + error.message);
                     button.textContent = originalButtonText;
                     button.disabled = false;
+                    button.classList.remove('added');
                 }
             });
         });
@@ -213,10 +221,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
     searchButton.addEventListener('click', performSearch);
 
-    /* searchInput.addEventListener('keypress', (event) => {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            performSearch();
+    // --- Lógica para el Cambio de Secciones de la Barra Lateral ---
+
+    // Función para mostrar la sección correcta y actualizar el enlace activo
+    const showSection = (sectionId) => {
+        contentSections.forEach(section => {
+            section.classList.add('hidden');
+        });
+
+        // Mostrar la sección solicitada
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+            targetSection.classList.remove('hidden');
+
+            targetSection.dispatchEvent(new CustomEvent('sectionShown', { detail: { sectionId: sectionId } }));
         }
-    }); */
+
+        // Remover la clase 'active' de todos los enlaces de la barra lateral
+        sidebarLinks.forEach(link => {
+            link.classList.remove('active');
+        });
+
+        // Añadir la clase 'active' al enlace que corresponde a la sección mostrada
+        const activeLink = document.querySelector(`.sidebar-link[data-section="${sectionId.replace('-section', '')}"]`);
+        if (activeLink) {
+            activeLink.classList.add('active');
+        }
+
+        localStorage.setItem('activeAdminSection', sectionId);
+    };
+
+    // Añadir listeners a los enlaces de la barra lateral
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            const sectionId = link.dataset.section + '-section';
+            showSection(sectionId);
+        });
+    });
+
+    // Mostrar la sección activa al cargar la página (por defecto o la última visitada)
+    const savedSectionId = localStorage.getItem('activeAdminSection');
+    if (savedSectionId && document.getElementById(savedSectionId)) {
+        showSection(savedSectionId);
+    } else {
+        showSection('add-movies-section');
+    }
+
 });

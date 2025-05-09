@@ -11,8 +11,8 @@ class PeliculasController extends Controller
     public static function recuperar_peliculas_activas() {
         $peliculas_objeto = Pelicula::with('generos')->where('activa', true)->get();
 
-        $peliculas = $peliculas_objeto->map(function ($pelicula) {
-            return [
+        foreach ($peliculas_objeto as $pelicula) {
+            $peliculas[$pelicula->id] = [
                 'id' => $pelicula->id,
                 'adult' => $pelicula->adult,
                 'backdrop_ruta' => $pelicula->backdrop_ruta,
@@ -31,9 +31,9 @@ class PeliculasController extends Controller
                 'id_sala' => $pelicula->id_sala,
                 'generos' => $pelicula->generos->pluck('genero')->toArray(),
             ];
-        });
+        }
 
-        return $peliculas->toArray();
+        return $peliculas;
     }
 
     private static function formatear_url_backdrop($ruta) {
