@@ -67,9 +67,26 @@ Route::patch('administrador/movies/{id}/estadoActivo', [AdminController::class, 
 //Ruta para cambiar de estreno a cartelera
 Route::patch('administrador/movies/{id}/estrenoActivo', [AdminController::class, 'EstrenoStatus'])->name('EstrenoEstado');
 
+//Ruta para obtener los menus de la base de datos
+Route::get('administrador/menu', [AdminController::class, 'obtenerMenu'])->name('obtenerMenu');
+
+//Ruta para cambiar el estado a activo o desactivado
+Route::patch('administrador/menu/{id}/estadoActivo', [AdminController::class, 'estadoActivo'])->name('estadoActivo');
+
+//Ruta para añadir nuevo elemento a la base de datos
+Route::post('administrador/menu', [AdminController::class, 'añadirProducto'])->name('añadirProducto');
+
+//Ruta para obtener detalles de cada producto para poderlos editar
+Route::get('administrador/menu/{id}', [AdminController::class, 'obtenerProducto'])->name('obtenerProducto');
+
+//Ruta para actualizar los detalles de cada producto
+Route::put('administrador/menu/{id}', [AdminController::class, 'actualizarProducto'])->name('actualizarProducto');
+
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
 });
+
 

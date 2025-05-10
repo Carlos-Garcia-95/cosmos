@@ -1,4 +1,3 @@
-/* En tu archivo CSS de administrador (ej: adminLogin.css o adminDashboard.css) */
 body {
     margin: 0;
     padding: 0;
@@ -95,8 +94,7 @@ body {
     text-align: center;
 }
 
-.sidebar-link
-{
+.sidebar-link {
     display: block;
     padding: 10px 15px;
     color: #f5f5f5;
@@ -114,11 +112,11 @@ body {
 .sidebar-logout-btn {
     display: block;
     padding: 10px 15px;
-    color: #f5f5f5;
+    color: white;
     text-decoration: none;
     border-radius: 5px;
     transition: background-color 0.3s ease, color 0.3s ease;
-    background-color: transparent;
+    background-color: #dc3545;
     border: none;
     text-align: center;
     cursor: pointer;
@@ -127,9 +125,6 @@ body {
     width: auto;
     max-width: 180px;
     margin: 0 auto;
-
-    background-color: #dc3545;
-    color: white;
 }
 
 .sidebar-link:hover,
@@ -166,9 +161,10 @@ body {
     text-align: center;
 }
 
-/* Estilos para los filtros (aplicados a ambas secciones) */
+/* Estilos para los filtros */
 .api-search-filters,
-.manage-filters {
+.manage-filters,
+.manage-menu-filters {
     display: flex;
     gap: 15px;
     margin-bottom: 20px;
@@ -179,12 +175,14 @@ body {
     border-radius: 8px;
 }
 
-/* Estilos para inputs, selects dentro de los filtros */
+/* Estilos para inputs y selects en los filtros */
 .api-search-filters input[type="text"],
 .api-search-filters input[type="number"],
 .api-search-filters select,
 .manage-filters input[type="text"],
-.manage-filters select {
+.manage-filters select,
+.manage-menu-filters input[type="text"],
+.manage-menu-filters select {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -195,7 +193,8 @@ body {
 
 /* Estilos para los botones de filtro */
 .api-search-filters button,
-.manage-filters button {
+.manage-filters button,
+.manage-menu-filters button {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -210,26 +209,30 @@ body {
     background-color: #007bff;
     color: white;
 }
+
 .api-search-filters button:hover:not(:disabled) {
     background-color: #0056b3;
 }
 
-.manage-filters button {
+.manage-filters button,
+.manage-menu-filters button#menu-filter-button {
     background-color: #28a745;
     color: white;
 }
-.manage-filters button:hover:not(:disabled) {
+
+.manage-filters button:hover:not(:disabled),
+.manage-menu-filters button#menu-filter-button:hover:not(:disabled) {
     background-color: #218838;
 }
 
 /* Estilo para botones de filtro deshabilitados */
 .api-search-filters button:disabled,
-.manage-filters button:disabled {
+.manage-filters button:disabled,
+.manage-menu-filters button:disabled {
     background-color: #ccc;
     color: #666;
     cursor: not-allowed;
 }
-
 
 .dashboard-content-area hr {
     border: none;
@@ -237,18 +240,20 @@ body {
     margin: 20px 0;
 }
 
-/* Estilos para las áreas de resultados (aplicados a ambas secciones) */
+/* Estilos para las áreas de resultados */
 .api-results-area,
-.manage-movies-area {
+.manage-movies-area,
+.manage-menu-area {
     margin-top: 20px;
     padding: 15px;
     border-radius: 8px;
     color: white;
 }
 
-/* Estilos para los ítems de película (aplicados a ambas secciones) */
+/* Estilos para los ítems (películas y menú) */
 .api-movie-item,
-.managed-movie-item {
+.managed-movie-item,
+.managed-menu-item {
     display: flex;
     background-color: #f9f9f9;
     padding: 15px;
@@ -261,9 +266,10 @@ body {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilos para las imágenes de poster */
+/* Estilos para las imágenes */
 .api-movie-item img,
-.managed-movie-item img {
+.managed-movie-item img,
+.managed-menu-item img {
     width: 80px;
     height: auto;
     border-radius: 5px;
@@ -271,61 +277,66 @@ body {
     object-fit: cover;
 }
 
-/* Estilos para los detalles de la película */
+/* Estilos para los detalles */
 .api-movie-item .movie-details,
-.managed-movie-item .movie-details {
+.managed-movie-item .movie-details,
+.managed-menu-item .menu-item-details {
     flex: 1;
 }
 
-/* Estilos para los títulos de película */
+/* Estilos para los títulos */
 .api-movie-item .movie-details h4,
-.managed-movie-item .movie-details h4 {
+.managed-movie-item .movie-details h4,
+.managed-menu-item .menu-item-details h4 {
     margin: 0 0 5px 0;
     color: #333;
     font-size: 1.1rem;
 }
 
- .api-movie-item .movie-details p,
- .managed-movie-item .movie-details p {
+.api-movie-item .movie-details p,
+.managed-movie-item .movie-details p,
+.managed-menu-item .menu-item-details p {
     margin: 0;
     color: #555;
     font-size: 0.9rem;
 }
 
-/* Estilos para el contenedor de botones si lo añadiste */
-.managed-movie-item .movie-actions {
+/* Estilos para las acciones */
+.managed-movie-item .movie-actions,
+.managed-menu-item .menu-item-actions {
     display: flex;
     flex-direction: column;
     gap: 10px;
     flex-shrink: 0;
 }
 
-
-/* Estilos específicos de botones de acción */
+/* Estilos para los botones de acción */
 .add-movie-btn,
 .toggle-status-btn,
-.toggle-estreno-btn {
-     padding: 8px 15px;
-     border: none;
-     border-radius: 5px;
-     cursor: pointer;
-     color: white;
-     font-size: 0.9rem;
-     transition: background-color 0.3s ease;
-     white-space: nowrap;
-     flex-shrink: 0;
-     text-align: center;
+.toggle-estreno-btn,
+.manage-menu-area .btn-edit-item,
+.manage-menu-area .btn-toggle-status {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+    text-align: center;
 }
 
-/* Estilo para el botón 'Añadir pelicula' (en sección API) */
+/* Botón 'Añadir pelicula' */
 .add-movie-btn {
     background-color: #0961e5;
 }
+
 .add-movie-btn:hover:not(:disabled) {
     background-color: rgb(47, 145, 211);
 }
 
-/* Estilo para el botón 'Añadida' (cuando la película ya está añadida) */
 .add-movie-btn.added,
 .add-movie-btn:disabled {
     background-color: #ccc;
@@ -333,68 +344,89 @@ body {
     cursor: not-allowed;
 }
 
-
-/* Estilos específicos para el botón Activar/Desactivar */
-.toggle-status-btn.activate {
+/* Botones Activar/Desactivar */
+.toggle-status-btn.activate,
+.manage-menu-area .btn-toggle-status.activate {
     background-color: #38a169;
 }
-.toggle-status-btn.activate:hover:not(:disabled) {
+
+.toggle-status-btn.activate:hover:not(:disabled),
+.manage-menu-area .btn-toggle-status.activate:hover {
     background-color: #2f855a;
 }
-.toggle-status-btn.deactivate {
+
+.toggle-status-btn.deactivate,
+.manage-menu-area .btn-toggle-status.deactivate {
     background-color: #e53e3e;
 }
-.toggle-status-btn.deactivate:hover:not(:disabled) {
-     background-color: #c53030;
+
+.toggle-status-btn.deactivate:hover:not(:disabled),
+.manage-menu-area .btn-toggle-status.deactivate:hover {
+    background-color: #c53030;
 }
 
-/* Estilos para el botón Estreno/Cartelera */
+/* Botones Estreno/Cartelera */
 .toggle-estreno-btn.activate {
     background-color: #0961e5;
 }
+
 .toggle-estreno-btn.activate:hover:not(:disabled) {
     background-color: rgb(47, 145, 211);
 }
+
 .toggle-estreno-btn.deactivate {
     background-color: #f6993f;
     color: #333;
 }
+
 .toggle-estreno-btn.deactivate:hover:not(:disabled) {
-     background-color: #de751f;
+    background-color: #de751f;
 }
 
+/* Botón Editar menú */
+.manage-menu-area .btn-edit-item {
+    background-color: #ffc107;
+    color: #212529;
+}
 
-/* Estilo para cualquier botón de acción cuando está deshabilitado */
+.manage-menu-area .btn-edit-item:hover {
+    background-color: #e0a800;
+}
+
+/* Botones deshabilitados */
 .toggle-status-btn:disabled,
-.toggle-estreno-btn:disabled {
+.toggle-estreno-btn:disabled,
+.manage-menu-area .btn-edit-item:disabled,
+.manage-menu-area .btn-toggle-status:disabled {
     opacity: 0.7;
     cursor: not-allowed;
 }
 
-/* Estilos para los spans que muestran el estado "Activa" o "Inactiva" */
+/* Textos de estado */
 .status-active {
     color: #38a169;
     font-weight: bold;
 }
+
 .status-inactive {
     color: #e53e3e;
     font-weight: bold;
 }
 
-/* Estilos para los spans de estado Estreno/Cartelera */
 .status-estreno {
     color: #f6993f;
     font-weight: bold;
 }
+
 .status-cartelera {
     color: #0961e5;
     font-weight: bold;
 }
 
-
-/* Estilos para los controles de paginación (aplicados a ambas secciones) */
+/* Controles de paginación */
 .api-pagination-controls,
-.manage-pagination-controls {
+.manage-pagination-controls,
+.menu-pagination-controls {
     margin-top: 20px;
     display: flex;
     justify-content: center;
@@ -404,34 +436,37 @@ body {
 }
 
 .api-pagination-controls button,
-.manage-pagination-controls button {
+.manage-pagination-controls button,
+.menu-pagination-controls button {
     padding: 8px 16px;
-    border: 1px solid #ccc;
+    border: 1px solid #555;
     border-radius: 4px;
-    background-color: #f9f9f9;
-    color: white;
+    background-color: #4a4a4a;
+    color: #f5f5f5;
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .api-pagination-controls button:hover:not(:disabled),
-.manage-pagination-controls button:hover:not(:disabled) {
-    background-color: #ddd;
-    color: #000;
-    border-color: #bbb;
+.manage-pagination-controls button:hover:not(:disabled),
+.menu-pagination-controls button:hover:not(:disabled) {
+    background-color: #5a5a5a;
+    border-color: #777;
 }
 
 .api-pagination-controls button:disabled,
-.manage-pagination-controls button:disabled {
+.manage-pagination-controls button:disabled,
+.menu-pagination-controls button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
-    background-color: #eee;
-    color: #999;
-    border-color: #eee;
+    background-color: #333;
+    color: #777;
+    border-color: #333;
 }
 
 .api-pagination-controls span,
-.manage-pagination-controls span {
+.manage-pagination-controls span,
+.menu-pagination-controls span {
     font-weight: bold;
 }
 
@@ -439,6 +474,7 @@ body {
     text-align: center;
     margin-top: 30px;
 }
+
 .logout-form button {
     background-color: #dc3545;
     color: white;
@@ -449,7 +485,223 @@ body {
     font-size: 1rem;
     transition: background-color 0.3s ease;
 }
+
 .logout-form button:hover {
     background-color: #c82333;
+}
+
+/* Estilos para la tabla de elementos del menú */
+.manage-menu-area table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    color: #333;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.manage-menu-area th,
+.manage-menu-area td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.manage-menu-area th {
+    background-color: #e9ecef; /* Un gris claro para los encabezados */
+    color: #495057;
+    font-weight: bold;
+}
+
+.manage-menu-area tr:last-child td {
+    border-bottom: none;
+}
+
+.manage-menu-area tr:hover {
+    background-color: #f1f1f1; /* Efecto hover en las filas */
+}
+
+.manage-menu-area img {
+    max-width: 60px;
+    height: auto;
+    border-radius: 4px;
+    vertical-align: middle;
+}
+
+/* Estilos para el Modal */
+.modal {
+    /* display: none; Por defecto oculto, se controla con JS */
+    position: fixed; /* Se queda fijo en la pantalla */
+    z-index: 1000; /* Por encima de otros elementos */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Permite scroll si el contenido es muy largo */
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+    display: flex; /* Para centrar el contenido del modal */
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #2c2c2c; /* Un poco más claro que el body para contraste */
+    color: #f5f5f5;
+    margin: auto;
+    padding: 25px;
+    border: 1px solid #555;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 550px; /* Ancho máximo del modal */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    position: relative; /* Para posicionar el botón de cierre */
+}
+
+.modal-content h4 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #28a745; /* Un color destacado para el título del modal */
+    text-align: center;
+}
+
+.close-button {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Estilos para el formulario dentro del modal */
+#menu-item-form div {
+    margin-bottom: 15px;
+}
+
+#menu-item-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #ccc;
+}
+
+#menu-item-form input[type="text"],
+#menu-item-form input[type="number"],
+#menu-item-form textarea,
+#menu-item-form input[type="file"] {
+    width: calc(100% - 22px); /* Ajustar por padding y borde */
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #3f3f3f;
+    color: #f5f5f5;
+    font-size: 1rem;
+}
+#menu-item-form input[type="file"] {
+    padding: 5px; /* Menos padding para el input file */
+}
+
+
+#menu-item-form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+#menu-item-foto-preview {
+    display: block; /* Para que ocupe su propia línea */
+    max-width: 150px; /* Más grande para la vista previa en el modal */
+    max-height: 150px;
+    margin-top: 10px;
+    border-radius: 4px;
+    border: 1px solid #555;
+}
+
+#add-new-menu-item-button,
+#save-menu-item-button{
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+#add-new-menu-item-button:hover{
+    background-color: #0056b3;
+}
+
+#cancel-menu-item-button{
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+#add-new-menu-item-button:hover {
+    background-color: #7c868f;
+}
+
+.modal-actions {
+    margin-top: 25px;
+    text-align: right; /* Alinea los botones a la derecha */
+}
+
+.modal-actions button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+    border: none;
+}
+
+#save-menu-item-button {
+    background-color: #28a745; /* Verde para guardar */
+    color: white;
+}
+#save-menu-item-button:hover {
+    background-color: #218838;
+}
+
+.modal-actions .btn-cancel { /* Si usas una clase específica para el botón cancelar */
+    background-color: #6c757d; /* Gris para cancelar */
+    color: white;
+}
+.modal-actions .btn-cancel:hover {
+    background-color: #5a6268;
+}
+
+.api-pagination-controls button,
+.manage-pagination-controls button,
+.menu-pagination-controls button { /* Añadimos la clase para el menú */
+    padding: 8px 16px;
+    border: 1px solid #555; /* Borde más oscuro para contraste con fondo claro */
+    border-radius: 4px;
+    background-color: #4a4a4a; /* Fondo de botón más oscuro */
+    color: #f5f5f5; /* Texto claro */
+    cursor: pointer;
+    /* ... el resto ... */
+}
+
+.api-pagination-controls button:hover:not(:disabled),
+.manage-pagination-controls button:hover:not(:disabled),
+.menu-pagination-controls button:hover:not(:disabled) {
+    background-color: #5a5a5a;
+    border-color: #777;
 }
 

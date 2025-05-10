@@ -25,6 +25,7 @@ export default defineConfig({
                 "resources/js/loginAdmin.js",
                 "resources/css/dashboard.css",
                 "resources/js/adminDashboardGestionarPelicula.js",
+                "resources/js/adminDashboardGestionarMenu.js",
 
             ],
             refresh: true,

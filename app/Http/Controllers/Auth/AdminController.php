@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\Pelicula;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use App\Models\MenuItem;
 
+//Función para mostrar el login de administrador
 class AdminController extends Controller
 {
     public function mostrarLogin()
@@ -23,6 +26,7 @@ class AdminController extends Controller
         return view('administrador.loginAdministrador');
     }
 
+    //Login del administradores, validación de campos
     public function login(Request $request)
     {
         $request->validate([
@@ -48,7 +52,7 @@ class AdminController extends Controller
         }
     }
 
-    
+
 
     //Conparar peliculas de la base de datos con las que nos muestra la api para saber cual tenemos ya en la base de datos.
     public function searchTMDb(Request $request)
@@ -198,6 +202,7 @@ class AdminController extends Controller
                 }
             }
 
+            //Guardar la película de la API
             $movieToSave = new Pelicula();
             $movieToSave->id_api = $movieDetails['id'];
             $movieToSave->titulo = $movieDetails['title'] ?? $movieDetails['original_title'] ?? 'Título desconocido';
@@ -244,7 +249,7 @@ class AdminController extends Controller
     {
         // 1. Obtener los parámetros de filtro y paginación de la request
         $query = $request->input('query');
-        $genreId = $request->input('genre_id');
+        /* $genreId = $request->input('genre_id'); */
         $status = $request->input('status', 'all');
         $itemsPerPage = $request->input('items_per_page', 10);
         $itemsPerPage = (int) $itemsPerPage; // Asegurarse de que es un entero
@@ -257,14 +262,15 @@ class AdminController extends Controller
 
         // Aplicar filtro por título si se proporciona un término de búsqueda
         if (!empty($query)) {
-            $movies->where(function($q) use ($query) {
+            $movies->where(function ($q) use ($query) {
                 // Buscar en el título principal O en el título original
                 $q->where('titulo', 'like', '%' . $query . '%')
-                ->orWhere('titulo_original', 'like', '%' . $query . '%');
+                    ->orWhere('titulo_original', 'like', '%' . $query . '%');
             });
         }
 
-        // Aplicar filtro por género si se proporciona un ID de género
+
+        // Aplicar filtro por género si se proporciona un ID de género, cuando lo solucionemos
         /* if (!empty($genreId)) {
             $movies->whereHas('generos', function ($q) use ($genreId) {
                 $q->where('genero_pelicula.id', $genreId);
@@ -286,7 +292,7 @@ class AdminController extends Controller
         return response()->json($paginatedMovies);
     }
 
-    
+
 
     public function estadoPelicula(Request $request, $id)
     {
@@ -310,21 +316,178 @@ class AdminController extends Controller
     //Estrenos
     public function EstrenoStatus($id)
     {
-            $movie = Pelicula::findOrFail($id);
+        $movie = Pelicula::findOrFail($id);
 
-            $movie->estreno = !$movie->estreno;
+        $movie->estreno = !$movie->estreno;
 
-            $movie->save();
+        $movie->save();
 
-            $newStatusText = $movie->estreno ? 'Estreno' : 'Cartelera';
+        $newStatusText = $movie->estreno ? 'Estreno' : 'Cartelera';
 
-            // Devolver una respuesta de éxito al frontend
-            return response()->json([
-                'message' => "Estado de cartelera/estreno actualizado a '{$newStatusText}'.",
-                'new_status' => $movie->estreno, // Devolver el nuevo valor booleano (false=Estreno, true=Cartelera)
-                'new_status_text' => $newStatusText // Devolver el texto del nuevo estado
-            ]);
+        // Devolver una respuesta de éxito al frontend
+        return response()->json([
+            'message' => "Estado de cartelera/estreno actualizado a '{$newStatusText}'.",
+            'new_status' => $movie->estreno,
+            'new_status_text' => $newStatusText
+        ]);
     }
+
+    public function obtenerMenu(Request $request)
+    {
+        try {
+            $query = MenuItem::orderBy('nombre');
+
+            // Filtrar por búsqueda
+            if ($request->has('search')) {
+                $searchTerm = $request->input('search');
+                $query->where('nombre', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('descripcion', 'like', '%' . $searchTerm . '%');
+            }
+
+            // Filtrar por estado (activo/inactivo)
+            if ($request->has('status') && $request->input('status') !== 'all') {
+                $status = $request->input('status');
+                $query->where('activo', $status); // Filtra directamente usando el valor 1 o 0
+            }
+
+            // Paginación
+            $perPage = $request->input('perPage', 10); // Default a 10 elementos por página
+            $menuItems = $query->paginate($perPage);
+
+            return response()->json($menuItems);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al cargar los elementos del menú.'], 500);
+        }
+    }
+
+    public function estadoActivo($id)
+    {
+
+        try {
+            //Validamos si el elemento del menu existe
+            $menuItem = MenuItem::findOrFail($id);
+
+            //Cambiamos el estado a activo
+            $menuItem->activo = !$menuItem->activo;
+
+            //Guaradmos los cambios en la BBDD
+            $menuItem->save();
+
+            //Respuesta Json
+            $newStatusText = $menuItem->activo ? 'Activado' : 'Desactivado';
+
+            return response()->json([
+                'message' => "Estado de elemento del menú actualizado a '{$newStatusText}'.",
+                'new_status' => $menuItem->activo,
+                'new_status_text' => $newStatusText,
+                'item_id' => $menuItem->id
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al actualizar el estado del elemento del menú.'], 500);
+        }
+    }
+
+    //Función para añadir un nuevo producto en la BBDD
+    public function añadirProducto(Request $request)
+    {
+
+        //Validar los datos recibidos del formulario
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'precio' => 'required|numeric|min:0',
+            'foto' => 'nullable|image|max:2048',
+        ]);
+
+        try {
+            //Nuevo producto
+            $newItem = new MenuItem();
+
+            //Asignamos los input, con las columnas de la base de datos
+            $newItem->nombre = $request->input('nombre');
+            $newItem->descripcion = $request->input('descripcion');
+            $newItem->precio = $request->input('precio');
+
+            //Manejar la subida de la foto
+            if ($request->hasFile('foto')) {
+                $file = $request->file('foto');
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                // Guardar directamente en la carpeta public/images/menus
+                $file->move(public_path('images/menus'), $fileName);
+                $newItem->imagen_url = '/images/menus/' . $fileName;
+            } else {
+                $newItem->imagen_url = "/images/menus/imagenDefecto.jpeg";
+            }
+
+            //Guardamos en la BBDD
+            $newItem->save();
+
+            //Respuesta
+            return response()->json([
+                'message' => 'Elemento del menú añadido con éxito.',
+                'item' => $newItem
+            ], 201);
+        } catch (\Exception $e) {
+
+            return response()->json(['error' => 'Ocurrió un error al añadir el elemento del menú.'], 500);
+        }
+    }
+
+    //Función para obtener un producto en concreto para editar
+    public function obtenerProducto($id)
+    {
+        try {
+
+            //Obtener el menu por su id
+            $menuItem = MenuItem::findOrFail($id);
+            return response()->json($menuItem);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al obtener los detalles del elemento del menú.'], 500);
+        }
+    }
+
+    public function actualizarProducto(Request $request, $id)
+    {
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'precio' => 'required|numeric|min:0',
+            'foto' => 'nullable|image|max:2048',
+            'imagen_ruta' => 'nullable|string|max:255', // Validamos el nuevo campo de ruta (opcional)
+        ]);
+
+        try {
+            $menuItem = MenuItem::findOrFail($id);
+            $menuItem->nombre = $request->input('nombre');
+            $menuItem->descripcion = $request->input('descripcion');
+            $menuItem->precio = $request->input('precio');
+
+            // Si se proporciona una nueva ruta de imagen, la actualizamos
+            if ($request->filled('imagen_ruta')) {
+                $menuItem->imagen_url = $request->input('imagen_ruta');
+            }
+            // Si se sube una nueva foto, la guardamos y actualizamos la ruta
+            elseif ($request->hasFile('foto')) {
+                $file = $request->file('foto');
+                $fileName = time() . '_' . $file->getClientOriginalName();
+                $file->move(public_path('images/menus'), $fileName);
+                $menuItem->imagen_url = '/images/menus/' . $fileName;
+            }
+            // Si no se proporciona una nueva ruta ni se sube una nueva foto,
+            // la imagen_url existente en la base de datos se mantiene.
+
+            $menuItem->save();
+
+            return response()->json([
+                'message' => 'Elemento del menú actualizado con éxito.',
+                'item' => $menuItem
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ocurrió un error al actualizar el elemento del menú.'], 500);
+        }
+    }
+
+
 
 
     //Función index que returnea la vista, con los géneros para el select
@@ -334,6 +497,7 @@ class AdminController extends Controller
         return view('administrador.dashboard', compact('generos_tmdb'));
     }
 
+    //Función logout, que nos rederige al login de administrador
     public function logout(Request $request)
     {
         Auth::guard('admin')->logout();
