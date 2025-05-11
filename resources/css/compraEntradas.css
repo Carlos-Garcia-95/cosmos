@@ -4,6 +4,229 @@
     box-sizing: border-box;
 }
 
+#seccionCompra {
+    height: 110vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    top: 100%;
+    transition: opacity 0.5s ease, visibility 0.5s ease, top 0.5s ease;
+    margin-top: 5%;
+}
+
+
+
+
+
+
+
+/* DIV DE SESIONES */
+
+.seccion-compra-contenido {
+    display: flex; /* Convierte este contenedor en Flexbox */
+    flex-direction: row; /* Organiza los hijos en fila (uno al lado del otro) */
+    width: 100%; /* Ocupa todo el ancho del padre (#seccionCompra) */
+    height: 100%; /* Ocupa toda la altura del padre */
+    padding: 15px; /* Añade un poco de padding interno */
+    box-sizing: border-box; /* Incluye padding en width/height */
+}
+
+
+.seccion_sesiones,
+.seccion_asientos {
+    height: 100%; /* Cada mitad ocupa el 100% de la altura */
+    overflow-y: auto; /* Permite scroll individual si el contenido es muy largo */
+    padding: 15px; /* Añade padding interno a cada mitad */
+    box-sizing: border-box; /* Incluye padding en width/height */
+    /* Añade bordes o fondos para visualización durante el desarrollo */
+    /* border: 1px solid blue; */
+    /* background-color: rgba(255, 255, 255, 0.05); */
+}
+
+.seccion_asientos {
+    width: 60%;
+}
+
+.seccion_sesiones {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    border-right: 1px solid white;
+    gap: 10px; /* Espacio entre columnas y filas del grid */
+    /* text-align: center; /* Opcional: centra el texto dentro de las celdas si no se especifica */
+    color: #f0f0f0; /* Color de texto para esta mitad */
+}
+
+/* Estilos para los elementos dentro del grid de la mitad izquierda */
+.day-column {
+    /* Estilos para las columnas de los días */
+    text-align: center;
+    font-weight: bold;
+    /* grid-column se definirá en JS */
+}
+
+.day-info {
+    width: 15%;
+}
+
+.times-column {
+     /* Estilos para las columnas de las horas */
+     /* grid-column se definirá en JS */
+}
+
+.session-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.session-day,
+.session-time {
+    /* Estilos para los elementos individuales de día/hora si no usas divs separados para columnas */
+    /* Puedes añadir padding, bordes, hover effects aquí */
+    padding: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-align: center;
+}
+
+.times-list {
+    display: flex;
+    flex-direction: row;
+    gap: 10%;
+}
+
+.session-time:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Estilos específicos para el contenido de la derecha si es necesario */
+.right-half .movie-container,
+.right-half .showcase,
+.right-half .container,
+.right-half .text-wrapper {
+    margin-bottom: 20px; /* Espacio entre las secciones dentro de la mitad derecha */
+}
+
+
+/* Asegúrate de que el contenido dentro de .right-half se ajusta bien */
+.right-half .container {
+    /* Estilos para el contenedor de asientos */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.right-half .row {
+    /* Estilos para las filas de asientos */
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.right-half .seat {
+    /* Estilos para los asientos */
+    background-color: #606060; /* Gris oscuro */
+    height: 25px;
+    width: 25px;
+    margin: 3px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.right-half .seat.selected {
+    background-color: #e67e22; /* Naranja */
+}
+
+.right-half .seat.occupied {
+    background-color: #f00; /* Rojo */
+    cursor: not-allowed;
+}
+
+.right-half .showcase li {
+     display: flex;
+     align-items: center;
+     margin: 0 10px;
+}
+.right-half .showcase li small {
+    margin-left: 5px;
+}
+.right-half .showcase li .seat {
+    cursor: default; /* No cursor de puntero en la leyenda */
+}
+
+.right-half .screen {
+    background-color: #ccc;
+    height: 70px;
+    width: 100%;
+    margin: 20px 0;
+    transform: rotateX(-45deg);
+    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.7);
+}
+
+.right-half .text-wrapper {
+    margin-top: 20px;
+    text-align: center;
+    color: #f0f0f0;
+}
+
+.right-half .text span {
+    color: #e67e22; /* Naranja para los números */
+}
+
+
+/* Estilo para el botón "Volver" */
+#cerrarCompra {
+    padding: 10px 20px;
+    color: white;
+    background-color: #555; /* Gris */
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px; /* Espacio debajo del botón de volver */
+}
+
+#cerrarCompra:hover {
+    background-color: #777; /* Gris más claro al pasar el ratón */
+}
+
+
+/* Estilo para el botón "Comprar Entradas" en la sección de compra */
+#confirmarCompra {
+     padding: 12px 25px;
+     color: white;
+     background-color: #28a745; /* Verde */
+     border: none;
+     border-radius: 5px;
+     font-size: 1em;
+     cursor: pointer;
+     transition: background-color 0.3s ease;
+     margin-top: 15px; /* Espacio encima del botón */
+}
+
+#confirmarCompra:hover {
+     background-color: #218838; /* Verde más oscuro */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* DIV DE ASIENTOS */
+
 .movie-container {
     margin: 20px 0;
 }
@@ -96,24 +319,17 @@ p.text span {
     color: #6feaf6;
 }
 
-#seccionCompra {
-    width: 80%;
-    max-width: 600px;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.7);
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 10px;
-    padding: 20px;
-    z-index: 1000;
-    transition: opacity 0.5s ease, visibility 0.5s ease, top 0.5s ease;
-    margin-top: 5%;
-}
 
+
+
+
+
+
+
+
+
+
+/* VARIOS */
 
   /* Cuando se activa (por ejemplo, al hacer clic en el botón) */
 .visible {

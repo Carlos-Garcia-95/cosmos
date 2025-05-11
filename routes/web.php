@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\MenuController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PeliculasController;
+use App\Http\Controllers\RecuperarSesionPelicula;
 
 //Ruta por get, al poner / en el buscador, nos saldra la pantalla de principal, que es devuelta por la clase HomeController y llama a la función index.
 Route::get('/', [HomeController::class, 'index'])->name('principal');
@@ -71,3 +72,5 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
 });
 
+// Recuperar las sesiones asociadas con una película
+Route::get('/recuperar_sesiones/id_pelicula={peliculaId}', [RecuperarSesionPelicula::class, 'recuperar_sesion_pelicula']);
