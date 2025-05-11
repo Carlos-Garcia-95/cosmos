@@ -28,6 +28,7 @@ return new class extends Migration
             $table->unsignedInteger('numero_votos')->nullable();
             $table->double('popularidad', 15, 5)->nullable();
             $table->boolean('activa');
+            $table->boolean('estreno');
             $table->timestamp('created_at')->useCurrent();
             
             $table->unsignedBigInteger('id_sala')->nullable();              // id sala

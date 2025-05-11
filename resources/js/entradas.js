@@ -9,8 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // y actualizar el contenido de seccionCompra con esos detalles.
 
         // Por ejemplo, podrías hacer algo como esto:
-        const pelicula = peliculas[peliculaId]; // Acceder a los datos de la película
-        console.log(peliculas);
+        //const pelicula = peliculas[peliculaId];
 
         //Seccion de compra es un div, no olvides agregar el contenido de la pelicula
         seccionCompra.innerHTML = `
