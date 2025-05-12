@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Pelicula;
 use App\Models\Sesion;
 use App\Models\Sala;
+use App\Models\Asiento; 
 use App\Models\Hora;
 use App\Models\Fecha;
+use App\Constants\Salas;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\ValidationException; // Importa la clase ValidationException
 
@@ -55,7 +58,7 @@ class SessionController extends Controller
 
         $fechaObj = Fecha::find($fechaId);
         if (!$fechaObj) {
-             return response()->json(['error' => 'Fecha no encontrada'], 400);
+            return response()->json(['error' => 'Fecha no encontrada'], 400);
         }
         $fechaSeleccionadaStr = $fechaObj->fecha; // Fecha en formato YYYY-MM-DD.
 
@@ -105,9 +108,9 @@ class SessionController extends Controller
                 }
             }
 
-            // Opcional: No mostrar horas ya pasadas si la fecha es hoy.
+            //No mostrar horas ya pasadas si la fecha es hoy.
             if ($fechaSeleccionadaStr == Carbon::now()->toDateString() && $inicioNuevaSesion->lt(Carbon::now())) {
-                 $isAvailable = false;
+                $isAvailable = false;
             }
 
 
@@ -130,22 +133,27 @@ class SessionController extends Controller
         try {
             $validatedData = $request->validate([
                 'fecha' => ['required', 'exists:fecha,id'],
-                'sala_id' => ['required', 'exists:sala,id_sala'], // Asumo que la PK de 'sala' es 'id_sala'.
+                'sala_id' => ['required', 'exists:sala,id_sala'],
                 'pelicula_id' => ['required', 'exists:pelicula,id'],
                 'hora' => ['required', 'exists:hora,id'],
-                'activa' => ['boolean'], // Opcional: si tienes un campo 'activa' en el formulario.
+                'activa' => ['boolean'],
             ]);
 
             // Comprobar si ya existe una sesión para la misma sala, fecha y hora
             $existingSession = Sesion::where('fecha', $validatedData['fecha'])
-                                     ->where('id_sala', $validatedData['sala_id'])
-                                     ->where('hora', $validatedData['hora'])
-                                     ->first();
+                                    ->where('id_sala', $validatedData['sala_id'])
+                                    ->where('hora', $validatedData['hora'])
+                                    ->first();
 
             if ($existingSession) {
                 return response()->json(['message' => 'Ya existe una sesión programada para esta sala, fecha y hora. Por favor, selecciona otra.'], 409);
             }
 
+            // INICIO DE LA TRANSACCIÓN DE BASE DE DATOS
+            // Todas las operaciones dentro de este bloque serán atómicas.
+            DB::beginTransaction();
+
+            // Crear la sesión
             $sesion = Sesion::create([
                 'fecha' => $validatedData['fecha'],
                 'id_sala' => $validatedData['sala_id'],
@@ -154,17 +162,66 @@ class SessionController extends Controller
                 'activa' => $validatedData['activa'] ?? true,
             ]);
 
-            return response()->json(['message' => 'Sesión creada exitosamente.', 'sesion' => $sesion], 201);
+            // Obtener la configuración detallada de la sala desde las constantes
+            $idSala = $validatedData['sala_id'];
+            if (!isset(Salas::SALAS[$idSala])) {
+                // Si la configuración de la sala no se encuentra, lanzamos una excepción.
+                // Se hará un rollback automáticamente al salir de este catch.
+                throw new \Exception("Configuración de sala (ID: {$idSala}) no encontrada en la clase 'Salas'.");
+            }
+
+            $salaConfig = Salas::SALAS[$idSala];
+            $filasDefinidas = $salaConfig['filas'];
+            $columnasDefinidas = $salaConfig['columnas'];
+            $estadoDefecto = $salaConfig['estado_defecto'];
+            $tipoDefecto = $salaConfig['tipo_defecto'];
+
+            // Verificar si el número total de asientos calculado coincide con el de la base de datos
+            $numAsientosGenerados = count($filasDefinidas) * count($columnasDefinidas);
+            $salaDb = Sala::find($idSala);
+            if ($salaDb && $salaDb->numero_asientos !== $numAsientosGenerados) {
+                // Esto es una inconsistencia, lanzamos una excepción
+                throw new \Exception("Inconsistencia: Sala ID {$idSala} tiene {$salaDb->numero_asientos} asientos en DB pero {$numAsientosGenerados} definidos en constantes. Por favor, corrige la configuración.");
+            }
+
+            // Generar los registros de Asientos para la nueva sesión
+            $asientosData = [];
+            foreach ($filasDefinidas as $fila) {
+                foreach ($columnasDefinidas as $columna) {
+                    $asientosData[] = [
+                        'id_sesion_pelicula' => $sesion->id,
+                        'estado' => $estadoDefecto,
+                        'id_sala' => $idSala,
+                        'id_tipo_asiento' => $tipoDefecto,
+                        'columna' => $columna,
+                        'fila' => $fila,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now(),
+                    ];
+                }
+            }
+
+            // Insertar masivamente los asientos
+            Asiento::insert($asientosData);
+
+            // Si todo ha ido bien, CONFIRMAR LA TRANSACCIÓN
+            DB::commit();
+
+            return response()->json(['message' => 'Sesión y asientos creados exitosamente.', 'sesion' => $sesion], 201);
 
         } catch (ValidationException $e) {
-             Log::warning("Error de validación al añadir sesión: " . $e->getMessage());
-             return response()->json([
-                 'message' => 'Error de validación.',
-                 'errors' => $e->errors()
-             ], 422);
-         } catch (\Exception $e) {
-            Log::error("Error al crear la sesión: " . $e->getMessage(), ['exception' => $e]);
-            return response()->json(['message' => 'Error interno al crear la sesión.', 'error' => $e->getMessage()], 500);
+            // No es necesario un DB::rollBack() aquí porque la validación ocurre antes de iniciar la transacción.
+            // Pero si decides iniciar la transacción antes de la validación, sí lo necesitarías.
+            return response()->json([
+                'message' => 'Error de validación.',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            // Si ocurre cualquier excepción durante la creación de la sesión o los asientos,
+            // REVERTIR LA TRANSACCIÓN para asegurar la consistencia de los datos.
+            DB::rollBack();
+            Log::error("Error al crear la sesión y/o asientos: " . $e->getMessage(), ['exception' => $e, 'trace' => $e->getTraceAsString()]);
+            return response()->json(['message' => 'Error interno al crear la sesión y/o asientos.', 'error' => $e->getMessage()], 500);
         }
     }
 
@@ -226,20 +283,38 @@ class SessionController extends Controller
      */
     public function deleteSession($sesion_id)
     {
+        // Usamos una transacción para asegurar que si falla la eliminación de asientos o sesión,
+        DB::beginTransaction();
+
         try {
             $session = Sesion::find($sesion_id);
 
+            // Verificar si la sesión existe
             if (!$session) {
+                DB::rollBack(); // Revertir la transacción si no se encuentra la sesión
                 return response()->json(['message' => 'Sesión no encontrada.'], 404);
             }
 
+            // 1. Eliminar los asientos relacionados con esta sesión
+            // Asumo que tu modelo Asiento tiene una clave foránea 'sesion_id' que referencia a la tabla 'sesiones'.
+            // Si la columna se llama diferente en tu tabla 'asientos', ajústala aquí.
+            $deletedSeatsCount = Asiento::where('id_sesion_pelicula', $session->id)->delete();
+
+            //Eliminar la sesión
             $session->delete();
 
-            return response()->json(['message' => 'Sesión eliminada exitosamente.'], 200);
+            // Si todo fue bien, confirmamos la transacción
+            DB::commit();
+
+            // Retornar una respuesta exitosa.
+            return response()->json(['message' => 'Sesión y asientos relacionados eliminados exitosamente.'], 200);
 
         } catch (\Exception $e) {
-            Log::error("Error al eliminar la sesión con ID {$sesion_id}: " . $e->getMessage());
-            return response()->json(['message' => 'Error al eliminar la sesión.', 'error' => $e->getMessage()], 500);
+            // Si ocurre algún error, revertimos la transacción
+            DB::rollBack();
+
+            // Retornar una respuesta de error al cliente
+            return response()->json(['message' => 'Error al eliminar la sesión y sus asientos.', 'error' => $e->getMessage()], 500);
         }
     }
 

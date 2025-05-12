@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetchData('/administrador/sesiones', 'POST', formData);
 
             // Mostrar mensaje de éxito
-            showTemporaryMessage('Sesión creada exitosamente.', 'success', 3000);
+            showTemporaryMessage('Sesión creada y asientos creados exitosamente.', 'success', 3000);
 
             // Resetear el formulario y poblar las horas de nuevo (ahora estará vacío o con valores predeterminados)
             createSessionForm.reset();

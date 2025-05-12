@@ -17,8 +17,21 @@
 <body>
     <div class="dashboard-layout">
         <header class="dashboard-header">
+        <!-- <button class="menu-toggle" aria-label="Abrir menú">☰</button> -->
             <div class="header-right-elements">
-                <span class="admin-name">{{ Auth::user()->nombre_user_admin ?? Auth::user()->nombre ?? Auth::user()->email ?? 'Admin' }}</span>
+                <span class="admin-name">
+                    @php
+                        $adminName = '';
+                        if (Auth::check()) {
+                            $user = Auth::user();
+                            $fullName = trim(($user->nombre ?? '') . ' ' . ($user->apellido ?? ''));
+                            $adminName = $fullName ?: ($user->nombre_user_admin ?? $user->nombre ?? $user->email ?? 'Admin');
+                        } else {
+                            $adminName = 'Admin'; // O lo que quieras mostrar si no hay usuario logueado
+                        }
+                    @endphp
+                    {{ $adminName }}
+                </span>
                 <div class="company-logo">
                     <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Logo Empresa Cosmos Cinema">
                 </div>
