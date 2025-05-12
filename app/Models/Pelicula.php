@@ -41,7 +41,11 @@ class Pelicula extends Model
 
     public function generos(): BelongsToMany
     {
-        return $this->belongsToMany(GeneroPelicula::class, 'pelicula_genero', 'id_pelicula', 'id_genero_pelicula', 'id', 'id_genero_pelicula')
-                    ->withTimestamps();
+        return $this->belongsToMany(
+            GeneroPelicula::class,      // Modelo relacionado
+            'pelicula_genero',          // Nombre de la tabla pivote
+            'id_pelicula',              // Clave foránea de este modelo (Pelicula) en la tabla pivote
+            'id_genero_pelicula'        // Clave foránea del modelo relacionado (GeneroPelicula) en la tabla pivote
+        );
     }
 }

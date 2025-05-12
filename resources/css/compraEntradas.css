@@ -26,7 +26,7 @@
 .seccion-compra-contenido {
     display: flex; /* Convierte este contenedor en Flexbox */
     flex-direction: row; /* Organiza los hijos en fila (uno al lado del otro) */
-    width: 100%; /* Ocupa todo el ancho del padre (#seccionCompra) */
+    width: 95%; /* Ocupa todo el ancho del padre (#seccionCompra) */
     height: 100%; /* Ocupa toda la altura del padre */
     padding: 15px; /* Añade un poco de padding interno */
     box-sizing: border-box; /* Incluye padding en width/height */
@@ -71,11 +71,6 @@
     width: 15%;
 }
 
-.times-column {
-     /* Estilos para las columnas de las horas */
-     /* grid-column se definirá en JS */
-}
-
 .session-row {
     display: flex;
     flex-direction: row;
@@ -96,7 +91,9 @@
 .times-list {
     display: flex;
     flex-direction: row;
-    gap: 10%;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 5%;
 }
 
 .session-time:hover {
@@ -166,6 +163,10 @@
     box-shadow: 0 3px 10px rgba(255, 255, 255, 0.7);
 }
 
+.screen {
+    justify-self: center;
+}
+
 .right-half .text-wrapper {
     margin-top: 20px;
     text-align: center;
@@ -227,22 +228,77 @@
 
 /* DIV DE ASIENTOS */
 
-.movie-container {
-    margin: 20px 0;
+.seccion_asientos_header {
+    padding: 10px 10px 0 10px;
 }
 
-.movie-container select {
-    background-color: #444451;
-    color: white;
-    border: 0;
-    border-radius: 5px;
-    font-size: 14px;
-    margin-left: 10px;
-    padding: 8px 15px;
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    appearance: none;
+.contenedor_principal_asientos_header {
+    display: flex; /* Activamos Flexbox */
 }
+
+.columna_izquierda {
+    width: 70%; /* Ocupa el 60% del ancho */
+    display: flex;
+    flex-direction: column; /* Los elementos internos se apilan verticalmente */
+    justify-content: space-between;
+}
+
+.superior_izquierda {
+    /* Aquí puedes añadir estilos específicos si los necesitas, como padding, etc. */
+    margin-bottom: 10px; /* Espacio entre el título y la leyenda de asientos */
+}
+
+.pelicula_asientos {
+    font-size: 2.5em; /* Ejemplo de estilo para el título */
+    font-weight: bold;
+}
+
+.columna_derecha {
+    width: 30%; /* Ocupa el 40% del ancho */
+    padding-left: 20px; /* Un poco de espacio para separarlo de la columna izquierda */
+    box-sizing: border-box; /* Para que el padding no aumente el ancho total */
+    display: flex;
+    flex-direction: column; /* Apila los elementos de información verticalmente */
+    justify-content: center; /* Alinea los elementos al inicio (arriba) */
+    align-items: flex-end;
+}
+
+.columna_derecha div {
+    margin-bottom: 8px;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.header_genero {
+    border: 1px solid white;
+    width: fit-content;
+    padding: 5px 15px;
+}
+
+
+
+.inferior_izquierda {
+    display: grid; /* Activamos CSS Grid */
+    grid-template-columns: repeat(2, 1fr); /* Creamos 2 columnas de igual fracción del espacio disponible */
+    grid-template-rows: auto auto; /* Definimos dos filas, la altura se ajustará al contenido */
+    gap: 10px;
+    
+}
+
+.header_div {
+    display: flex;
+    flex-direction: row;
+    font-size: 1.2em;
+}
+
+
+
+.header_titulo {
+    color: #6feaf6;
+    font-size: 1em;
+}
+
+
 
 .container {
     perspective: 100px;
@@ -269,7 +325,7 @@
 }
 
 .seat.occupied {
-    background-color: #fff;
+    background-color: #d12d10;
 }
 
 .seat:not(.occupied):hover {
@@ -277,14 +333,23 @@
     transform: scale(1.2);
 }
 
+.gap {
+    background-color: transparent;
+    border-radius: 0;
+    height: 24px;
+    width: 30px;
+    margin: 3px;
+}
+
 .showcase {
     background: rgba(0, 0, 0, 0.1);
-    padding: 5px 10px;
+    padding: 15px 10px 0px 10px;
     border-radius: 5px;
-    color: #777;
+    color: white;
     list-style-type: none;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 5%;
 }
 
 .showcase li {

@@ -55,7 +55,7 @@
         <div class='cartelera-titulo'>
             <h3>Elige tus Asientos</h3>
         </div>
-        <div class='separador'></div>
+        <div class='separador_compra'></div>
         <div class="seccion-compra-contenido">
             <!-- Fechas y horas de sesiones de la película -->
             <div class='seccion_sesiones' id='seccion_sesiones'>

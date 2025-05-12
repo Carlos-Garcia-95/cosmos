@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\MenuController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PeliculasController;
+use App\Http\Controllers\RecuperarAsientos;
 use App\Http\Controllers\RecuperarSesionPelicula;
 
 //Ruta por get, al poner / en el buscador, nos saldra la pantalla de principal, que es devuelta por la clase HomeController y llama a la función index.
@@ -92,3 +93,6 @@ Route::middleware(['auth'])->group(function () {
 
 // Recuperar las sesiones asociadas con una película
 Route::get('/recuperar_sesiones/id_pelicula={peliculaId}', [RecuperarSesionPelicula::class, 'recuperar_sesion_pelicula']);
+
+// Recuperar los asientos de la sesión seleccionada
+Route::get('/recuperar_asientos/id_sesion={id_sesion}', [RecuperarAsientos::class, 'recuperar_asientos_sesion']);

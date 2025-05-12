@@ -20,7 +20,11 @@ class GeneroPelicula extends Model
 
     public function peliculas(): BelongsToMany
     {
-        return $this->belongsToMany(Pelicula::class, 'pelicula_genero', 'id_genero_pelicula', 'id_pelicula', 'id_genero_pelicula', 'id')
-                    ->withTimestamps();
+        return $this->belongsToMany(
+            Pelicula::class,            // Modelo relacionado
+            'pelicula_genero',          // Nombre de la tabla pivote
+            'id_genero_pelicula',       // Clave foránea de este modelo (GeneroPelicula) en la tabla pivote
+            'id_pelicula'               // Clave foránea del modelo relacionado (Pelicula) en la tabla pivote
+        );
     }
 }

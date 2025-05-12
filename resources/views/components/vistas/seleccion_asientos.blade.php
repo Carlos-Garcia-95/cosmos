@@ -1,51 +1,18 @@
-<div>
-            <div id='cerrar-button' class='header-buttons cerrar-button'>
-                <button id="cerrarCompra">VOLVER</button>
+<div class='seccion_asientos_header' id='seccion_asientos_header'>
+    <div class="contenedor_principal_asientos_header">
+        <div class="columna_izquierda" id='columna_izquierda'>
+            <div class="superior_izquierda" id='superior_izquierda'>
+
             </div>
+            <div class="inferior_izquierda" id='inferior_izquierda'>
 
-            <div class="movie-container">
-                <label>Pick a Movie</label>
-                <!-- Ya haremos el select con las querys necesarias para sacar info de base de datos -->
-                <select id="movie">
-                    <option value='8'>True Romance - $8</option>
-                    <option value='8'>American History X - $8</option>
-                    <option value='8'>A Beautiful Mind - $8</option>
-                    <option value='10'>Joker - $10</option>
-                </select>
             </div>
+        </div>
+        <div class="columna_derecha" id='columna_derecha'>
 
-            <!-- Podemos meter los tres dentro de una tabla y juntarla a asiento-->
-            <ul class="showcase">
-                <li>
-                    <div class="seat"></div>
-                    <small>Available</small>
-                </li>
-                <li>
-                    <div class="seat selected"></div>
-                    <small>Selected</small>
-                </li>
-                <li>
-                    <div class="seat occupied"></div>
-                    <small>Occupied</small>
-                </li>
-            </ul>
+        </div>
+    </div>
+    <div class="inferior" id='inferior'>
 
-            <!-- Contenedor para los asientos -->
-            <div class="container">
-                <div class="screen"></div>
-                @for ($i = 0; $i < 8; $i++) <div class="row">
-                    @for ($j = 0; $j < 8; $j++) <div class="seat">
-            </div>
-            @endfor
-        </div>
-        @endfor
-        </div>
-
-        <!-- Información de los asientos seleccionados y precio -->
-        <div class="text-wrapper">
-            <p class="text">
-                You have selected <span id="count">0</span> seats for a price of $<span id="total">0</span>
-            </p>
-            <button id="confirmarCompra">Comprar Entradas</button>
-        </div>
-        </div>
+    </div>
+</div>
