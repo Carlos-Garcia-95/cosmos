@@ -238,7 +238,7 @@ CREATE TABLE `pelicula_genero` (
 -- Estructura de tabla para la tabla `sala`
 --
 
-CREATE TABLE `sala` (
+CREATE TABLE `salas` (
   `id_sala` bigint(20) UNSIGNED NOT NULL,
   `numero_asientos` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

@@ -705,3 +705,114 @@ body {
     border-color: #777;
 }
 
+/*Parte de las sesiones*/
+#create-session-section {
+    margin-bottom: 20px;
+    padding: 15px;
+}
+
+#create-session-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+#create-session-section form > div {
+    margin-bottom: 10px;
+}
+
+#create-session-section label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#create-session-section select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#create-session-section .button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+#create-session-section .button.primary {
+    background-color: #007bff;
+}
+
+#create-session-section .button.primary:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos para el layout de dos columnas y la tabla de sesiones */
+.main-container {
+    display: flex;
+    justify-content: center; /* Centra el contenido horizontalmente */
+    align-items: flex-start; /* Alinea los elementos al inicio (arriba) */
+    gap: 30px; /* Espacio entre las secciones */
+    padding: 20px;
+    max-width: 1200px; /* O el ancho que consideres adecuado para tu layout */
+    margin: 0 auto; /* Centra el contenedor principal */
+}
+
+.form-section,
+.sessions-table-section {
+    flex: 1; /* Permite que ambas secciones crezcan y se encojan */
+    padding: 20px;
+}
+
+.divider {
+    width: 2px; /* Ancho de la línea vertical */
+    background-color: #ccc; /* Color de la línea */
+    align-self: stretch; /* Hace que la línea se estire a la altura de la sección más alta */
+}
+
+/* Estilos básicos para la tabla */
+.sessions-table {
+    width: 100%;
+    border-collapse: collapse; /* Elimina el espacio entre las celdas */
+    margin-top: 15px;
+}
+
+.sessions-table th,
+.sessions-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.sessions-table th {
+    font-weight: bold;
+}
+
+.sessions-table tbody tr:nth-child(even) {
+}
+
+.sessions-table button.delete-btn {
+    background-color: #dc3545; /* Rojo de Bootstrap */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+}
+
+.sessions-table button.delete-btn:hover {
+    background-color: #c82333;
+}
+
+#noSessionsMessage {
+    color: #666;
+    text-align: center;
+    margin-top: 20px;
+}
+

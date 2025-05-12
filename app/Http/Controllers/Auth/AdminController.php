@@ -452,8 +452,6 @@ class AdminController extends Controller
             'nombre' => 'required|string|max:255',
             'descripcion' => 'nullable|string',
             'precio' => 'required|numeric|min:0',
-            'foto' => 'nullable|image|max:2048',
-            'imagen_ruta' => 'nullable|string|max:255', // Validamos el nuevo campo de ruta (opcional)
         ]);
 
         try {
@@ -461,20 +459,6 @@ class AdminController extends Controller
             $menuItem->nombre = $request->input('nombre');
             $menuItem->descripcion = $request->input('descripcion');
             $menuItem->precio = $request->input('precio');
-
-            // Si se proporciona una nueva ruta de imagen, la actualizamos
-            if ($request->filled('imagen_ruta')) {
-                $menuItem->imagen_url = $request->input('imagen_ruta');
-            }
-            // Si se sube una nueva foto, la guardamos y actualizamos la ruta
-            elseif ($request->hasFile('foto')) {
-                $file = $request->file('foto');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $file->move(public_path('images/menus'), $fileName);
-                $menuItem->imagen_url = '/images/menus/' . $fileName;
-            }
-            // Si no se proporciona una nueva ruta ni se sube una nueva foto,
-            // la imagen_url existente en la base de datos se mantiene.
 
             $menuItem->save();
 

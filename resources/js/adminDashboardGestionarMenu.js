@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuItemCurrentFotoRutaInput = document.getElementById('menu-item-current-foto-ruta');
     const saveMenuItemButton = document.getElementById('save-menu-item-button');
     const cancelMenuItemButton = document.getElementById('cancel-menu-item-button');
-    
+
 
     // --- ESTADO ---
     let currentPage = 1;
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const parts = defaultImagePath.split('/');
             imageName = parts[parts.length - 1];
         }
-    
+
         return `
             <div class="managed-menu-item">
                 <img src="${imageUrl}" alt="${item.nombre}" style="width: 100px; height: auto; border-radius: 4px;">
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         menuPageInfo.textContent = total > 0 ? `Página ${current} de ${last} (${total} elementos)` : `Página 0 de 0 (0 elementos)`;
         menuPrevPageBtn.disabled = current <= 1;
         menuNextPageBtn.disabled = current >= last || last === 0;
-        
+
         totalPages = last;
         totalItems = total;
         currentPage = current;
@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         menuNextPageBtn.disabled = true;
 
         try {
+            // Nota: Asegúrate de que esta URL sea correcta en tu entorno (ej. /administrador/menu)
             const response = await fetch(`menu?${params.toString()}`, {
                 method: 'GET',
                 headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken }
@@ -222,6 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 menuItemFotoPreview.src = defaultImagePath; // Mostrar default si no hay imagen_url
                 menuItemFotoPreview.style.display = 'block'; // O 'none' si prefieres
             }
+                menuItemFotoInput.style.display = 'none';
         } catch (error) {
             displayMenuError(`Error al cargar para editar: ${error.message}`);
             closeModal();
@@ -364,16 +366,19 @@ document.addEventListener('DOMContentLoaded', () => {
         // Listeners
         addNewMenuItemButton.addEventListener('click', openModalForAdd);
         menuFilterButton.addEventListener('click', () => { fetchMenuItems(1);});
-        /* menuSearchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') fetchMenuItems(1); });
+
+        // >>>>>> ESTAS LÍNEAS HAN SIDO DESCOMENTADAS <<<<<<
+        menuSearchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') fetchMenuItems(1); });
         menuStatusSelect.addEventListener('change', () => fetchMenuItems(1));
-        menuItemsPerPageSelect.addEventListener('change', () => fetchMenuItems(1)); */
+        menuItemsPerPageSelect.addEventListener('change', () => fetchMenuItems(1));
+        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
         menuPrevPageBtn.addEventListener('click', () => { if (currentPage > 1) fetchMenuItems(currentPage - 1); });
         menuNextPageBtn.addEventListener('click', () => { if (currentPage < totalPages) fetchMenuItems(currentPage + 1); });
 
         closeButton.addEventListener('click', closeModal);
         cancelMenuItemButton.addEventListener('click', closeModal);
-        /* menuItemModal.addEventListener('click', (event) => { if (event.target === menuItemModal) closeModal(); }); */
+        /* menuItemModal.addEventListener('click', (event) => { if (event.target === menuItemModal) closeModal(); }); */ // Esta línea sigue comentada
         menuItemForm.addEventListener('submit', handleFormSubmit);
         menuItemFotoInput.addEventListener('change', previewImage);
 

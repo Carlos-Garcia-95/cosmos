@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_pelicula');  // id pelicula
             $table->unsignedBigInteger('hora');         // hora de la pelicula
             $table->unsignedBigInteger('fecha');
+            $table->unsignedBigInteger('activa');
             $table->timestamps();
 
             $table->foreign('id_sala')->references('id_sala')->on('sala');      // id sala

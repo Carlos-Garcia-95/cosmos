@@ -10,6 +10,9 @@ use App\Http\Controllers\Auth\MenuController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PeliculasController;
+use App\Http\Controllers\Auth\SalaController;
+use App\Http\Controllers\Auth\SessionController;
+use App\Http\Controllers\Auth\FechaController;
 
 //Ruta por get, al poner / en el buscador, nos saldra la pantalla de principal, que es devuelta por la clase HomeController y llama a la función index.
 Route::get('/', [HomeController::class, 'index'])->name('principal');
@@ -82,6 +85,25 @@ Route::get('administrador/menu/{id}', [AdminController::class, 'obtenerProducto'
 //Ruta para actualizar los detalles de cada producto
 Route::put('administrador/menu/{id}', [AdminController::class, 'actualizarProducto'])->name('actualizarProducto');
 
+Route::get('administrador/peliculas/activas-en-cartelera', [SessionController::class, 'getPeliculasActivasEnCartelera']);
+
+// Ruta para obtener la lista de salas (para el select, aunque por ahora solo sea 1)
+Route::get('administrador/salas', [SalaController::class, 'getSalas'])->name('admin.getSalas');
+
+// Ruta para obtener las horas disponibles para una fecha, película y sala (para el select dinámico)
+Route::get('administrador/sesiones/horas-disponibles', [SessionController::class, 'getHorasDisponibles'])->name('admin.getHorasDisponibles');
+
+// Ruta para crear una nueva sesión
+Route::post('administrador/sesiones', [SessionController::class, 'storeSesion'])->name('admin.storeSesion');
+
+// Ruta para obtener las fechas disponibles
+Route::get('administrador/fechas/disponibles', [FechaController::class, 'getFechasDisponibles'])->name('admin.getFechasDisponibles');
+
+// NUEVA RUTA PARA OBTENER SESIONES POR FECHA
+Route::get('administrador/sesiones-por-fecha/{fecha_id}', [SessionController::class, 'getSessionsByDate']);
+
+// NUEVA RUTA PARA ELIMINAR SESIONES (la haremos más tarde, pero la puedes añadir ya comentada)
+Route::delete('administrador/sesiones/{sesion_id}', [SessionController::class, 'deleteSession']);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
