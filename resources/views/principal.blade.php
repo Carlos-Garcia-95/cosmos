@@ -18,11 +18,11 @@
         'resources/js/compraEntradas.js',
         'resources/js/user.js',
         'resources/css/user_modal.css', 
-        "resources/js/cartaCosmos.js",
-        "resources/css/cartaCosmos.css",
-        "resources/css/cartelera.css",
+        'resources/js/cartaCosmos.js',
+        'resources/css/cartaCosmos.css',
+        'resources/css/cartelera.css',
         'resources/css/detalle_pelicula.css',
-        'resources/js/detalle_pelicula.js',
+        'resources/js/detalle_y_asientos.js',
     ])
     <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
 
@@ -34,115 +34,38 @@
         
         <div class="main">
             <section class="header-section">
-                <div class="header-buttons" style="display: flex; align-items: center;">
-                    @if (session('success'))
-                    <div id="flash-message" class="success-message">
-                        {{ session('success') }}
-                    </div>
-                    @push('scripts')
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const flashMessage = document.getElementById('flash-message');
-                            if (flashMessage && flashMessage.textContent.trim() !== '') {
-                                flashMessage.classList.add('show');
-                                setTimeout(function() {  
-                                    flashMessage.classList.remove('show');
-                                    setTimeout(() => {
-                                    flashMessage.textContent = '';
-                                    }, 500);
-                                }, 3000);
-                            }
-                        });
-                    </script>
-                    @endpush
-                    @endif
-                    <button id="mostrarMenus"> <a class="botones" href="#seccionMenus">CARTA COSMOS</a></button>
-                    <button id="mostrarCompra"> <a class="botones" href="#seccionCompra">COMPRAR ENTRADAS</a></button>
-                    @if(Auth::check())
-                    <button id="miCuenta"><a class="botones">MI CUENTA</a></button>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
-                        @csrf
-                        <button type="submit" id="logout">
-                        <a class="botones">LOGOUT</a>
-                        </button>
-                    </form>
-                    @else
-                    <button id="mostrarRegistro"><a class="botones">ÚNETE A COSMOS</a></button>
-                    <button id="mostrarLogin"><a class="botones">INICIAR SESIÓN</a></button>
-                    @endif
-
-                </div>
-                <div class="logo-container">
-                    <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Cosmos Cinema Logo" class="cinema-logo">
-                </div>
+                <!-- Header con botones -->
+                <x-vistas.header/>
             </section>
 
+            <!-- Slider horizontal de películas -->
             <x-vistas.mostrar_peliculas_slider :peliculas='$peliculas'/>
             
-
         </div>
     </section>
 
     <!-- Sección de Cartelera -->
     <section id="seccion_cartelera" class="seccion_cartelera">
-        <form action='' method='POST' id='comprar_cartelera'>
-            <x-vistas.mostrar_peliculas_cartelera :peliculas='$peliculas'/>
-        </form>
+        <!-- Cartelera -->
+        <x-vistas.mostrar_peliculas_cartelera :peliculas='$peliculas'/>
     </section>
 
     <!-- Modal de compra de entradas oculto inicialmente -->
     <section id="seccionCompra" class="pt-5 hidden">
-
-        <div>
-            <div id='cerrar-button' class='header-buttons cerrar-button'>
-                <button id="cerrarCompra">VOLVER</button>
-            </div>
-
-            <div class="movie-container">
-                <label>Pick a Movie</label>
-                <!-- Ya haremos el select con las querys necesarias para sacar info de base de datos -->
-                <select id="movie">
-                    <option value='8'>True Romance - $8</option>
-                    <option value='8'>American History X - $8</option>
-                    <option value='8'>A Beautiful Mind - $8</option>
-                    <option value='10'>Joker - $10</option>
-                </select>
-            </div>
-
-            <!-- Podemos meter los tres dentro de una tabla y juntarla a asiento-->
-            <ul class="showcase">
-                <li>
-                    <div class="seat"></div>
-                    <small>Available</small>
-                </li>
-                <li>
-                    <div class="seat selected"></div>
-                    <small>Selected</small>
-                </li>
-                <li>
-                    <div class="seat occupied"></div>
-                    <small>Occupied</small>
-                </li>
-            </ul>
-
-            <!-- Contenedor para los asientos -->
-            <div class="container">
-                <div class="screen"></div>
-                @for ($i = 0; $i < 8; $i++) <div class="row">
-                    @for ($j = 0; $j < 8; $j++) <div class="seat">
-            </div>
-            @endfor
+        <div class='cartelera-titulo'>
+            <h3>Elige tus Asientos</h3>
         </div>
-        @endfor
-        </div>
-
-        <!-- Información de los asientos seleccionados y precio -->
-        <div class="text-wrapper">
-            <p class="text">
-                You have selected <span id="count">0</span> seats for a price of $<span id="total">0</span>
-            </p>
-            <button id="confirmarCompra">Comprar Entradas</button>
-        </div>
+        <div class='separador_compra'></div>
+        <div class="seccion-compra-contenido">
+            <!-- Fechas y horas de sesiones de la película -->
+            <div class='seccion_sesiones' id='seccion_sesiones'>
+                <div class='seccion_sesiones_dias' id='seccion_sesiones_dias'></div>
+                <div class='seccion_sesiones_horas' id='seccion_sesiones_horas'></div>
+            </div>
+            <!-- Datos de la sesión y asientos asociados a ella -->
+            <div class='seccion_asientos' id='seccion_asientos'>
+                <x-vistas.seleccion_asientos/>
+            </div>
         </div>
     </section>
 
@@ -151,14 +74,16 @@
         <x-vistas.mostrar_menu :menus='$menus'/>
     </section>
 
-
-
+    <!-- Modal de registro nuevo usuario -->
     <x-modal.modal_registro :ciudades='$ciudades'/>
 
+    <!-- Modal login de usuario -->
     <x-modal.modal_login/>
 
+    <!-- Modal de ficha de usuario -->
     <x-modal.modal_usuario/>
 
+    <!-- Modal de detalle de la película y COMPRAR ENTRADAS -->
     <x-modal.modal_detalle_pelicula/>
 
     @stack('scripts')

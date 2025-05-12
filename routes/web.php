@@ -13,6 +13,8 @@ use App\Http\Controllers\PeliculasController;
 use App\Http\Controllers\Auth\SalaController;
 use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\Auth\FechaController;
+use App\Http\Controllers\RecuperarAsientos;
+use App\Http\Controllers\RecuperarSesionPelicula;
 
 //Ruta por get, al poner / en el buscador, nos saldra la pantalla de principal, que es devuelta por la clase HomeController y llama a la función index.
 Route::get('/', [HomeController::class, 'index'])->name('principal');
@@ -85,6 +87,7 @@ Route::get('administrador/menu/{id}', [AdminController::class, 'obtenerProducto'
 //Ruta para actualizar los detalles de cada producto
 Route::put('administrador/menu/{id}', [AdminController::class, 'actualizarProducto'])->name('actualizarProducto');
 
+//Ruta para activar peliculas en cartelera
 Route::get('administrador/peliculas/activas-en-cartelera', [SessionController::class, 'getPeliculasActivasEnCartelera']);
 
 // Ruta para obtener la lista de salas (para el select, aunque por ahora solo sea 1)
@@ -99,11 +102,17 @@ Route::post('administrador/sesiones', [SessionController::class, 'storeSesion'])
 // Ruta para obtener las fechas disponibles
 Route::get('administrador/fechas/disponibles', [FechaController::class, 'getFechasDisponibles'])->name('admin.getFechasDisponibles');
 
-// NUEVA RUTA PARA OBTENER SESIONES POR FECHA
+//Ruta para obtener sesione spor fecha
 Route::get('administrador/sesiones-por-fecha/{fecha_id}', [SessionController::class, 'getSessionsByDate']);
 
-// NUEVA RUTA PARA ELIMINAR SESIONES (la haremos más tarde, pero la puedes añadir ya comentada)
+//Ruta para eliminar sesiones
 Route::delete('administrador/sesiones/{sesion_id}', [SessionController::class, 'deleteSession']);
+
+// Recuperar las sesiones asociadas con una película
+Route::get('/recuperar_sesiones/id_pelicula={peliculaId}', [RecuperarSesionPelicula::class, 'recuperar_sesion_pelicula']);
+
+// Recuperar los asientos de la sesión seleccionada
+Route::get('/recuperar_asientos/id_sesion={id_sesion}', [RecuperarAsientos::class, 'recuperar_asientos_sesion']);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {

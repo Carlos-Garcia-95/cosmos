@@ -16,6 +16,12 @@
     border-bottom: 1px solid white;
 }
 
+.separador_compra {
+    justify-self: center;
+    width: 90%;
+    border-bottom: 1px solid white;
+}
+
 .cartelera {
     display: flex;
     flex-wrap: wrap;
