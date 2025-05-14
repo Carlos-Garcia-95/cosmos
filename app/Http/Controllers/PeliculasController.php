@@ -16,13 +16,13 @@ class PeliculasController extends Controller
                 'id' => $pelicula->id,
                 'adult' => $pelicula->adult,
                 'backdrop_ruta' => $pelicula->backdrop_ruta,
-                'backdrop_url' => self::formatear_url_backdrop($pelicula->backdrop_ruta),
+                'backdrop_url' => self::formatear_url($pelicula->backdrop_ruta),
                 'id_api' => $pelicula->id_api,
                 'lenguaje_original' => $pelicula->lenguaje_original,
                 'titulo_original' => $pelicula->titulo_original,
                 'sinopsis' => $pelicula->sinopsis,
                 'poster_ruta' => $pelicula->poster_ruta,
-                'poster_url' => self::formatear_url_poster($pelicula->poster_ruta),
+                'poster_url' => self::formatear_url($pelicula->poster_ruta),
                 'fecha_estreno' => $pelicula->fecha_estreno,
                 'titulo' => $pelicula->titulo,
                 'video' => $pelicula->video,
@@ -30,24 +30,14 @@ class PeliculasController extends Controller
                 'creacion' => $pelicula->creacion,
                 'id_sala' => $pelicula->id_sala,
                 'generos' => $pelicula->generos->pluck('genero')->toArray(),
+                'duracion' => $pelicula->duracion,
             ];
         }
 
         return $peliculas;
     }
 
-    private static function formatear_url_backdrop($ruta) {
-        $url_api = "https://image.tmdb.org/t/p/original/";
-        $url = "";
-
-        if (isset($ruta)) {
-            $url = $url_api . $ruta;
-        }
-
-        return $url;
-    }
-
-    private static function formatear_url_poster($ruta) {
+    public static function formatear_url($ruta) {
         $url_api = "https://image.tmdb.org/t/p/original/";
         $url = "";
 

@@ -23,6 +23,7 @@
         'resources/css/cartelera.css',
         'resources/css/detalle_pelicula.css',
         'resources/js/detalle_y_asientos.js',
+        'resources/css/confirmar_seleccion.css',
     ])
     <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
 
@@ -85,6 +86,10 @@
 
     <!-- Modal de detalle de la película y COMPRAR ENTRADAS -->
     <x-modal.modal_detalle_pelicula/>
+
+    <!-- Modal de confirmar selección de asientos -->
+    <x-modal.modal_confirmar_seleccion/>
+    
 
     @stack('scripts')
 

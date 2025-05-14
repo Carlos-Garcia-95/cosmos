@@ -39,9 +39,15 @@ class asiento extends Seeder
                     for ($columna = 1; $columna <= $max_columna; $columna++) {
                         // Si existe la fila y la columna, se intruduce fila y columna de asiento como integer
                         if (in_array($fila, $filas) && in_array($columna, $columnas)) {
+                            $aleatorio = rand(0, 1);
+                            if ($aleatorio == 0) {
+                                $estado_aleatorio = 1;
+                            } else {
+                                $estado_aleatorio = 2;
+                            }
                             $asientos[] = [
                                 'id_sesion_pelicula' => $sesion->id,
-                                'estado' => $estado_defecto,
+                                'estado' => $estado_aleatorio,
                                 'columna' => $columna,
                                 'fila' => $fila,
                                 'id_sala' => $id_sala,
