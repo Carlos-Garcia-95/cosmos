@@ -14,13 +14,11 @@ return new class extends Migration
         Schema::create('administrador', function (Blueprint $table) {
             $table->id('id_administrador');
             $table->string('nombre_user_admin', 30)->unique();
-            $table->string('nombre', 50);
-            $table->string('apellido', 50);
             $table->string('email', 50)->unique();
-            $table->date('fecha_nacimiento');
-            $table->string('numero_telefono', 15);
-            $table->string('password', 200);
             $table->string('codigo_administrador', 20)->unique();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->nullable(); 
+            $table->foreign('email')->references('email')->on('users');
         });
     }
 

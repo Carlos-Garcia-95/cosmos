@@ -14,6 +14,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevPageBtn = document.getElementById('prev-page-btn');
     const nextPageBtn = document.getElementById('next-page-btn');
 
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mainContainer = document.querySelector('.main-dashboard-content');
+
+    if (menuToggle && mainContainer) {
+        menuToggle.addEventListener('click', function() {
+            mainContainer.classList.toggle('sidebar-open');
+        });
+    }
+
+    sidebarLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth <= 431) {
+                mainContainer.classList.remove('sidebar-open');
+            }
+        });
+    });
+
     // Habilita/deshabilita el input de búsqueda según el tipo de lista seleccionado.
     const updateSearchInputState = () => {
         if (listTypeSelect.value === 'search') {
@@ -69,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <img src="${posterUrl}" alt="Poster de ${movie.title || 'Película sin título'}">
                 <div class="movie-details">
                     <h4>${movie.title || 'Película sin título'} (${movie.release_date ? movie.release_date.split('-')[0] : 'Año desconocido'})</h4>
-                    <p>${movie.overview ? movie.overview.substring(0, 150) + '...' : 'Sinopsis no disponible.'}</p>
+                    <p class='sinopsis'>${movie.overview ? movie.overview.substring(0, 150) + '...' : 'Sinopsis no disponible.'}</p>
                 </div>
                 <button class="${buttonClass}" data-tmdb-id="${movie.id}" ${buttonDisabled}>${buttonText}</button>
             </div>

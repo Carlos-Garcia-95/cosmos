@@ -161,7 +161,6 @@ body {
     text-align: center;
 }
 
-/* Estilos para los filtros */
 .api-search-filters,
 .manage-filters,
 .manage-menu-filters {
@@ -175,7 +174,6 @@ body {
     border-radius: 8px;
 }
 
-/* Estilos para inputs y selects en los filtros */
 .api-search-filters input[type="text"],
 .api-search-filters input[type="number"],
 .api-search-filters select,
@@ -191,7 +189,6 @@ body {
     font-size: 1rem;
 }
 
-/* Estilos para los botones de filtro */
 .api-search-filters button,
 .manage-filters button,
 .manage-menu-filters button {
@@ -202,9 +199,9 @@ body {
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
     flex-shrink: 0;
+    text-align: center;
 }
 
-/* Colores específicos para botones de filtro */
 .api-search-filters button {
     background-color: #007bff;
     color: white;
@@ -225,7 +222,6 @@ body {
     background-color: #218838;
 }
 
-/* Estilo para botones de filtro deshabilitados */
 .api-search-filters button:disabled,
 .manage-filters button:disabled,
 .manage-menu-filters button:disabled {
@@ -240,7 +236,6 @@ body {
     margin: 20px 0;
 }
 
-/* Estilos para las áreas de resultados */
 .api-results-area,
 .manage-movies-area,
 .manage-menu-area {
@@ -250,7 +245,6 @@ body {
     color: white;
 }
 
-/* Estilos para los ítems (películas y menú) */
 .api-movie-item,
 .managed-movie-item,
 .managed-menu-item {
@@ -266,7 +260,6 @@ body {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Estilos para las imágenes */
 .api-movie-item img,
 .managed-movie-item img,
 .managed-menu-item img {
@@ -277,14 +270,12 @@ body {
     object-fit: cover;
 }
 
-/* Estilos para los detalles */
 .api-movie-item .movie-details,
 .managed-movie-item .movie-details,
 .managed-menu-item .menu-item-details {
     flex: 1;
 }
 
-/* Estilos para los títulos */
 .api-movie-item .movie-details h4,
 .managed-movie-item .movie-details h4,
 .managed-menu-item .menu-item-details h4 {
@@ -301,7 +292,6 @@ body {
     font-size: 0.9rem;
 }
 
-/* Estilos para las acciones */
 .managed-movie-item .movie-actions,
 .managed-menu-item .menu-item-actions {
     display: flex;
@@ -310,7 +300,6 @@ body {
     flex-shrink: 0;
 }
 
-/* Estilos para los botones de acción */
 .add-movie-btn,
 .toggle-status-btn,
 .toggle-estreno-btn,
@@ -328,7 +317,6 @@ body {
     text-align: center;
 }
 
-/* Botón 'Añadir pelicula' */
 .add-movie-btn {
     background-color: #0961e5;
 }
@@ -344,7 +332,6 @@ body {
     cursor: not-allowed;
 }
 
-/* Botones Activar/Desactivar */
 .toggle-status-btn.activate,
 .manage-menu-area .btn-toggle-status.activate {
     background-color: #38a169;
@@ -365,7 +352,6 @@ body {
     background-color: #c53030;
 }
 
-/* Botones Estreno/Cartelera */
 .toggle-estreno-btn.activate {
     background-color: #0961e5;
 }
@@ -383,7 +369,6 @@ body {
     background-color: #de751f;
 }
 
-/* Botón Editar menú */
 .manage-menu-area .btn-edit-item {
     background-color: #ffc107;
     color: #212529;
@@ -393,7 +378,6 @@ body {
     background-color: #e0a800;
 }
 
-/* Botones deshabilitados */
 .toggle-status-btn:disabled,
 .toggle-estreno-btn:disabled,
 .manage-menu-area .btn-edit-item:disabled,
@@ -402,7 +386,6 @@ body {
     cursor: not-allowed;
 }
 
-/* Textos de estado */
 .status-active {
     color: #38a169;
     font-weight: bold;
@@ -423,7 +406,6 @@ body {
     font-weight: bold;
 }
 
-/* Controles de paginación */
 .api-pagination-controls,
 .manage-pagination-controls,
 .menu-pagination-controls {
@@ -486,11 +468,14 @@ body {
     transition: background-color 0.3s ease;
 }
 
+#botonesEditar{
+    text-align: right;
+}
+
 .logout-form button:hover {
     background-color: #c82333;
 }
 
-/* Estilos para la tabla de elementos del menú */
 .manage-menu-area table {
     width: 100%;
     border-collapse: collapse;
@@ -509,7 +494,7 @@ body {
 }
 
 .manage-menu-area th {
-    background-color: #e9ecef; /* Un gris claro para los encabezados */
+    background-color: #e9ecef;
     color: #495057;
     font-weight: bold;
 }
@@ -519,7 +504,7 @@ body {
 }
 
 .manage-menu-area tr:hover {
-    background-color: #f1f1f1; /* Efecto hover en las filas */
+    background-color: #f1f1f1;
 }
 
 .manage-menu-area img {
@@ -529,39 +514,37 @@ body {
     vertical-align: middle;
 }
 
-/* Estilos para el Modal */
 .modal {
-    /* display: none; Por defecto oculto, se controla con JS */
-    position: fixed; /* Se queda fijo en la pantalla */
-    z-index: 1000; /* Por encima de otros elementos */
+    position: fixed;
+    z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; /* Permite scroll si el contenido es muy largo */
-    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
-    display: flex; /* Para centrar el contenido del modal */
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .modal-content {
-    background-color: #2c2c2c; /* Un poco más claro que el body para contraste */
+    background-color: #2c2c2c;
     color: #f5f5f5;
     margin: auto;
     padding: 25px;
     border: 1px solid #555;
     border-radius: 8px;
     width: 90%;
-    max-width: 550px; /* Ancho máximo del modal */
+    max-width: 550px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    position: relative; /* Para posicionar el botón de cierre */
+    position: relative;
 }
 
 .modal-content h4 {
     margin-top: 0;
     margin-bottom: 20px;
-    color: #28a745; /* Un color destacado para el título del modal */
+    color: #28a745;
     text-align: center;
 }
 
@@ -581,7 +564,6 @@ body {
     cursor: pointer;
 }
 
-/* Estilos para el formulario dentro del modal */
 #menu-item-form div {
     margin-bottom: 15px;
 }
@@ -597,7 +579,7 @@ body {
 #menu-item-form input[type="number"],
 #menu-item-form textarea,
 #menu-item-form input[type="file"] {
-    width: calc(100% - 22px); /* Ajustar por padding y borde */
+    width: calc(100% - 22px);
     padding: 10px;
     border: 1px solid #555;
     border-radius: 4px;
@@ -606,9 +588,8 @@ body {
     font-size: 1rem;
 }
 #menu-item-form input[type="file"] {
-    padding: 5px; /* Menos padding para el input file */
+    padding: 5px;
 }
-
 
 #menu-item-form textarea {
     min-height: 80px;
@@ -616,8 +597,8 @@ body {
 }
 
 #menu-item-foto-preview {
-    display: block; /* Para que ocupe su propia línea */
-    max-width: 150px; /* Más grande para la vista previa en el modal */
+    display: block;
+    max-width: 150px;
     max-height: 150px;
     margin-top: 10px;
     border-radius: 4px;
@@ -625,7 +606,7 @@ body {
 }
 
 #add-new-menu-item-button,
-#save-menu-item-button{
+#save-menu-item-button {
     background-color: #007bff;
     color: white;
     padding: 10px 15px;
@@ -636,11 +617,11 @@ body {
     transition: background-color 0.3s ease;
 }
 
-#add-new-menu-item-button:hover{
+#add-new-menu-item-button:hover {
     background-color: #0056b3;
 }
 
-#cancel-menu-item-button{
+#cancel-menu-item-button {
     background-color: #6c757d;
     color: white;
     padding: 10px 15px;
@@ -657,7 +638,7 @@ body {
 
 .modal-actions {
     margin-top: 25px;
-    text-align: right; /* Alinea los botones a la derecha */
+    text-align: right;
 }
 
 .modal-actions button {
@@ -671,15 +652,15 @@ body {
 }
 
 #save-menu-item-button {
-    background-color: #28a745; /* Verde para guardar */
+    background-color: #28a745;
     color: white;
 }
 #save-menu-item-button:hover {
     background-color: #218838;
 }
 
-.modal-actions .btn-cancel { /* Si usas una clase específica para el botón cancelar */
-    background-color: #6c757d; /* Gris para cancelar */
+.modal-actions .btn-cancel {
+    background-color: #6c757d;
     color: white;
 }
 .modal-actions .btn-cancel:hover {
@@ -688,14 +669,14 @@ body {
 
 .api-pagination-controls button,
 .manage-pagination-controls button,
-.menu-pagination-controls button { /* Añadimos la clase para el menú */
+.menu-pagination-controls button {
     padding: 8px 16px;
-    border: 1px solid #555; /* Borde más oscuro para contraste con fondo claro */
+    border: 1px solid #555;
     border-radius: 4px;
-    background-color: #4a4a4a; /* Fondo de botón más oscuro */
-    color: #f5f5f5; /* Texto claro */
+    background-color: #4a4a4a;
+    color: #f5f5f5;
     cursor: pointer;
-    /* ... el resto ... */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .api-pagination-controls button:hover:not(:disabled),
@@ -705,7 +686,288 @@ body {
     border-color: #777;
 }
 
-/*Parte de las sesiones*/
+.api-pagination-controls button:disabled,
+.manage-pagination-controls button:disabled,
+.menu-pagination-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #333;
+    color: #777;
+    border-color: #333;
+}
+
+.api-pagination-controls span,
+.manage-pagination-controls span,
+.menu-pagination-controls span {
+    font-weight: bold;
+}
+
+.logout-form {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.logout-form button {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.logout-form button:hover {
+    background-color: #c82333;
+}
+
+.manage-menu-area table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    color: #333;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.manage-menu-area th,
+.manage-menu-area td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.manage-menu-area th {
+    background-color: #e9ecef;
+    color: #495057;
+    font-weight: bold;
+}
+
+.manage-menu-area tr:last-child td {
+    border-bottom: none;
+}
+
+.manage-menu-area tr:hover {
+    background-color: #f1f1f1;
+}
+
+.manage-menu-area img {
+    max-width: 60px;
+    height: auto;
+    border-radius: 4px;
+    vertical-align: middle;
+}
+
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #2c2c2c;
+    color: #f5f5f5;
+    margin: auto;
+    padding: 25px;
+    border: 1px solid #555;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 550px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.modal-content h4 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #28a745;
+    text-align: center;
+}
+
+.close-button {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#menu-item-form div {
+    margin-bottom: 15px;
+}
+
+#menu-item-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #ccc;
+}
+
+#menu-item-form input[type="text"],
+#menu-item-form input[type="number"],
+#menu-item-form textarea,
+#menu-item-form input[type="file"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #3f3f3f;
+    color: #f5f5f5;
+    font-size: 1rem;
+}
+#menu-item-form input[type="file"] {
+    padding: 5px;
+}
+
+#menu-item-form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+#menu-item-foto-preview {
+    display: block;
+    max-width: 150px;
+    max-height: 150px;
+    margin-top: 10px;
+    border-radius: 4px;
+    border: 1px solid #555;
+}
+
+#add-new-menu-item-button,
+#save-menu-item-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+#add-new-menu-item-button:hover {
+    background-color: #0056b3;
+}
+
+#cancel-menu-item-button {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+#add-new-menu-item-button:hover {
+    background-color: #7c868f;
+}
+
+.modal-actions {
+    margin-top: 25px;
+    text-align: right;
+}
+
+.modal-actions button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-left: 10px;
+    border: none;
+}
+
+#save-menu-item-button {
+    background-color: #28a745;
+    color: white;
+}
+#save-menu-item-button:hover {
+    background-color: #218838;
+}
+
+.modal-actions .btn-cancel {
+    background-color: #6c757d;
+    color: white;
+}
+.modal-actions .btn-cancel:hover {
+    background-color: #5a6268;
+}
+
+.api-pagination-controls button,
+.manage-pagination-controls button,
+.menu-pagination-controls button {
+    padding: 8px 16px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #4a4a4a;
+    color: #f5f5f5;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.api-pagination-controls button:hover:not(:disabled),
+.manage-pagination-controls button:hover:not(:disabled),
+.menu-pagination-controls button:hover:not(:disabled) {
+    background-color: #5a5a5a;
+    border-color: #777;
+}
+
+.api-pagination-controls button:disabled,
+.manage-pagination-controls button:disabled,
+.menu-pagination-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #333;
+    color: #777;
+    border-color: #333;
+}
+
+.api-pagination-controls span,
+.manage-pagination-controls span,
+.menu-pagination-controls span {
+    font-weight: bold;
+}
+
+.logout-form {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.logout-form button {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.logout-form button:hover {
+    background-color: #c82333;
+}
+
 #create-session-section {
     margin-bottom: 20px;
     padding: 15px;
@@ -751,33 +1013,31 @@ body {
     background-color: #0056b3;
 }
 
-/* Estilos para el layout de dos columnas y la tabla de sesiones */
 .main-container {
     display: flex;
-    justify-content: center; /* Centra el contenido horizontalmente */
-    align-items: flex-start; /* Alinea los elementos al inicio (arriba) */
-    gap: 30px; /* Espacio entre las secciones */
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
     padding: 20px;
-    max-width: 1200px; /* O el ancho que consideres adecuado para tu layout */
-    margin: 0 auto; /* Centra el contenedor principal */
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .form-section,
 .sessions-table-section {
-    flex: 1; /* Permite que ambas secciones crezcan y se encojan */
+    flex: 1;
     padding: 20px;
 }
 
 .divider {
-    width: 2px; /* Ancho de la línea vertical */
-    background-color: #ccc; /* Color de la línea */
-    align-self: stretch; /* Hace que la línea se estire a la altura de la sección más alta */
+    width: 2px;
+    background-color: #ccc;
+    align-self: stretch;
 }
 
-/* Estilos básicos para la tabla */
 .sessions-table {
     width: 100%;
-    border-collapse: collapse; /* Elimina el espacio entre las celdas */
+    border-collapse: collapse;
     margin-top: 15px;
 }
 
@@ -797,7 +1057,7 @@ body {
 }
 
 .sessions-table button.delete-btn {
-    background-color: #dc3545; /* Rojo de Bootstrap */
+    background-color: #dc3545;
     color: white;
     border: none;
     padding: 8px 12px;
@@ -816,3 +1076,319 @@ body {
     margin-top: 20px;
 }
 
+.add-user-form-container {
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.add-user-form-container h3 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: white;
+    font-size: 1.8em;
+}
+
+.add-user-form-container .mb-3 {
+    margin-bottom: 1rem;
+}
+
+.add-user-form-container .form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: white;
+    font-size: 0.95em;
+}
+
+.add-user-form-container .form-control,
+.add-user-form-container .form-select {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-sizing: border-box;
+}
+
+.add-user-form-container .form-control:focus,
+.add-user-form-container .form-select:focus {
+    border-color: #007bff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.add-user-form-container .form-control.is-invalid,
+.add-user-form-container .form-select.is-invalid {
+    border-color: #dc3545;
+    padding-right: 2.25rem;
+}
+
+.add-user-form-container .invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #dc3545;
+}
+
+.add-user-form-container .btn-primary {
+    display: block;
+    width: 100%;
+    font-weight: 400;
+    color: #fff;
+    background-color: #007bff;
+    border: 1px solid #007bff;
+    padding: 10px 20px;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    text-align: center;
+}
+
+.add-user-form-container .btn-primary:hover {
+    color: #fff;
+    background-color: #0056b3;
+    border-color: #004085;
+}
+
+.add-user-form-container .alert-success {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+/* Media Query para pantallas con un ancho MÁXIMO de 1023.98px (es decir, menores a 1024px) */
+@media (max-width: 1025px) {
+    .main-container {
+        flex-direction: column;
+        width: 100%; 
+    }
+
+    /* Asegura que cada sección ocupe el ancho completo */
+    .form-section,
+    .divider,
+    .sessions-table-section {
+        width: 100%;
+        margin-bottom: 20px;
+        flex: none;
+    }
+
+    /* Ajusta el separador para que sea una línea horizontal */
+    .divider {
+        height: 1px;
+        margin: 20px 0;
+        width: 100%;
+    }
+
+    /* Ajusta el padding interno si es necesario */
+    .form-section,
+    .sessions-table-section {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 769px) {
+
+    .dashboard-sidebar {
+        width: 150px;
+    }
+
+    .sidebar-link{
+        font-size:15px;
+    }
+
+    .api-movie-item .movie-details p, .managed-movie-item .movie-details p, .managed-menu-item .menu-item-details p {
+        font-size: 0.8rem;
+    }
+    .add-movie-btn, .toggle-status-btn, .toggle-estreno-btn, .manage-menu-area .btn-edit-item, .manage-menu-area .btn-toggle-status {
+        font-size: 0.8rem;
+    }
+
+    .sinopsis{
+        text-align: justify;
+    }
+
+    .form-section, .divider, .sessions-table-section {
+        margin-bottom:0;
+    }
+}
+
+@media (max-width: 431px) {
+
+    .dashboard-header {
+        color: #f5f5f5;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid white;
+        padding: 10px 20px;
+    }
+
+    .main-dashboard-content {
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+    }
+
+    /* Oculta la barra lateral por defecto en móviles */
+    .dashboard-sidebar {
+        display: none;
+        width: 100%;
+        position: static;
+        /* Estilos de apariencia de la barra lateral apilada */
+        margin-top: 0;
+        margin-bottom: 15px;
+        padding: 10px 0;
+    }
+
+    /* Muestra el botón de hamburguesa en el header */
+    .dashboard-header .menu-toggle {
+        display: block; /* Muestra el botón */
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #333;
+        padding: 10px;
+        line-height: 40px; /* Centra el texto si es solo "☰" */
+        text-align: center;
+    }
+
+    /* Clase para mostrar la sidebar cuando el menú está abierto (añadida con JS) */
+    .main-dashboard-content.sidebar-open > .dashboard-sidebar {
+        display: block;
+    }
+
+    /* Estilos para el contenido interno del sidebar apilado */
+    .dashboard-sidebar .sidebar-menu ul {
+        display: block; /* Lista vertical */
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+    .sidebar-menu li {
+        display: block;
+        margin-bottom: 8px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 7px;
+    }
+    .sidebar-menu li:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .sidebar-menu a {
+        display: block;
+        padding: 8px 15px;
+        text-decoration: none;
+    }
+    .sidebar-menu a.active {
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .sidebar-bottom {
+        text-align: center;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+    }
+    .sidebar-logout-btn {
+        width: auto;
+        padding: 10px 20px;
+        /* ... otros estilos ... */
+    }
+
+    .sidebar-link.active {
+        background-color: black;
+    }
+
+    .api-search-filters, .manage-filters, .manage-menu-filters {
+        padding:0;
+    }
+
+    .managed-movie-item .movie-actions {
+        flex-direction: row;
+        margin: 0 18%;
+    }
+
+    .toggle-status-btn.deactivate {
+        margin: 0;
+    }
+
+    .toggle-estreno-btn.activate {
+        margin: 0;
+    }
+
+    .manage-menu-area .btn-toggle-status.deactivate {
+        margin: 0;
+    }
+
+    .managed-menu-item .menu-item-actions {
+        flex-direction: row;
+        margin: 0 25%;
+    }
+
+    .api-movie-item .movie-details h4, .managed-movie-item .movie-details h4, .managed-menu-item .menu-item-details h4 {
+        text-align: center;
+    }
+
+    .api-pagination-controls span, .manage-pagination-controls span, .menu-pagination-controls span {
+        text-align: center;
+    }
+
+    .api-movie-item, .managed-movie-item, .managed-menu-item {
+        gap: 32px;
+    }
+
+    .add-movie-btn, .toggle-status-btn, .toggle-estreno-btn, .manage-menu-area .btn-toggle-status {
+        margin: 0 35%;
+    }
+
+    .add-movie-btn.added, .add-movie-btn:disabled {
+        margin: 0 40%;
+    }
+
+    #add-new-menu-item-button, #save-menu-item-button {
+        margin-bottom: 5%;
+    }
+
+    #botonesEditar{
+        text-align: center;
+    }
+
+    .table-responsive-container {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-top: 15px;
+    }
+    
+    /* Opcional: Asegúrate de que la tabla misma no se comprima excesivamente */
+    .sessions-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    /* Ajustes básicos para celdas y encabezados en móvil si es necesario */
+    .sessions-table th,
+    .sessions-table td {
+        white-space: nowrap;
+        padding: 8px 10px;
+    }
+}

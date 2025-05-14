@@ -1,84 +1,71 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // 1. Obtener referencias a los elementos clave
     const modalRegistro = document.getElementById("modalRegistro");
-    const checkUrlBase = '/check-';
-    const passwordContainers = modalRegistro.querySelectorAll('.password-input-container');
+    const checkUrlBase = "/check-";
+    const passwordContainers = modalRegistro.querySelectorAll(
+        ".password-input-container"
+    );
     const mostrarRegistroBt = document.getElementById("mostrarRegistro");
 
     const cerrarRegistroBtn = modalRegistro.querySelector("#cerrarRegistro");
     const form = modalRegistro.querySelector("form");
     const steps = modalRegistro.querySelectorAll(".form-step");
 
-    // Área para mostrar errores de validación de JavaScript
     const clientSideErrorArea = modalRegistro.querySelector(
         ".client-side-errors"
     );
 
-    passwordContainers.forEach(container => {
-        
-        const passwordInput = container.querySelector('input[type="password"], input[type="text"]');
-        
-        const toggleIcon = container.querySelector('.toggle-password');
-    
+    passwordContainers.forEach((container) => {
+        const passwordInput = container.querySelector(
+            'input[type="password"], input[type="text"]'
+        );
+        const toggleIcon = container.querySelector(".toggle-password");
+
         if (passwordInput && toggleIcon) {
-            
-            toggleIcon.addEventListener('click', function() {
-                
-                const currentType = passwordInput.getAttribute('type');
-    
-                const newType = currentType === 'password' ? 'text' : 'password';
-    
-                // Cambia el atributo type del input
-                passwordInput.setAttribute('type', newType);
-    
-                toggleIcon.textContent = newType === 'password' ? '👁️' : '🙈';
+            toggleIcon.addEventListener("click", function () {
+                const currentType = passwordInput.getAttribute("type");
+                const newType =
+                    currentType === "password" ? "text" : "password";
+                passwordInput.setAttribute("type", newType);
+                toggleIcon.textContent = newType === "password" ? "👁️" : "🙈";
             });
         }
     });
 
     let currentStepIndex = 0;
 
-    // 2. Funciones para mostrar/ocultar el modal
     function openModal() {
         const modalRegistro = document.getElementById("modalRegistro");
-    
+
         if (modalRegistro) {
-            modalRegistro.classList.remove('hidden');
-            modalRegistro.classList.add('flex'); 
-    
-            showStep(0); 
-    
-            //Enfocar el primer campo
-            const firstInput = modalRegistro.querySelector('input:not([type="hidden"]), select, textarea');
+            modalRegistro.classList.remove("hidden");
+            modalRegistro.classList.add("flex");
+
+            showStep(0);
+
+            const firstInput = modalRegistro.querySelector(
+                'input:not([type="hidden"]), select, textarea'
+            );
             if (firstInput) {
                 setTimeout(() => firstInput.focus(), 50);
             }
-    
-        } else {
-            console.error('>>> ERROR: modalRegistro no encontrado dentro de openModal.');
         }
     }
 
     function closeModal() {
-        const modalRegistro = document.getElementById("modalRegistro"); 
+        const modalRegistro = document.getElementById("modalRegistro");
 
         if (modalRegistro) {
-
-        modalRegistro.classList.remove('flex');
-        modalRegistro.classList.add('hidden');
-
-        resetForm(); 
-
-        hideErrors();
-        clearInvalidClasses();
-        modalRegistro.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
-
-        } else {
-            console.error('>>> ERROR: modalRegistro no encontrado dentro de closeModal.');
+            modalRegistro.classList.remove("flex");
+            modalRegistro.classList.add("hidden");
+            resetForm();
+            hideErrors();
+            clearInvalidClasses();
+            modalRegistro
+                .querySelectorAll(".error-message")
+                .forEach((el) => (el.style.display = "none"));
         }
     }
 
-    // Añadir listeners al botón de cerrar y posiblemente al fondo del modal
     if (cerrarRegistroBtn) {
         cerrarRegistroBtn.addEventListener("click", closeModal);
     }
@@ -88,21 +75,16 @@ document.addEventListener("DOMContentLoaded", function () {
         mostrarRegistroBtn.addEventListener("click", openModal);
     }
 
-    // 3. Función para mostrar un paso específico
     function showStep(stepIndex) {
-        // Asegurarse de que el índice es válido
         if (stepIndex < 0 || stepIndex >= steps.length) {
-            console.error("Intentando mostrar un paso inválido:", stepIndex);
             return;
         }
 
-        // Ocultar todos los pasos y remover la clase 'active'
         steps.forEach((step) => {
             step.classList.remove("active");
             step.style.display = "none";
         });
 
-        // Mostrar el paso deseado y añadir la clase 'active'
         steps[stepIndex].classList.add("active");
         steps[stepIndex].style.display = "block";
 
@@ -111,16 +93,14 @@ document.addEventListener("DOMContentLoaded", function () {
         hideErrors();
         clearInvalidClasses();
 
-        // Enfocar el primer campo del nuevo paso para accesibilidad
         const firstInput = steps[stepIndex].querySelector(
             'input:not([type="hidden"]), select, textarea'
         );
         if (firstInput) {
-            setTimeout(() => firstInput.focus(), 50); // Pequeño retraso para asegurar que el elemento es visible
+            setTimeout(() => firstInput.focus(), 50);
         }
     }
 
-    // Funciones para manejar el área de errores de JS
     function showErrors(messages) {
         if (!clientSideErrorArea) return;
         clientSideErrorArea.innerHTML = messages.join("<br>");
@@ -133,14 +113,12 @@ document.addEventListener("DOMContentLoaded", function () {
         clientSideErrorArea.style.display = "none";
     }
 
-    // Función para quitar las clases 'invalid' de todos los campos en todos los pasos
     function clearInvalidClasses() {
         modalRegistro
             .querySelectorAll(".invalid")
             .forEach((el) => el.classList.remove("invalid"));
     }
 
-    //Función para resetear el formulario y volver al paso 0
     function resetForm() {
         if (form) form.reset();
         showStep(0);
@@ -151,28 +129,21 @@ document.addEventListener("DOMContentLoaded", function () {
             .forEach((el) => (el.style.display = "none"));
     }
 
-    // Establecer el estado inicial al cargar la página
     modalRegistro.style.display = "none";
-    // Mostrar el primer paso, aunque el modal esté oculto. Se hará visible al abrir el modal.
     showStep(0);
 
-    // 4. Obtener referencias a los botones de navegación
-    // Seleccionamos todos los botones con estas clases dentro del modal
     const nextButtons = modalRegistro.querySelectorAll(".next-step");
     const prevButtons = modalRegistro.querySelectorAll(".prev-step");
 
-    // 5. Añadir listeners a los botones de navegación
-
-    // Botones "Siguiente"
     nextButtons.forEach((button) => {
         button.addEventListener("click", async function () {
             let stepIsValid = true;
             if (currentStepIndex === 0) {
-                stepIsValid = await validateStep1(); // Implementaremos esta función
+                stepIsValid = await validateStep1();
             } else if (currentStepIndex === 1) {
-                stepIsValid = await validateStep2(); // Implementaremos esta función
+                stepIsValid = await validateStep2();
             } else if (currentStepIndex === 2) {
-                stepIsValid = await validateStep3(); // Implementaremos esta función
+                stepIsValid = await validateStep3();
             }
             if (stepIsValid) {
                 if (currentStepIndex < steps.length - 1) {
@@ -183,126 +154,139 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     async function validateStep1() {
-    
-    hideErrors(); 
-    clearInvalidClasses(); 
-                clearStepFieldErrors(steps[0]); 
-        
+        hideErrors();
+        clearInvalidClasses();
+        clearStepFieldErrors(steps[0]);
+
         const step1 = steps[0];
-    const emailInput = step1.querySelector('[name="email"]');
-    const emailConfirmationInput = step1.querySelector(
-    '[name="email_confirmation"]'
+        const emailInput = step1.querySelector('[name="email"]');
+        const emailConfirmationInput = step1.querySelector(
+            '[name="email_confirmation"]'
         );
         const passwordInput = step1.querySelector('[name="password"]');
-    const passwordConfirmationInput = step1.querySelector(
-    '[name="password_confirmation"]'
-    );
-        
-    let isStepValid = true;
-        
-     // --- Validaciones para el Paso 1 ---
-        
-        
+        const passwordConfirmationInput = step1.querySelector(
+            '[name="password_confirmation"]'
+        );
+
+        let isStepValid = true;
+
         if (!emailInput || !emailInput.value.trim()) {
-        displayFieldError(emailInput, "El email es obligatorio.");
-        if (emailInput) emailInput.classList.add("invalid");
-    isStepValid = false;
+            displayFieldError(emailInput, "El email es obligatorio.");
+            if (emailInput) emailInput.classList.add("invalid");
+            isStepValid = false;
         } else if (!/\S+@\S+\.\S+/.test(emailInput.value)) {
-    displayFieldError(emailInput, "Por favor, introduce un email válido.");
-    if (emailInput) emailInput.classList.add("invalid");
-         isStepValid = false;
-    } else {
-                    clearFieldError(emailInput); 
-                }
-        
-                
-                if (!emailConfirmationInput || !emailConfirmationInput.value.trim()) {
-                    displayFieldError(emailConfirmationInput, "La confirmación del email es obligatoria.");
-                    if (emailConfirmationInput) emailConfirmationInput.classList.add("invalid");
-                    isStepValid = false;
-                } else if (emailInput && emailConfirmationInput && emailInput.value !== emailConfirmationInput.value) {
-                    displayFieldError(emailConfirmationInput, "El email y la confirmación no coinciden.");
-                    if (emailInput) emailInput.classList.add("invalid"); 
-                    if (emailConfirmationInput) emailConfirmationInput.classList.add("invalid");
-                    isStepValid = false;
-                } else {
-                    clearFieldError(emailConfirmationInput); 
-                    
-                    if (emailInput) emailInput.classList.remove("invalid");
-                }
-        
-        
-        
-    if (!passwordInput || !passwordInput.value) {
-    displayFieldError(passwordInput, "La contraseña es obligatoria.");
-    if (passwordInput) passwordInput.classList.add("invalid");
-    isStepValid = false;
-    } else if (passwordInput.value.length < 8) {
-    displayFieldError(passwordInput, "La contraseña debe tener al menos 8 caracteres.");
-    if (passwordInput) passwordInput.classList.add("invalid");
-    isStepValid = false;
-    } else {
-                    clearFieldError(passwordInput);
-                }
-        
-            
-                if (!passwordConfirmationInput || !passwordConfirmationInput.value) {
-                    displayFieldError(passwordConfirmationInput, "La confirmación de la contraseña es obligatoria.");
-                    if (passwordConfirmationInput) passwordConfirmationInput.classList.add("invalid");
-                    isStepValid = false;
-                } else if (passwordInput && passwordConfirmationInput && passwordInput.value !== passwordConfirmationInput.value) {
-                    displayFieldError(passwordConfirmationInput, "La contraseña y la confirmación no coinciden.");
-                    if (passwordInput) passwordInput.classList.add("invalid"); 
-                    if (passwordConfirmationInput) passwordConfirmationInput.classList.add("invalid");
-                    isStepValid = false;
-                } else {
-                    clearFieldError(passwordConfirmationInput); 
-                    
-                    if (passwordInput) passwordInput.classList.remove("invalid");
-                }
-
-                if (emailInput && !emailInput.classList.contains('invalid')) {
-                    const isEmailUnique = await checkEmailExists(emailInput);
-                    if (!isEmailUnique) {
-                        isStepValid = false; 
-                    }
-                }
-
-        
-        return isStepValid; 
+            displayFieldError(
+                emailInput,
+                "Por favor, introduce un email válido."
+            );
+            if (emailInput) emailInput.classList.add("invalid");
+            isStepValid = false;
+        } else {
+            clearFieldError(emailInput);
         }
 
-    // Implementación para validar el Paso 2 (errores por campo)
+        if (!emailConfirmationInput || !emailConfirmationInput.value.trim()) {
+            displayFieldError(
+                emailConfirmationInput,
+                "La confirmación del email es obligatoria."
+            );
+            if (emailConfirmationInput)
+                emailConfirmationInput.classList.add("invalid");
+            isStepValid = false;
+        } else if (
+            emailInput &&
+            emailConfirmationInput &&
+            emailInput.value !== emailConfirmationInput.value
+        ) {
+            displayFieldError(
+                emailConfirmationInput,
+                "El email y la confirmación no coinciden."
+            );
+            if (emailInput) emailInput.classList.add("invalid");
+            if (emailConfirmationInput)
+                emailConfirmationInput.classList.add("invalid");
+            isStepValid = false;
+        } else {
+            clearFieldError(emailConfirmationInput);
+            if (emailInput) emailInput.classList.remove("invalid");
+        }
+
+        if (!passwordInput || !passwordInput.value) {
+            displayFieldError(passwordInput, "La contraseña es obligatoria.");
+            if (passwordInput) passwordInput.classList.add("invalid");
+            isStepValid = false;
+        } else if (passwordInput.value.length < 8) {
+            displayFieldError(
+                passwordInput,
+                "La contraseña debe tener al menos 8 caracteres."
+            );
+            if (passwordInput) passwordInput.classList.add("invalid");
+            isStepValid = false;
+        } else {
+            clearFieldError(passwordInput);
+        }
+
+        if (!passwordConfirmationInput || !passwordConfirmationInput.value) {
+            displayFieldError(
+                passwordConfirmationInput,
+                "La confirmación de la contraseña es obligatoria."
+            );
+            if (passwordConfirmationInput)
+                passwordConfirmationInput.classList.add("invalid");
+            isStepValid = false;
+        } else if (
+            passwordInput &&
+            passwordConfirmationInput &&
+            passwordInput.value !== passwordConfirmationInput.value
+        ) {
+            displayFieldError(
+                passwordConfirmationInput,
+                "La contraseña y la confirmación no coinciden."
+            );
+            if (passwordInput) passwordInput.classList.add("invalid");
+            if (passwordConfirmationInput)
+                passwordConfirmationInput.classList.add("invalid");
+            isStepValid = false;
+        } else {
+            clearFieldError(passwordConfirmationInput);
+            if (passwordInput) passwordInput.classList.remove("invalid");
+        }
+
+        if (emailInput && !emailInput.classList.contains("invalid")) {
+            const isEmailUnique = await checkEmailExists(emailInput);
+            if (!isEmailUnique) {
+                isStepValid = false;
+            }
+        }
+
+        return isStepValid;
+    }
+
     async function validateStep2() {
-    
-        hideErrors(); 
-        clearInvalidClasses(); 
-        clearStepFieldErrors(steps[1]); 
+        hideErrors();
+        clearInvalidClasses();
+        clearStepFieldErrors(steps[1]);
 
         const step2 = steps[1];
 
-        
         const nombreInput = step2.querySelector('[name="nombre"]');
         const apellidosInput = step2.querySelector('[name="apellidos"]');
         const direccionInput = step2.querySelector('[name="direccion"]');
-        const ciudadSelect = step2.querySelector('[name="ciudad"]'); 
+        const ciudadSelect = step2.querySelector('[name="ciudad"]');
         const telefonoInput = step2.querySelector('[name="telefono"]');
         const dniInput = step2.querySelector('[name="dni"]');
-        const cpInput = step2.querySelector('[name="codigo_postal"]'); 
+        const cpInput = step2.querySelector('[name="codigo_postal"]');
 
-        let isStepValid = true; 
-
-        // --- Validaciones para el Paso 2 (usando displayFieldError) ---
+        let isStepValid = true;
 
         if (!nombreInput || !nombreInput.value.trim()) {
             displayFieldError(nombreInput, "El nombre es obligatorio.");
             if (nombreInput) nombreInput.classList.add("invalid");
             isStepValid = false;
         } else {
-            clearFieldError(nombreInput); 
+            clearFieldError(nombreInput);
         }
 
-    
         if (!apellidosInput || !apellidosInput.value.trim()) {
             displayFieldError(
                 apellidosInput,
@@ -311,25 +295,23 @@ document.addEventListener("DOMContentLoaded", function () {
             if (apellidosInput) apellidosInput.classList.add("invalid");
             isStepValid = false;
         } else {
-            clearFieldError(apellidosInput); 
+            clearFieldError(apellidosInput);
         }
 
-        // Validar Dirección (es 'required' en tu HTML)
         if (!direccionInput || !direccionInput.value.trim()) {
             displayFieldError(direccionInput, "La Dirección es obligatoria.");
             if (direccionInput) direccionInput.classList.add("invalid");
             isStepValid = false;
         } else {
-            clearFieldError(direccionInput); 
+            clearFieldError(direccionInput);
         }
 
-        
         if (!ciudadSelect || !ciudadSelect.value) {
             displayFieldError(ciudadSelect, "Debes seleccionar una ciudad.");
             if (ciudadSelect) ciudadSelect.classList.add("invalid");
             isStepValid = false;
         } else {
-            clearFieldError(ciudadSelect); 
+            clearFieldError(ciudadSelect);
         }
 
         if (!telefonoInput || !telefonoInput.value.trim()) {
@@ -337,35 +319,52 @@ document.addEventListener("DOMContentLoaded", function () {
             if (telefonoInput) telefonoInput.classList.add("invalid");
             isStepValid = false;
         } else {
-            const phoneRegex = /^\d{9}$/; 
+            const phoneRegex = /^\d{9}$/;
             if (!phoneRegex.test(telefonoInput.value.trim())) {
                 displayFieldError(
                     telefonoInput,
                     "El teléfono debe tener exactamente 9 dígitos."
-                ); 
+                );
                 if (telefonoInput) telefonoInput.classList.add("invalid");
                 isStepValid = false;
             } else {
-                clearFieldError(telefonoInput); 
+                clearFieldError(telefonoInput);
             }
         }
 
-    
         if (!dniInput || !dniInput.value.trim()) {
             displayFieldError(dniInput, "El DNI es obligatorio.");
             if (dniInput) dniInput.classList.add("invalid");
             isStepValid = false;
         } else {
-            const dniRegexSoloFormato = /^\d{8}[A-Za-z]$/; 
-            if (!dniRegexSoloFormato.test(dniInput.value.trim())) {
+            const dniFormatRegex = /^\d{8}[A-Za-z]$/;
+            const dniValue = dniInput.value.trim();
+            if (!dniFormatRegex.test(dniValue)) {
                 displayFieldError(
                     dniInput,
                     "El formato del DNI debe ser 8 números seguidos de una letra."
                 );
                 if (dniInput) dniInput.classList.add("invalid");
                 isStepValid = false;
+            } else if (!isValidDniLetter(dniValue)) {
+                // <<-- AÑADIDO: Verificar la letra del DNI
+                displayFieldError(
+                    dniInput,
+                    "La letra del DNI no se corresponde con los números."
+                );
+                if (dniInput) dniInput.classList.add("invalid");
+                isStepValid = false;
             } else {
-                clearFieldError(dniInput); 
+                // Si el formato y la letra son correctos
+                clearFieldError(dniInput);
+                if (dniInput) dniInput.classList.remove("invalid");
+
+                // >> Verificación de unicidad del DNI vía AJAX <<
+                const isDniUnique = await checkDniExists(dniInput);
+                if (!isDniUnique) {
+                    // checkDniExists ya mostró el error "Ya existe" y añadió 'invalid'
+                    isStepValid = false;
+                }
             }
         }
 
@@ -374,126 +373,272 @@ document.addEventListener("DOMContentLoaded", function () {
             if (cpInput) cpInput.classList.add("invalid");
             isStepValid = false;
         } else {
-            const cpRegex = /^\d{5}$/; 
+            const cpRegex = /^\d{5}$/;
             if (!cpRegex.test(cpInput.value.trim())) {
-                displayFieldError(
-                    cpInput,
-                    "El C.P debe tener 5 dígitos."
-                );
+                displayFieldError(cpInput, "El C.P debe tener 5 dígitos.");
                 if (cpInput) cpInput.classList.add("invalid");
                 isStepValid = false;
             } else {
-                clearFieldError(cpInput); 
+                clearFieldError(cpInput);
             }
         }
 
-        if (dniInput && !dniInput.classList.contains('invalid')) {
-            const isDniUnique = await checkDniExists(dniInput);
-            if (!isDniUnique) {
-                isStepValid = false; 
-            }
-        }
-
-    
-
-        return isStepValid; 
+        return isStepValid;
     }
 
-    // Implementación para validar el Paso 3 
+    async function validateStep3() {
+        hideErrors();
+        clearInvalidClasses();
+        clearStepFieldErrors(steps[2]);
 
-async function validateStep3() {
+        const step3 = steps[2];
 
-hideErrors(); 
-    clearInvalidClasses();
-                clearStepFieldErrors(steps[2]); 
-        
-const step3 = steps[2]; 
-        
+        const fechaNacimientoInput = step3.querySelector(
+            '[name="fecha_nacimiento"]'
+        );
+        const mayorEdadCheckbox = step3.querySelector('[name="mayor_edad"]');
 
-    const fechaNacimientoInput = step3.querySelector(
-    '[name="fecha_nacimiento"]'
-);
-const mayorEdadCheckbox = step3.querySelector('[name="mayor_edad"]');
-    
-        
-    let isStepValid = true;
-        
-    // --- Validaciones para el Paso 3 (usando displayFieldError) ---
-        
+        let isStepValid = true;
 
-    if (!fechaNacimientoInput || !fechaNacimientoInput.value.trim()) {
-    displayFieldError(fechaNacimientoInput, "La Fecha de Nacimiento es obligatoria.");
-if (fechaNacimientoInput)
-fechaNacimientoInput.classList.add("invalid");
-isStepValid = false;
-} else {
-    const birthDate = new Date(fechaNacimientoInput.value);
-    if (isNaN(birthDate.getTime())) {
-displayFieldError(
-fechaNacimientoInput,
-"Por favor, introduce una fecha de nacimiento válida."
-);
-if (fechaNacimientoInput)
-fechaNacimientoInput.classList.add("invalid");
-    isStepValid = false;
-} else {
-    
-        const today = new Date();
-    const ageLimitDate = new Date(
-today.getFullYear() - 14,
-today.getMonth(),
-        today.getDate()
-);
-if (birthDate > ageLimitDate) {
-displayFieldError(fechaNacimientoInput, "Debes tener al menos 14 años.");
-fechaNacimientoInput.classList.add("invalid");
-if (fechaNacimientoInput)
-fechaNacimientoInput.classList.add("invalid");
-isStepValid = false;
-} else {
-                             clearFieldError(fechaNacimientoInput); // Limpiar si es válido
-                        }
-    }
-    }
-        
-        
-
-    if (!mayorEdadCheckbox || !mayorEdadCheckbox.checked) {
-                    
-                    if (!mayorEdadCheckbox) {
-                        console.error("Checkbox 'mayor_edad' no encontrado en el paso 3.");
-                    } else {
-                         // Si existe pero no está marcado
-                        displayFieldError(mayorEdadCheckbox, "Debes confirmar que eres mayor de 14 años."); 
-                        mayorEdadCheckbox.classList.add("invalid"); 
-                        isStepValid = false;
-                    }
-    } else {
-                    clearFieldError(mayorEdadCheckbox); 
+        if (!fechaNacimientoInput || !fechaNacimientoInput.value.trim()) {
+            displayFieldError(
+                fechaNacimientoInput,
+                "La Fecha de Nacimiento es obligatoria."
+            );
+            if (fechaNacimientoInput)
+                fechaNacimientoInput.classList.add("invalid");
+            isStepValid = false;
+        } else {
+            const birthDate = new Date(fechaNacimientoInput.value);
+            if (isNaN(birthDate.getTime())) {
+                displayFieldError(
+                    fechaNacimientoInput,
+                    "Por favor, introduce una fecha de nacimiento válida."
+                );
+                if (fechaNacimientoInput)
+                    fechaNacimientoInput.classList.add("invalid");
+                isStepValid = false;
+            } else {
+                const today = new Date();
+                const ageLimitDate = new Date(
+                    today.getFullYear() - 14,
+                    today.getMonth(),
+                    today.getDate()
+                );
+                if (birthDate > ageLimitDate) {
+                    displayFieldError(
+                        fechaNacimientoInput,
+                        "Debes tener al menos 14 años."
+                    );
+                    fechaNacimientoInput.classList.add("invalid");
+                    if (fechaNacimientoInput)
+                        fechaNacimientoInput.classList.add("invalid");
+                    isStepValid = false;
+                } else {
+                    clearFieldError(fechaNacimientoInput);
                 }
-        
+            }
+        }
 
-        
-    return isStepValid; 
+        if (!mayorEdadCheckbox || !mayorEdadCheckbox.checked) {
+            if (!mayorEdadCheckbox) {
+            } else {
+                displayFieldError(
+                    mayorEdadCheckbox,
+                    "Debes confirmar que eres mayor de 14 años."
+                );
+                mayorEdadCheckbox.classList.add("invalid");
+                isStepValid = false;
+            }
+        } else {
+            clearFieldError(mayorEdadCheckbox);
+        }
+
+        return isStepValid;
     }
 
-    // 6. Manejar el evento submit del formulario para la validación FINAL
+    function displayFieldError(inputElement, message) {
+        const formRow = inputElement.closest(".form-row");
+        if (formRow) {
+            const errorElement = formRow.querySelector(
+                ".client-side-field-error"
+            );
+            if (errorElement) {
+                errorElement.innerHTML = message;
+                errorElement.style.display = "block";
+            }
+        }
+    }
+
+    function clearFieldError(inputElement) {
+        const formRow = inputElement.closest(".form-row");
+        if (formRow) {
+            const errorElement = formRow.querySelector(
+                ".client-side-field-error"
+            );
+            if (errorElement) {
+                errorElement.innerHTML = "";
+                errorElement.style.display = "none";
+            }
+        }
+    }
+
+    function clearStepFieldErrors(stepElement) {
+        stepElement
+            .querySelectorAll(".form-row .client-side-field-error")
+            .forEach((el) => {
+                el.innerHTML = "";
+                el.style.display = "none";
+            });
+    }
+
+    async function checkEmailExists(emailInput) {
+        if (!emailInput || !emailInput.value.trim()) {
+            clearFieldError(emailInput);
+            return false;
+        }
+
+        const email = emailInput.value.trim();
+
+        const errorElement = emailInput
+            .closest(".form-row")
+            ?.querySelector(".client-side-field-error");
+
+        if (
+            errorElement &&
+            errorElement.innerHTML.includes("ya está registrado")
+        ) {
+            clearFieldError(emailInput);
+        }
+        if (emailInput) emailInput.classList.remove("invalid");
+
+        try {
+            const response = await fetch(
+                `${checkUrlBase}email?email=${encodeURIComponent(email)}`
+            );
+
+            if (!response.ok) {
+                console.error(
+                    "Error en la respuesta del backend al comprobar email:",
+                    response.status,
+                    response.statusText
+                );
+                displayFieldError(
+                    emailInput,
+                    "Error al verificar email. Intenta de nuevo."
+                );
+                if (emailInput) emailInput.classList.add("invalid");
+                return false;
+            }
+
+            const data = await response.json();
+
+            if (data.exists) {
+                displayFieldError(emailInput, "Este email ya está registrado.");
+                if (emailInput) emailInput.classList.add("invalid");
+                return false;
+            } else {
+                clearFieldError(emailInput);
+                return true;
+            }
+        } catch (error) {
+            console.error(
+                "Error al hacer la petición fetch para comprobar email:",
+                error
+            );
+            displayFieldError(
+                emailInput,
+                "Error al verificar email. Intenta de nuevo."
+            );
+            if (emailInput) emailInput.classList.add("invalid");
+            return false;
+        }
+    }
+
+    async function checkDniExists(dniInput) {
+        if (!dniInput || !dniInput.value.trim()) {
+            clearFieldError(dniInput);
+            return true;
+        }
+
+        const dni = dniInput.value.trim();
+
+        const errorElement = dniInput
+            .closest(".form-row")
+            ?.querySelector(".client-side-field-error");
+
+        if (
+            errorElement &&
+            errorElement.innerHTML.includes("ya existe ese DNI")
+        ) {
+            clearFieldError(dniInput);
+        }
+
+        if (dniInput) dniInput.classList.remove("invalid");
+
+        const dniFormatRegex = /^\d{8}[A-Za-z]$/;
+        if (!dniFormatRegex.test(dni)) {
+            displayFieldError(dniInput, "El formato del DNI no es válido.");
+            if (dniInput) dniInput.classList.add("invalid");
+            return false;
+        }
+
+        try {
+            const response = await fetch(
+                `${checkUrlBase}dni?dni=${encodeURIComponent(dni)}`
+            );
+
+            if (!response.ok) {
+                console.error(
+                    "Error en la respuesta del backend al comprobar DNI:",
+                    response.status,
+                    response.statusText
+                );
+                displayFieldError(
+                    dniInput,
+                    "Error al verificar DNI. Intenta de nuevo."
+                );
+                if (dniInput) dniInput.classList.add("invalid");
+                return false;
+            }
+
+            const data = await response.json();
+
+            if (data.exists) {
+                displayFieldError(dniInput, "Ya existe ese DNI registrado.");
+                if (dniInput) dniInput.classList.add("invalid");
+                return false;
+            } else {
+                clearFieldError(dniInput);
+                if (dniInput) dniInput.classList.remove("invalid");
+                return true;
+            }
+        } catch (error) {
+            console.error(
+                "Error al hacer la petición fetch para comprobar DNI:",
+                error
+            );
+            displayFieldError(
+                dniInput,
+                "Error al verificar DNI. Intenta de nuevo."
+            );
+            if (dniInput) dniInput.classList.add("invalid");
+            return false;
+        }
+    }
 
     form.addEventListener("submit", async function (event) {
-        // Detener el envío por defecto del formulario inicialmente
         event.preventDefault();
 
-        // Limpiar errores y clases 'invalid' de validaciones anteriores
         hideErrors();
         clearInvalidClasses();
 
-        steps.forEach(step => clearStepFieldErrors(step));
+        steps.forEach((step) => clearStepFieldErrors(step));
 
         const isStep1Valid = await validateStep1();
         const isStep2Valid = await validateStep2();
         const isStep3Valid = await validateStep3();
 
-        // Comprobar si TODOS los pasos son válidos
         const isFormValid = isStep1Valid && isStep2Valid && isStep3Valid;
 
         if (isFormValid) {
@@ -512,154 +657,10 @@ isStepValid = false;
         }
     });
 
-    // Función auxiliar para encontrar y mostrar un error debajo de un input
-    function displayFieldError(inputElement, message) {
-        const formRow = inputElement.closest(".form-row");
-        if (formRow) {
-            const errorElement = formRow.querySelector(".client-side-field-error");
-            if (errorElement) {
-                errorElement.innerHTML = message;
-                errorElement.style.display = "block";
-            }else {
-                console.warn("ADVERTENCIA: Elemento de error cliente (.client-side-field-error) NO encontrado para input:", inputElement);
-        }
-} else {
-            console.warn("ADVERTENCIA: Form row (.form-row) NO encontrado para input:", inputElement);
-    }
-        }
-
-    // Función auxiliar para encontrar y limpiar un error debajo de un input
-    function clearFieldError(inputElement) {
-        const formRow = inputElement.closest(".form-row");
-        if (formRow) {
-            const errorElement = formRow.querySelector(".client-side-field-error");
-            if (errorElement) {
-                errorElement.innerHTML = "";
-                errorElement.style.display = "none"; 
-            }
-        }
-    }
-
-    // Función para limpiar TODOS los errores de campo dentro de un paso específico
-    function clearStepFieldErrors(stepElement) {
-        stepElement
-            .querySelectorAll(".form-row .client-side-field-error")
-            .forEach((el) => {
-                el.innerHTML = "";
-                el.style.display = "none";
-            });
-    }
-
-    async function checkEmailExists(emailInput) {
-        if (!emailInput || !emailInput.value.trim()) {
-            clearFieldError(emailInput);
-            return false;
-        }
-
-        const email = emailInput.value.trim();
-        
-        const errorElement = emailInput.closest('.form-row')?.querySelector('.client-side-field-error');
-
-        if (errorElement && errorElement.innerHTML.includes('ya está registrado')) {
-            clearFieldError(emailInput);
-        }
-        if (emailInput) emailInput.classList.remove("invalid");
-
-        try {
-            
-            const response = await fetch(`${checkUrlBase}email?email=${encodeURIComponent(email)}`);
-
-            if (!response.ok) {
-                console.error('Error en la respuesta del backend al comprobar email:', response.status, response.statusText);
-                displayFieldError(emailInput, "Error al verificar email. Intenta de nuevo.");
-                if (emailInput) emailInput.classList.add("invalid");
-                return false; 
-            }
-
-            const data = await response.json();
-
-            if (data.exists) {
-                displayFieldError(emailInput, "Este email ya está registrado.");
-                if (emailInput) emailInput.classList.add("invalid");
-                return false;
-            } else {
-                clearFieldError(emailInput);
-                return true;
-            }
-
-        } catch (error) {
-            console.error('Error al hacer la petición fetch para comprobar email:', error);
-            displayFieldError(emailInput, "Error al verificar email. Intenta de nuevo.");
-            if (emailInput) emailInput.classList.add("invalid");
-            return false; 
-        }
-    }
-
-
-    async function checkDniExists(dniInput) { 
-    if (!dniInput || !dniInput.value.trim()) {
-    clearFieldError(dniInput); 
-    return true; 
-    }
-    
-    const dni = dniInput.value.trim();
-
-    const errorElement = dniInput.closest('.form-row')?.querySelector('.client-side-field-error'); // Asegúrate que la clase del span es correcta
-    
-
-    if (errorElement && errorElement.innerHTML.includes('ya existe ese DNI')) { // Ajusta el texto si el mensaje es diferente
-    clearFieldError(dniInput);
-    }
-
-    if (dniInput) dniInput.classList.remove("invalid");
-    
-    const dniFormatRegex = /^\d{8}[A-Za-z]$/;
-    if (!dniFormatRegex.test(dni)) {
-    displayFieldError(dniInput, "El formato del DNI no es válido."); 
-    if (dniInput) dniInput.classList.add("invalid");
-    return false; 
-    }
-    
-    
-    try {
-    const response = await fetch(`${checkUrlBase}dni?dni=${encodeURIComponent(dni)}`); 
-    
-    if (!response.ok) {
-    console.error('Error en la respuesta del backend al comprobar DNI:', response.status, response.statusText);
-    displayFieldError(dniInput, "Error al verificar DNI. Intenta de nuevo."); 
-    if (dniInput) dniInput.classList.add("invalid");
-    return false; 
-    }
-    
-    const data = await response.json(); 
-    
-    if (data.exists) {
-
-    displayFieldError(dniInput, "Ya existe ese DNI registrado."); 
-    if (dniInput) dniInput.classList.add("invalid");
-    return false; 
-    } else {
-    
-    clearFieldError(dniInput); 
-    if (dniInput) dniInput.classList.remove("invalid"); 
-    return true; 
-    }
-    
-    } catch (error) {
-    console.error('Error al hacer la petición fetch para comprobar DNI:', error);
-    displayFieldError(dniInput, "Error al verificar DNI. Intenta de nuevo."); 
-    if (dniInput) dniInput.classList.add("invalid");
-    return false; 
-    }
-    }
-
-    // Botones "Anterior"
     prevButtons.forEach((button) => {
         button.addEventListener("click", function () {
-            // Al ir hacia atrás, simplemente cambiamos de paso
             if (currentStepIndex > 0) {
                 showStep(currentStepIndex - 1);
-                // La función showStep ya limpia errores y clases 'invalid'
             }
         });
     });

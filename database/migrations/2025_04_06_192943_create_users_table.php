@@ -67,17 +67,20 @@ return new class extends Migration
             $table->string('email', 50)->unique();
             $table->date('fecha_nacimiento');
             $table->string('numero_telefono', 9);
+            $table->unsignedBigInteger('ciudad')->nullable(); 
             $table->string('dni', 9)->unique();
             $table->string('direccion', 150)->nullable();
-            $table->string('ciudad', 30);
             $table->string('codigo_postal', 10); 
             $table->string('password', 200);
             $table->rememberToken();
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->nullable(); 
             $table->tinyInteger('mayor_edad')->default(0); 
             $table->unsignedBigInteger('id_descuento')->nullable(); 
+            $table->unsignedBigInteger('tipo_usuario')->nullable(); 
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->nullable(); 
+            $table->foreign('ciudad')->references('id')->on('ciudades'); 
             $table->foreign('id_descuento')->references('id_descuento')->on('descuento');
+            $table->foreign('tipo_usuario')->references('id_tipo_usuario')->on('tipo_usuario');
         });
     }
 

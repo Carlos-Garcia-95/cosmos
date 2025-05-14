@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Rules\letraDNI;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 
@@ -24,9 +25,9 @@ class RegisterController extends Controller
             'apellidos' => 'required|string|max:255|alpha',
             'direccion' => 'required|string|max:255|regex:/^[a-zA-Z0-9\s\/\-#.,]*$/',
             'ciudad' => 'required',
-            'codigo_postal' => 'required|string|max:10',
+            'codigo_postal' => 'required|string|max:5|min:5',
             'telefono' => 'required|digits:9',
-            'dni' => 'required|regex:/^\d{8}[A-Za-z]$/',
+            'dni' => ['required','regex:/^\d{8}[A-Za-z]$/','unique:users,dni',new letraDNI],
             'mayor_edad' => 'required|accepted',
             'fecha_nacimiento' => 'required|date',
         ]);

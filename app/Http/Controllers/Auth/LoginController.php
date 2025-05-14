@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
+    const ID_TIPO_USUARIO_CLIENTE = 3;
+    const ID_TIPO_USUARIO_EMPLEADO = 2;
+    const ID_TIPO_USUARIO_ADMINISTRADOR = 1;
+
     public function login(Request $request) {
 
         $mensajes = [
@@ -19,40 +23,54 @@ class LoginController extends Controller
             'login_password.required' => 'Por favor, introduce tu contraseña.',
         ];
 
-        // Comprueba que los campos se han rellenado correctamente
+        // Validar los campos de email y contraseña del formulario
+        // Los nombres de los campos en el formulario deben ser 'login_email' y 'login_password'
         $credentials = $request->validate([
             'login_email' => ['required', 'email'],
             'login_password' => ['required']
         ], $mensajes);
 
-        // Comprobar email correcto
-        $user = User::where('email', $credentials['login_email'])->first();
+        // Preparamos las credenciales para Auth::attempt.
+        // Auth::attempt espera las claves 'email' y 'password' por defecto.
+        $authCredentials = [
+            'email' => $credentials['login_email'],
+            'password' => $credentials['login_password'],
+        ];
 
-        if (!$user) {
+        // --- Intentar login estándar usando email y password ---
+        if (Auth::attempt($authCredentials, $request->has('remember'))) {
+
+            // --- PASO 1: Login estándar exitoso en tabla 'users' ---
+            $user = Auth::user();
+
+            // --- PASO 2: Verificar si el tipo_usuario es 'Cliente'/'Empleado'/'Administrador' ---
+            if ($user->tipo_usuario === self::ID_TIPO_USUARIO_CLIENTE) {
+
+                $request->session()->regenerate();
+                Log::info('Session data after Auth::attempt success:', $request->session()->all());
+
+                return redirect()->intended('/')->with('success', "¡Bienvenido Cliente {$user->nombre} {$user->apellidos}!");
+
+            } else if($user->tipo_usuario === self::ID_TIPO_USUARIO_EMPLEADO){
+
+                $request->session()->regenerate();
+                Log::info('Session data after Auth::attempt success:', $request->session()->all());
+
+                return redirect()->intended('/')->with('success', "¡Bienvenido Empleado {$user->nombre} {$user->apellidos}!");
+            } else if($user->tipo_usuario === self::ID_TIPO_USUARIO_ADMINISTRADOR){
+
+                $request->session()->regenerate();
+                Log::info('Session data after Auth::attempt success:', $request->session()->all());
+
+                return redirect()->intended('/')->with('success', "¡Bienvenido Administrador {$user->nombre} {$user->apellidos}!");
+            }
+
+        } else {
+            // --- PASO 5: El login falló. ---
             return back()->withErrors([
-                'login_email' => 'La contraseña o el email introducido no es correcto.'
-            ])->withInput();
+                'login_email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.' // Mensaje genérico de error de credenciales
+            ])->onlyInput('login_email'); // Mantener el email en el formulario
         }
-
-        // Comprobar password correcta
-        if (!Hash::check($credentials['login_password'], $user->password)) {
-            return back()->withErrors([
-                'login_password' => 'La contraseña o el email introducido no es correcto.'
-            ])->withInput();
-        }
-
-        // Intentar login. Si es exitoso, vuelve a index con las sesión iniciada
-        if (Auth::attempt(['email' => $credentials['login_email'], 'password' => $credentials['login_password']], $request->has('remember'))) {
-            $request->session()->regenerate();
-            Log::info('Session data after Auth::attempt success:', $request->session()->all()); 
-            return redirect()->intended('/')->with('success', '¡Bienvenido!');
-            
-        }
-
-        return back()->withErrors([
-            'login_email' => 'El email o la contraseña no son correctos'
-        ])->withInput();
-
     }
 
     public function showLoginForm()

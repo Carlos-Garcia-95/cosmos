@@ -6,29 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Cosmos Cinema</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     @vite(['resources/css/dashboard.css'])
     @vite(['resources/js/adminDashboard.js'])
     @vite(['resources/js/adminDashboardGestionarPelicula.js'])
     @vite(['resources/js/adminDashboardGestionarMenu.js'])
     @vite(['resources/js/adminDashboardSesiones.js'])
+    @vite(['resources/js/adminDashboardAñadirEmpleado.js'])
 </head>
 
 <body>
     <div class="dashboard-layout">
         <header class="dashboard-header">
-        <!-- <button class="menu-toggle" aria-label="Abrir menú">☰</button> -->
+            <button class="menu-toggle" aria-label="Abrir menú">☰</button>
             <div class="header-right-elements">
                 <span class="admin-name">
                     @php
-                        $adminName = '';
-                        if (Auth::check()) {
-                            $user = Auth::user();
-                            $fullName = trim(($user->nombre ?? '') . ' ' . ($user->apellido ?? ''));
-                            $adminName = $fullName ?: ($user->nombre_user_admin ?? $user->nombre ?? $user->email ?? 'Admin');
-                        } else {
-                            $adminName = 'Admin'; // O lo que quieras mostrar si no hay usuario logueado
-                        }
+                    $adminName = '';
+                    if (Auth::check()) {
+                    $user = Auth::user();
+                    $fullName = trim(($user->nombre ?? '') . ' ' . ($user->apellido ?? ''));
+                    $adminName = $fullName ?: ($user->nombre_user_admin ?? $user->nombre ?? $user->email ?? 'Admin');
+                    } else {
+                    $adminName = 'Admin'; // O lo que quieras mostrar si no hay usuario logueado
+                    }
                     @endphp
                     {{ $adminName }}
                 </span>
@@ -55,6 +57,9 @@
                             </li>
                             <li>
                                 <a href="#" class="sidebar-link" data-section="create-session">Gestionar Sesión</a>
+                            </li>
+                            <li>
+                                <a href="#" class="sidebar-link" data-section="add-user">Añadir Empleado</a>
                             </li>
                         </ul>
                     </div>
@@ -204,7 +209,7 @@
                                     <img id="menu-item-foto-preview" src="#" alt="Vista previa de la foto" style="max-width: 100px; max-height: 100px; display: none; margin-top: 10px;" />
                                     <input type="hidden" id="menu-item-current-foto-ruta" name="current_foto_ruta">
                                 </div>
-                                <div style="text-align: right;">
+                                <div id="botonesEditar">
                                     <button type="button" id="cancel-menu-item-button">Cancelar</button>
                                     <button type="submit" id="save-menu-item-button">Guardar</button>
                                 </div>
@@ -216,7 +221,6 @@
                     <h3>Gestión de Sesión de Películas</h3>
                     <div class="main-container">
                         <div class="form-section">
-                            {{-- El título "Crear Nueva Sesión" del formulario interno, ya lo tienes arriba. Puedes quitarlo si no lo quieres duplicado --}}
                             <h2>Crear nueva Sesión</h2>
 
                             <form id="create-session-form">
@@ -226,7 +230,7 @@
                                         <option value="">Seleccionar fecha</option>
                                         @if(isset($fechas))
                                         @foreach($fechas as $fecha)
-                                            <option value="{{ $fecha->id }}">{{ $fecha->fecha }}</option>
+                                        <option value="{{ $fecha->id }}">{{ $fecha->fecha }}</option>
                                         @endforeach
                                         @endif
                                     </select>
@@ -235,7 +239,7 @@
                                     <label for="session-sala">Sala:</label>
                                     <select id="session-sala" name="sala_id" required>
                                         <option value="">Seleccionar sala</option>
-                                        
+
                                     </select>
                                 </div>
                                 <div>
@@ -261,24 +265,168 @@
                         <div class="sessions-table-section">
                             <h2>Sesiones Creadas<span id="selected-session-date"></span></h2>
                             <p id="noSessionsMessage" style="display: none;">No hay sesiones creadas para esta fecha.</p>
+                            <div class="table-responsive-container">
                             <table id="sessionsTable" class="sessions-table">
                                 <thead>
                                     <tr>
                                         <th>Sesión</th>
                                         <th>Película</th>
                                         <th>Hora</th>
-                                        <th>Hora Final</th> 
+                                        <th>Hora Final</th>
                                         <th>Sala</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
+
                                 </tbody>
                             </table>
+                            </div>
                         </div>
                     </div>
                 </section>
+
+                <section id="add-user-section" class="content-section hidden">
+                    <div class="add-user-form-container">
+
+                        <h3>Añadir Nuevo Empleado</h3>
+
+                        <form action="{{ route('users.store') }}" id="add-user-form" method="POST">
+                            @csrf {{-- Token CSRF --}}
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="nombre" class="form-label">Nombre</label>
+                                        <input type="text" class="form-control @error('nombre') is-invalid @enderror" id="nombre" name="nombre" value="{{ old('nombre') }}" placeholer="Nombre" required>
+                                        @error('nombre')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="apellidos" class="form-label">Apellidos</label>
+                                        <input type="text" class="form-control @error('apellidos') is-invalid @enderror" id="apellidos" name="apellidos" value="{{ old('apellidos') }}" placeholer="Apellidos" required>
+                                        @error('apellidos')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                                        <input type="date" class="form-control @error('fecha_nacimiento') is-invalid @enderror" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ old('fecha_nacimiento') }}" required>
+                                        @error('fecha_nacimiento')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="numero_telefono" class="form-label">Número de Teléfono</label>
+                                        <input type="text" class="form-control @error('numero_telefono') is-invalid @enderror" id="numero_telefono" name="numero_telefono" value="{{ old('numero_telefono') }}" pattern="^\d{9}$" title="El teléfono debe tener 9 dígitos." maxlength="9" minlength="9" placeholer="000000000" required>
+                                        @error('numero_telefono')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="dni" class="form-label">DNI</label>
+                                        <input type="text" class="form-control @error('dni') is-invalid @enderror" id="dni" name="dni" value="{{ old('dni') }}" pattern="^\d{8}[A-Za-z]$" title="El DNI debe tener 8 dígitos seguidos de una letra." maxlength="9" minlength="9" placeholer="00000000X" required>
+                                        @error('dni')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="ciudad_id" class="form-label">Ciudad</label>
+                                        <select class="form-select @error('ciudad_id') is-invalid @enderror" id="ciudad" name="ciudad" required>
+                                            <option value="" disabled selected>Selecciona la ciudad</option>
+                                            @isset($ciudades)
+                                            @foreach($ciudades as $ciudad)
+                                            <option value="{{ $ciudad->id }}" {{ old('ciudad_id') == $ciudad->id ? 'selected' : '' }}>
+                                                {{ $ciudad->nombre }}
+                                            </option>
+                                            @endforeach
+                                            @endisset
+                                        </select>
+                                        @error('ciudad_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="mb-3">
+                                        <label for="direccion" class="form-label">Dirección (Opcional)</label>
+                                        <input type="text" class="form-control @error('direccion') is-invalid @enderror" id="direccion" name="direccion" value="{{ old('direccion') }}" placeholer="C/ calle NºX">
+                                        @error('direccion')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="codigo_postal" class="form-label">Código Postal</label>
+                                        <input type="text" class="form-control @error('codigo_postal') is-invalid @enderror" id="codigo_postal" name="codigo_postal" value="{{ old('codigo_postal') }}" pattern="^\d{5}$" title="El Código Postal debe tener exactamente 5 dígitos numéricos." maxlength="5" minlength="5" placeholer="00000" required>
+                                        @error('codigo_postal')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="tipo_usuario" class="form-label">Tipo de Usuario</label>
+                                        <select class="form-select @error('tipo_usuario') is-invalid @enderror" id="tipo_usuario" name="tipo_usuario" required>
+                                            <option value="">Selecciona el tipo</option>
+                                            <option value="1" {{ old('tipo_usuario') == '1' ? 'selected' : '' }}>Administrador</option>
+                                            <option value="2" {{ old('tipo_usuario') == '2' ? 'selected' : '' }}>Empleado</option>
+                                        </select>
+                                        @error('tipo_usuario')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Fila/Div para el Botón de Submit --}}
+                            <div class="mb-3 text-center">
+                                <button type="submit" class="btn btn-primary">Generar Empleado</button>
+                            </div>
+
+                            <div id="user-creation-message" style="margin-top: 10px; padding: 10px; text-align: center; font-weight: bold; display: none;">
+                        </div>
+
+                        </form>
+
+                        
+
+                    </div>
+                </section>
+
             </main>
         </div>
     </div>

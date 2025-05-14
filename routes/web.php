@@ -114,6 +114,15 @@ Route::get('/recuperar_sesiones/id_pelicula={peliculaId}', [RecuperarSesionPelic
 // Recuperar los asientos de la sesión seleccionada
 Route::get('/recuperar_asientos/id_sesion={id_sesion}', [RecuperarAsientos::class, 'recuperar_asientos_sesion']);
 
+// Ruta para procesar el envío del formulario
+Route::post('administrador/users', [AdminController::class, 'crearEmpleado'])->name('users.store');
+
+// Ruta para comprobar si el email existe
+Route::get('administrador/check-email', [CheckController::class, 'checkEmail']);
+
+// Ruta para comprobar si el DNI existe
+Route::get('administrador/check-dni', [CheckController::class, 'checkDni']);
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');

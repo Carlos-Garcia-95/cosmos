@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="menu-item-details">
                     <h4>${item.nombre || 'N/A'}</h4>
                     <p>Precio: ${formattedPrice}</p>
-                    <p>${item.descripcion ? item.descripcion.substring(0, 100) + '...' : 'Sin descripción'}</p>
+                    <p class='sinopsis'>${item.descripcion ? item.descripcion.substring(0, 100) + '...' : 'Sin descripción'}</p>
                     <p>Estado: <span class="status-text ${item.activo ? 'status-active' : 'status-inactive'}">${item.activo ? 'Activo' : 'Inactivo'}</span></p>
                 </div>
                 <div class="menu-item-actions">
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // Nota: Asegúrate de que esta URL sea correcta en tu entorno (ej. /administrador/menu)
-            const response = await fetch(`menu?${params.toString()}`, {
+            const response = await fetch(`/administrador/menu?${params.toString()}`, {
                 method: 'GET',
                 headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': csrfToken }
             });

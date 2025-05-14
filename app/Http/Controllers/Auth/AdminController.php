@@ -7,11 +7,16 @@ use Illuminate\Http\Request;
 use App\Models\Administrator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use App\Http\Controllers\PeticionPeliculasController;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use App\Rules\letraDNI;
 use App\Models\Pelicula;
+use App\Models\User;
+use App\Models\Ciudad;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use App\Models\MenuItem;
 
@@ -35,26 +40,40 @@ class AdminController extends Controller
             'codigo_administrador' => 'required|string',
         ]);
 
-        $user = Administrator::where('email', $request->email)
-            ->where('codigo_administrador', $request->codigo_administrador)
-            ->first();
+        $credentials = $request->only('email', 'password');
 
-        if ($user) {
-            if (Hash::check($request->password, $user->password)) {
-                Auth::guard('admin')->login($user);
+        // --- PASO 1: Intentar el login estándar de usuario (tabla 'users') ---
+        if (Auth::guard('web')->attempt($credentials)) {
+            $user = Auth::guard('web')->user();
+
+            // --- PASO 2: Ahora que el usuario está autenticado en 'users', verificar si es administrador ---
+            $administrator = Administrator::where('email', $user->email)
+                ->where('codigo_administrador', $request->codigo_administrador)
+                ->first();
+
+            // --- PASO 3: Si se encuentra el registro en 'administrador' con el código correcto, es administrador ---
+            if ($administrator) {
+                Auth::guard('web')->logout();
+                Auth::guard('admin')->login($administrator);
                 $request->session()->regenerate();
+
+                // Redirigir al administrador
                 return redirect()->route('administrador.dashboard');
             } else {
-                return redirect()->back()->withErrors(['password' => 'Las credenciales proporcionadas no coinciden.'])->withInput($request->only('email', 'codigo_administrador'));
+                // --- NO ES ADMINISTRADOR ---
+                Auth::guard('web')->logout();
+                return back()->withErrors(['codigo_administrador' => 'Las credenciales de usuario proporcionadas no coinciden.'])->withInput($request->only('email', 'codigo_administrador'));
             }
         } else {
-            return redirect()->back()->withErrors(['email' => 'Las credenciales proporcionadas no coinciden.'])->withInput($request->only('email', 'codigo_administrador'));
+            return back()->withErrors([
+                'email' => 'Las credenciales de usuario proporcionadas no coinciden.',
+            ])->onlyInput('email');
         }
     }
 
 
 
-    //Conparar peliculas de la base de datos con las que nos muestra la api para saber cual tenemos ya en la base de datos.
+    //Comparar peliculas de la base de datos con las que nos muestra la api para saber cual tenemos ya en la base de datos.
     public function searchTMDb(Request $request)
     {
         $query = $request->input('query');
@@ -471,14 +490,194 @@ class AdminController extends Controller
         }
     }
 
+    //Crear nuevo Empleado (Desde Administrador)
+    public function crearEmpleado(Request $request)
+    {
+
+        $mensajes = [
+            'nombre.required' => 'El campo Nombre es obligatorio.',
+            'nombre.string' => 'El campo Nombre debe ser una cadena de texto.',
+            'nombre.max' => 'El campo Nombre no debe exceder los :max caracteres.',
+
+            'apellidos.required' => 'El campo Apellidos es obligatorio.',
+            'apellidos.string' => 'El campo Apellidos debe ser una cadena de texto.',
+            'apellidos.max' => 'El campo Apellidos no debe exceder los :max caracteres.',
+
+            'direccion.required' => 'El campo Dirección es obligatorio.',
+            'direccion.string' => 'El campo Dirección debe ser una cadena de texto.',
+            'direccion.max' => 'El campo Dirección no debe exceder los :max caracteres.',
+            'direccion.regex' => 'El campo Dirección contiene caracteres no permitidos.',
+
+            'ciudad.required' => 'Debes seleccionar una ciudad.',
+            'ciudad.exists' => 'La ciudad seleccionada no es válida.',
+
+            'codigo_postal.required' => 'El campo Código Postal es obligatorio.',
+            'codigo_postal.string' => 'El campo Código Postal debe ser una cadena de texto.',
+
+            'codigo_postal.max' => 'El Código Postal debe tener exactamente :max dígitos.',
+            'codigo_postal.min' => 'El Código Postal debe tener exactamente :min dígitos.',
+
+            'numero_telefono.required' => 'El campo Número de Teléfono es obligatorio.',
+            'numero_telefono.digits' => 'El campo Número de Teléfono debe tener exactamente :digits dígitos.',
+
+            'dni.required' => 'El campo DNI es obligatorio.',
+            'dni.regex' => 'El formato del DNI debe ser 8 números seguidos de una letra.',
+            'dni.unique' => 'Ya existe un usuario con este DNI registrado.',
+
+            'fecha_nacimiento.required' => 'El campo Fecha de Nacimiento es obligatorio.',
+            'fecha_nacimiento.date' => 'El campo Fecha de Nacimiento debe ser una fecha válida.',
+            'fecha_nacimiento.before' => 'El campo Fecha de Nacimiento debe ser una fecha anterior a :date.',
+
+            'tipo_usuario.required' => 'Debes seleccionar el tipo de usuario.',
+            'tipo_usuario.integer' => 'El campo Tipo de Usuario debe ser un número entero.',
+            'tipo_usuario.in' => 'El tipo de usuario seleccionado no es válido.',
+        ];
+        // Validación de los datos del formulario con reglas combinadas/adaptadas
+        $validator = Validator::make($request->all(), [
+            'nombre' => ['required', 'string', 'max:100'], // Ajustado max, quitado alpha
+            'apellidos' => ['required', 'string', 'max:100'], // Ajustado max, quitado alpha
+            'direccion' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\s\/\-#.,]*$/'],
+            'ciudad' => ['required', 'exists:ciudades,id'],
+            'codigo_postal' => ['required', 'string', 'max:5', 'min:5'],
+            'numero_telefono' => ['required', 'digits:9'], // <<-- Usamos 'digits:9' y el nombre 'numero_telefono'
+            'dni' => ['required','regex:/^\d{8}[A-Za-z]$/','unique:users,dni',new letraDNI],
+            'fecha_nacimiento' => ['required', 'date', 'before:today'], // De ambos, añadido before:today
+            'tipo_usuario' => ['required', 'integer', 'in:1,2'], // De AdminController
+        ], $mensajes);
+
+        // Si falla la validación...
+        if ($validator->fails()) {
+            $ciudades = Ciudad::orderBy('nombre')->get();
+            return back()->withErrors($validator)->withInput()->with(compact('ciudades'));
+        }
+
+        $validatedData = $validator->validated();
+
+        // --- Lógica de Creación de Usuario (Email, Password, Mayor_Edad) ---
+
+        // Lógica para normalizar partes del nombre/apellido/dni para el email
+        $normalizeEmailPart = function ($string) {
+            $string = Str::lower($string);
+            $string = str_replace(' ', '', $string);
+            $string = str_replace(['á', 'é', 'í', 'ó', 'ú', 'ñ', 'ü', 'Á', 'É', 'Í', 'Ó', 'Ú', 'Ñ', 'Ü'], ['a', 'e', 'i', 'o', 'u', 'n', 'u', 'A', 'E', 'I', 'O', 'U', 'N', 'U'], $string);
+            $string = preg_replace('/[^a-z0-9]/', '', $string);
+            return $string;
+        };
+
+        $nombreNormalizado = $normalizeEmailPart($validatedData['nombre']);
+        $apellidosNormalizado = $normalizeEmailPart($validatedData['apellidos']);
+        $letraDni = Str::upper(substr($validatedData['dni'], -1)); // Última letra del DNI
+
+        // Generar email
+        // Sigamos el original: nombre.apellido.letraDNI@cosmosAdmin.com
+        $generatedEmail = $nombreNormalizado . '.' . $apellidosNormalizado . '.' . $letraDni . '@cosmosAdmin.com'; // <<-- ¡VERIFICA Y AJUSTA TU DOMINIO!
+
+        //Si existe se le añade un número
+        $originalEmail = $generatedEmail;
+        $counter = 1;
+        while (User::where('email', $generatedEmail)->exists()) {
+            $generatedEmail = $originalEmail . $counter;
+            $counter++;
+        }
 
 
+        $defaultPassword = ''; // Inicializa la variable
+
+        if ($validatedData['tipo_usuario'] == 1) { // Si el tipo de usuario seleccionado es Administrador
+            $defaultPassword = 'CosmosAdmin123';
+        } else if ($validatedData['tipo_usuario'] == 2) { // Si el tipo de usuario seleccionado es Empleado
+            $defaultPassword = 'CosmosEmpleado123';
+        }
+
+        $hashedPassword = Hash::make($defaultPassword);
+
+        // Calcular si es mayor de edad
+        $fechaNacimiento = new \DateTime($validatedData['fecha_nacimiento']);
+        $hoy = new \DateTime();
+        $edad = $hoy->diff($fechaNacimiento)->y;
+        $isMayorEdad = $edad >= 18;
+
+
+        // Crear el usuario en la tabla 'users'
+        $user = User::create([
+            'nombre' => $validatedData['nombre'],
+            'apellidos' => $validatedData['apellidos'],
+            'email' => $generatedEmail, // Usar el email generado
+            'password' => $hashedPassword, // Usar la password generada y hasheada
+            'fecha_nacimiento' => $validatedData['fecha_nacimiento'],
+            'numero_telefono' => $validatedData['numero_telefono'],
+            'dni' => $validatedData['dni'],
+            'direccion' => $validatedData['direccion'],
+            'ciudad' => $validatedData['ciudad'], // Guardar el ID de la ciudad
+            'codigo_postal' => $validatedData['codigo_postal'],
+            'mayor_edad' => $isMayorEdad, // Usar el valor calculado
+            'id_descuento' => 1, // Por defecto 1 (ajusta si necesitas lógica para esto)
+            'tipo_usuario' => $validatedData['tipo_usuario'],
+        ]);
+
+        // Si el tipo de usuario Administrador, crear registro en tabla 'administrador'
+        if ($user->tipo_usuario == 1) {
+
+            $codigoAdmin = '';
+            $isUniqueCode = false;
+
+            do {
+                // Generar una letra aleatoria
+                $letra1 = Str::random(1, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
+                // Generar dos números aleatorios
+                $numeros = sprintf('%02d', rand(0, 99));
+
+                // Generar una segunda letra aleatoria
+                $letra2 = Str::random(1, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+
+                $codigoAdmin = $letra1 . $numeros . $letra2;
+
+                // Verificar si este código ya existe en la tabla 'administrador'
+                $isUniqueCode = !Administrator::where('codigo_administrador', $codigoAdmin)->exists();
+
+            } while (!$isUniqueCode); // Repetir el proceso si el código generado ya existe
+
+            // Generar Nombre de Usuario Administrador único
+            $nombreUserAdmin = '';
+            $isUniqueAdminName = false;
+
+            // Crear una base para el nombre de usuario a partir del nombre validado
+            $nombreBaseAdmin = Str::slug($validatedData['nombre'], '_');
+            do {
+
+                // Generar un sufijo numérico aleatorio
+                $randomSuffix = rand(100, 999);
+
+                // Combinar para formar el nombre de usuario
+                $nombreUserAdmin = $nombreBaseAdmin . '_Cosmos' . $randomSuffix;
+
+                // Verificar si este nombre de usuario ya existe en la tabla 'administrador'
+                $isUniqueAdminName = !Administrator::where('nombre_user_admin', Str::ucfirst($nombreUserAdmin))->exists();
+
+            } while (!$isUniqueAdminName); // Repetir si el nombre de usuario generado ya existe
+
+            // Crear el registro en la tabla 'administrador'
+            // Asegúrate de usar el email generado, no el validado
+            Administrator::create([
+                'email' => $user->email, // Usar el email del objeto $user creado
+                'codigo_administrador' => Str::upper($codigoAdmin),
+                'nombre_user_admin' => Str::ucfirst($nombreUserAdmin),
+            ]);
+        }
+        
+            return response()->json([
+                'message' => 'Empleado creado exitosamente.',
+            ], 201);
+
+    }
 
     //Función index que returnea la vista, con los géneros para el select
     public function index()
     {
         $generos_tmdb = PeticionPeliculasController::peticion_generos();
-        return view('administrador.dashboard', compact('generos_tmdb'));
+        $ciudades = Ciudad::orderBy('nombre')->get();
+        return view('administrador.dashboard', compact('generos_tmdb','ciudades'));
     }
 
     //Función logout, que nos rederige al login de administrador

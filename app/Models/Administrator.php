@@ -20,27 +20,16 @@ class Administrator extends Authenticatable // Al extender Authenticatable (alia
 
 
     protected $fillable = [
-        'nombre_user_admin',    
-        'nombre',              
-        'apellido',            
-        'email',               
-        'fecha_nacimiento',    
-        'numero_telefono',     
-        'password',             
-        'codigo_administrador', 
+        'nombre_user_admin',             
+        'email',           
+        'codigo_administrador',
     ];
 
     // Define qué atributos deben ser ocultados (no incluidos) al convertir el modelo a array o JSON (ej: para APIs)
-    protected $hidden = [
-        'password',           
+    protected $hidden = [          
         'codigo_administrador',
-        'remember_token',
     ];
 
-    protected $casts = [
-        'fecha_nacimiento' => 'date',
-        'password' => 'hashed',
-    ];
     public function getAuthIdentifierName(): string
     {
         return $this->primaryKey;

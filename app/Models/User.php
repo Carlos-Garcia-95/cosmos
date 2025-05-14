@@ -74,6 +74,8 @@ class User extends Authenticatable
         'dni',
         'mayor_edad',
         'fecha_nacimiento',
+        'tipo_usuario',
+        'id_descuento'
     ];
     
 

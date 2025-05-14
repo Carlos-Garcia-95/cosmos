@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ? movie.fecha_estreno.split("-")[0]
                 : "Año desconocido"
         })</h4>
-                    <p>${
+                    <p class='sinopsis'>${
                         movie.sinopsis
                             ? movie.sinopsis.substring(0, 150) + "..."
                             : "Sinopsis no disponible."
