@@ -20,6 +20,7 @@ class sesion_pelicula extends Seeder
                     'id_pelicula' => 1,
                     'hora' => 21,
                     'fecha' => $i,
+                    'activa' => 1,
                     'created_at' => now(),
                     'updated_at' => now()
                 ],
@@ -28,14 +29,16 @@ class sesion_pelicula extends Seeder
                     'id_pelicula' => 2,
                     'hora' => 27,
                     'fecha' => $i,
+                    'activa' => 1,
                     'created_at' => now(),
                     'updated_at' => now()
                 ],
-                [
+                /* [
                     'id_sala' => 1,
                     'id_pelicula' => 3,
                     'hora' => 33,
                     'fecha' => $i,
+                    'activa' => 1,
                     'created_at' => now(),
                     'updated_at' => now()
                 ],
@@ -44,14 +47,16 @@ class sesion_pelicula extends Seeder
                     'id_pelicula' => 4,
                     'hora' => 39,
                     'fecha' => $i,
+                    'activa' => 1,
                     'created_at' => now(),
                     'updated_at' => now()
-                ],
+                ], */
                 [
                     'id_sala' => 1,
                     'id_pelicula' => 5,
                     'hora' => 45,
                     'fecha' => $i,
+                    'activa' => 1,
                     'created_at' => now(),
                     'updated_at' => now()
                 ],
@@ -60,6 +65,7 @@ class sesion_pelicula extends Seeder
                     'id_pelicula' => 6,
                     'hora' => 3,
                     'fecha' => $i,
+                    'activa' => 1,
                     'created_at' => now(),
                     'updated_at' => now()
                 ]

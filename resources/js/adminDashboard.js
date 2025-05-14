@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-
     const sidebarLinks = document.querySelectorAll('.sidebar-link[data-section]');
     const contentSections = document.querySelectorAll('.content-section');
 
@@ -15,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevPageBtn = document.getElementById('prev-page-btn');
     const nextPageBtn = document.getElementById('next-page-btn');
 
+    // Habilita/deshabilita el input de búsqueda según el tipo de lista seleccionado.
     const updateSearchInputState = () => {
         if (listTypeSelect.value === 'search') {
             searchInput.disabled = false;
@@ -29,20 +29,23 @@ document.addEventListener('DOMContentLoaded', () => {
     listTypeSelect.addEventListener('change', updateSearchInputState);
     updateSearchInputState();
 
-    let allFetchedMovies = [];
-    let currentPage = 1;
-    const itemsPerPage = 5;
+    let allFetchedMovies = []; // Almacena todas las películas obtenidas de la API.
+    let currentPage = 1; // Página actual para mostrar películas.
+    const itemsPerPage = 5; // Número de películas a mostrar por página.
 
+    // Muestra un mensaje en el área de resultados.
     const displayMessage = (message) => {
         resultsArea.innerHTML = `<p>${message}</p>`;
         updatePaginationControls(0);
     };
 
+    // Muestra un mensaje de error en el área de resultados.
     const displayError = (message = 'Ocurrió un error al buscar películas.') => {
         resultsArea.innerHTML = `<p style="color: red;">${message}</p>`;
         updatePaginationControls(0);
     };
 
+    // Actualiza los controles de paginación según el número total de películas.
     const updatePaginationControls = (totalMoviesCount) => {
         const totalDisplayPages = Math.ceil(totalMoviesCount / itemsPerPage);
         pageInfoSpan.textContent = `Página ${currentPage} de ${totalDisplayPages || 1}`;
@@ -51,10 +54,12 @@ document.addEventListener('DOMContentLoaded', () => {
         nextPageBtn.disabled = currentPage === totalDisplayPages || totalDisplayPages === 0;
     };
 
+    // Construye la cadena HTML para un solo elemento de película.
     const buildMovieItemHtml = (movie) => {
         const posterBaseUrl = 'https://image.tmdb.org/t/p/w200/';
         const posterUrl = movie.poster_path ? `${posterBaseUrl}${movie.poster_path}` : 'https://via.placeholder.com/80x120?text=No+Poster';
 
+        // Determina el texto del botón, el estado deshabilitado y la clase según la propiedad 'is_added'.
         const buttonText = movie.is_added ? 'Añadida' : 'Añadir pelicula';
         const buttonDisabled = movie.is_added ? 'disabled' : '';
         const buttonClass = movie.is_added ? 'add-movie-btn added' : 'add-movie-btn';
@@ -71,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     };
 
+    // Renderiza las películas para la página actual.
     const renderCurrentPageMovies = () => {
         resultsArea.innerHTML = '';
 
@@ -78,6 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const endIndex = startIndex + itemsPerPage;
         const moviesToDisplay = allFetchedMovies.slice(startIndex, endIndex);
 
+        // Ajusta la página actual si queda vacía después de filtrar/volver a renderizar.
         if (moviesToDisplay.length === 0 && allFetchedMovies.length > 0) {
             currentPage = Math.max(1, currentPage - 1);
             renderCurrentPageMovies();
@@ -111,15 +118,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     const result = await response.json();
 
                     if (response.ok) {
-                        if (response.status === 409) {
+                        if (response.status === 409) { // Maneja el estado de película duplicada (HTTP 409 Conflict)
                             button.textContent = 'Ya añadida';
-                             button.classList.add('added'); // Add 'added' class for styling
+                            button.classList.add('added');
                         } else if (result.status === 'success') {
                             button.textContent = 'Añadida';
-                            button.classList.add('added'); // Add 'added' class for styling
-                        } else if (result.status === 'duplicate') {
+                            button.classList.add('added');
+                        } else if (result.status === 'duplicate') { // Maneja el estado de película duplicada (de la respuesta personalizada del backend)
                             button.textContent = 'Ya añadida';
-                             button.classList.add('added'); // Add 'added' class for styling
+                            button.classList.add('added');
                         } else {
                             console.warn('Respuesta exitosa con estado desconocido:', result);
                             alert(result.message || 'Operación completada con estado desconocido.');
@@ -163,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Realiza la búsqueda de películas según la entrada del usuario.
     const performSearch = async () => {
         const query = searchInput.value.trim();
         const listType = listTypeSelect.value;
@@ -170,6 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const pagesToFetch = quantitySelect.value;
         const searchLanguage = languageSelect.value;
 
+        // Valida la entrada de búsqueda para el tipo de lista 'search'.
         if (listType === 'search' && query === '') {
             displayMessage('Por favor, introduce un título para buscar.');
             allFetchedMovies = [];
@@ -223,35 +232,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Lógica para el Cambio de Secciones de la Barra Lateral ---
 
-    // Función para mostrar la sección correcta y actualizar el enlace activo
+    // Función para mostrar la sección correcta y actualizar el enlace activo.
     const showSection = (sectionId) => {
         contentSections.forEach(section => {
             section.classList.add('hidden');
         });
 
-        // Mostrar la sección solicitada
         const targetSection = document.getElementById(sectionId);
         if (targetSection) {
             targetSection.classList.remove('hidden');
-
+            // Emite un evento personalizado cuando se muestra una sección, útil para otros módulos.
             targetSection.dispatchEvent(new CustomEvent('sectionShown', { detail: { sectionId: sectionId } }));
         }
 
-        // Remover la clase 'active' de todos los enlaces de la barra lateral
         sidebarLinks.forEach(link => {
             link.classList.remove('active');
         });
 
-        // Añadir la clase 'active' al enlace que corresponde a la sección mostrada
         const activeLink = document.querySelector(`.sidebar-link[data-section="${sectionId.replace('-section', '')}"]`);
         if (activeLink) {
             activeLink.classList.add('active');
         }
 
-        localStorage.setItem('activeAdminSection', sectionId);
+        localStorage.setItem('activeAdminSection', sectionId); // Almacena la sección activa en el almacenamiento local.
     };
 
-    // Añadir listeners a los enlaces de la barra lateral
     sidebarLinks.forEach(link => {
         link.addEventListener('click', (event) => {
             event.preventDefault();
@@ -260,12 +265,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Mostrar la sección activa al cargar la página (por defecto o la última visitada)
+    // Muestra la sección activa al cargar la página (por defecto o la última visitada).
     const savedSectionId = localStorage.getItem('activeAdminSection');
     if (savedSectionId && document.getElementById(savedSectionId)) {
         showSection(savedSectionId);
     } else {
         showSection('add-movies-section');
     }
-
 });

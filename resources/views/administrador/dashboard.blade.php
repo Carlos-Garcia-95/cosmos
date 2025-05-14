@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,12 +11,27 @@
     @vite(['resources/js/adminDashboard.js'])
     @vite(['resources/js/adminDashboardGestionarPelicula.js'])
     @vite(['resources/js/adminDashboardGestionarMenu.js'])
+    @vite(['resources/js/adminDashboardSesiones.js'])
 </head>
+
 <body>
     <div class="dashboard-layout">
         <header class="dashboard-header">
+        <!-- <button class="menu-toggle" aria-label="Abrir menú">☰</button> -->
             <div class="header-right-elements">
-                <span class="admin-name">{{ Auth::user()->nombre_user_admin ?? Auth::user()->nombre ?? Auth::user()->email ?? 'Admin' }}</span>
+                <span class="admin-name">
+                    @php
+                        $adminName = '';
+                        if (Auth::check()) {
+                            $user = Auth::user();
+                            $fullName = trim(($user->nombre ?? '') . ' ' . ($user->apellido ?? ''));
+                            $adminName = $fullName ?: ($user->nombre_user_admin ?? $user->nombre ?? $user->email ?? 'Admin');
+                        } else {
+                            $adminName = 'Admin'; // O lo que quieras mostrar si no hay usuario logueado
+                        }
+                    @endphp
+                    {{ $adminName }}
+                </span>
                 <div class="company-logo">
                     <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Logo Empresa Cosmos Cinema">
                 </div>
@@ -23,30 +39,33 @@
         </header>
 
         <div class="main-dashboard-content">
-        <aside class="dashboard-sidebar">
-            <nav class="sidebar-nav">
+            <aside class="dashboard-sidebar">
+                <nav class="sidebar-nav">
 
-                <div class="sidebar-menu">
-                    <ul>
-                        <li>
-                            <a href="#" class="sidebar-link active" data-section="add-movies">Añadir peliculas</a>
-                        </li>
-                        <li>
-                            <a href="#" class="sidebar-link" data-section="manage-movies">Gestionar películas</a>
-                        </li>
-                        <li>
-                            <a href="#" class="sidebar-link" data-section="manage-menu">Gestionar Menú Cosmos</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="sidebar-bottom">
-                    <form action="{{ route('administrador.logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="sidebar-logout-btn">Cerrar Sesión</button>
-                    </form>
-                </div>
-            </nav>
-        </aside>
+                    <div class="sidebar-menu">
+                        <ul>
+                            <li>
+                                <a href="#" class="sidebar-link active" data-section="add-movies">Añadir peliculas</a>
+                            </li>
+                            <li>
+                                <a href="#" class="sidebar-link" data-section="manage-movies">Gestionar películas</a>
+                            </li>
+                            <li>
+                                <a href="#" class="sidebar-link" data-section="manage-menu">Gestionar Menú Cosmos</a>
+                            </li>
+                            <li>
+                                <a href="#" class="sidebar-link" data-section="create-session">Gestionar Sesión</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-bottom">
+                        <form action="{{ route('administrador.logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="sidebar-logout-btn">Cerrar Sesión</button>
+                        </form>
+                    </div>
+                </nav>
+            </aside>
 
             <main class="dashboard-content-area">
                 <section id="add-movies-section" class="content-section">
@@ -63,7 +82,7 @@
                         <select id="api-genre-select">
                             <option value="">Todos los géneros</option>
                             @foreach ($generos_tmdb ?? [] as $genero)
-                                <option value="{{ $genero['id'] }}">{{ $genero['name'] }}</option>
+                            <option value="{{ $genero['id'] }}">{{ $genero['name'] }}</option>
                             @endforeach
                         </select>
                         <select id="api-quantity-select">
@@ -100,7 +119,7 @@
                         <select id="manage-genre-select">
                             <option value="">Todos los géneros</option>
                             @foreach ($generos_tmdb ?? [] as $genero)
-                                <option value="{{ $genero['id'] }}">{{ $genero['name'] }}</option>
+                            <option value="{{ $genero['id'] }}">{{ $genero['name'] }}</option>
                             @endforeach
                         </select>
                         <select id="manage-status-select">
@@ -182,13 +201,8 @@
                                 <div>
                                     <label for="menu-item-foto">Foto:</label>
                                     <input type="file" id="menu-item-foto" name="foto" accept="image/*">
-                                    <img id="menu-item-foto-preview" src="#" alt="Vista previa de la foto" style="max-width: 100px; max-height: 100px; display: none; margin-top: 10px;"/>
+                                    <img id="menu-item-foto-preview" src="#" alt="Vista previa de la foto" style="max-width: 100px; max-height: 100px; display: none; margin-top: 10px;" />
                                     <input type="hidden" id="menu-item-current-foto-ruta" name="current_foto_ruta">
-                                </div>
-                                <div class="form-group">
-                                    <label for="menu-item-imagen-ruta">Nueva Ruta de Imagen</label>
-                                    <input type="text" class="form-control" id="menu-item-imagen-ruta" name="imagen_ruta">
-                                    <small class="form-text text-muted">Si deseas cambiar la ruta de la imagen, ingrésala aquí.</small>
                                 </div>
                                 <div style="text-align: right;">
                                     <button type="button" id="cancel-menu-item-button">Cancelar</button>
@@ -197,10 +211,77 @@
                             </form>
                         </div>
                     </div>
+                </section>
+                <section id="create-session-section" class="content-section hidden">
+                    <h3>Gestión de Sesión de Películas</h3>
+                    <div class="main-container">
+                        <div class="form-section">
+                            {{-- El título "Crear Nueva Sesión" del formulario interno, ya lo tienes arriba. Puedes quitarlo si no lo quieres duplicado --}}
+                            <h2>Crear nueva Sesión</h2>
 
+                            <form id="create-session-form">
+                                <div>
+                                    <label for="session-fecha">Fecha:</label>
+                                    <select id="session-fecha" name="fecha" required>
+                                        <option value="">Seleccionar fecha</option>
+                                        @if(isset($fechas))
+                                        @foreach($fechas as $fecha)
+                                            <option value="{{ $fecha->id }}">{{ $fecha->fecha }}</option>
+                                        @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="session-sala">Sala:</label>
+                                    <select id="session-sala" name="sala_id" required>
+                                        <option value="">Seleccionar sala</option>
+                                        
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="session-pelicula">Película:</label>
+                                    <select id="session-pelicula" name="pelicula_id" required>
+                                        <option value="">Seleccionar película</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="session-hora">Hora:</label>
+                                    <select id="session-hora" name="hora" required>
+                                        <option value="">Seleccionar hora</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <button type="submit" class="button primary">Crear Sesión</button>
+                                </div>
+                                <div id="session-creation-message" style="margin-top: 10px; padding: 10px; text-align: center; font-weight: bold;"></div>
+                            </form>
+                        </div>
+
+                        <div class="divider"></div>
+                        <div class="sessions-table-section">
+                            <h2>Sesiones Creadas<span id="selected-session-date"></span></h2>
+                            <p id="noSessionsMessage" style="display: none;">No hay sesiones creadas para esta fecha.</p>
+                            <table id="sessionsTable" class="sessions-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sesión</th>
+                                        <th>Película</th>
+                                        <th>Hora</th>
+                                        <th>Hora Final</th> 
+                                        <th>Sala</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </section>
             </main>
         </div>
     </div>
 </body>
+
 </html>

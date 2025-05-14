@@ -10,6 +10,9 @@ use App\Http\Controllers\Auth\MenuController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PeliculasController;
+use App\Http\Controllers\Auth\SalaController;
+use App\Http\Controllers\Auth\SessionController;
+use App\Http\Controllers\Auth\FechaController;
 use App\Http\Controllers\RecuperarAsientos;
 use App\Http\Controllers\RecuperarSesion;
 use App\Http\Controllers\RecuperarSesionPelicula;
@@ -85,6 +88,32 @@ Route::get('administrador/menu/{id}', [AdminController::class, 'obtenerProducto'
 //Ruta para actualizar los detalles de cada producto
 Route::put('administrador/menu/{id}', [AdminController::class, 'actualizarProducto'])->name('actualizarProducto');
 
+//Ruta para activar peliculas en cartelera
+Route::get('administrador/peliculas/activas-en-cartelera', [SessionController::class, 'getPeliculasActivasEnCartelera']);
+
+// Ruta para obtener la lista de salas (para el select, aunque por ahora solo sea 1)
+Route::get('administrador/salas', [SalaController::class, 'getSalas'])->name('admin.getSalas');
+
+// Ruta para obtener las horas disponibles para una fecha, película y sala (para el select dinámico)
+Route::get('administrador/sesiones/horas-disponibles', [SessionController::class, 'getHorasDisponibles'])->name('admin.getHorasDisponibles');
+
+// Ruta para crear una nueva sesión
+Route::post('administrador/sesiones', [SessionController::class, 'storeSesion'])->name('admin.storeSesion');
+
+// Ruta para obtener las fechas disponibles
+Route::get('administrador/fechas/disponibles', [FechaController::class, 'getFechasDisponibles'])->name('admin.getFechasDisponibles');
+
+//Ruta para obtener sesione spor fecha
+Route::get('administrador/sesiones-por-fecha/{fecha_id}', [SessionController::class, 'getSessionsByDate']);
+
+//Ruta para eliminar sesiones
+Route::delete('administrador/sesiones/{sesion_id}', [SessionController::class, 'deleteSession']);
+
+// Recuperar las sesiones asociadas con una película
+Route::get('/recuperar_sesiones/id_pelicula={peliculaId}', [RecuperarSesionPelicula::class, 'recuperar_sesion_pelicula']);
+
+// Recuperar los asientos de la sesión seleccionada
+Route::get('/recuperar_asientos/id_sesion={id_sesion}', [RecuperarAsientos::class, 'recuperar_asientos_sesion']);
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
@@ -92,8 +121,6 @@ Route::middleware(['auth'])->group(function () {
     })->name('dashboard');
 });
 
-// Recuperar las sesiones asociadas con una película
-Route::get('/recuperar_sesiones/id_pelicula={peliculaId}', [RecuperarSesionPelicula::class, 'recuperar_sesion_pelicula']);
 
 // Recuperar los asientos de la sesión seleccionada
 Route::get('/recuperar_asientos/id_sesion={id_sesion}', [RecuperarAsientos::class, 'recuperar_asientos_sesion']);
