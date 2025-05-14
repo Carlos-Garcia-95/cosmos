@@ -30,4 +30,15 @@ class SesionPelicula extends Model
         return $this->belongsTo(Fecha::class, 'fecha', 'id');
     }
 
+    // Relación a tabla pelicula
+    public function pelicula()
+    {
+        return $this->belongsTo(Pelicula::class, 'id_pelicula', 'id');
+    }
+
+    // Relación a tabla sala
+    public function sala()
+    {
+        return $this->belongsTo(Sala::class, 'id_sala', 'id_sala');
+    }
 }

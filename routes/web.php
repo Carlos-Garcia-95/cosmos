@@ -14,6 +14,7 @@ use App\Http\Controllers\Auth\SalaController;
 use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\Auth\FechaController;
 use App\Http\Controllers\RecuperarAsientos;
+use App\Http\Controllers\RecuperarSesion;
 use App\Http\Controllers\RecuperarSesionPelicula;
 
 //Ruta por get, al poner / en el buscador, nos saldra la pantalla de principal, que es devuelta por la clase HomeController y llama a la función index.
@@ -128,5 +129,14 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard');
     })->name('dashboard');
 });
+
+
+// Recuperar los asientos de la sesión seleccionada
+Route::get('/recuperar_asientos/id_sesion={id_sesion}', [RecuperarAsientos::class, 'recuperar_asientos_sesion']);
+
+// Recuperar la sesión a través de una sesion_id
+Route::get('/recuperar_sesion/id_sesion={id_sesion}', [RecuperarSesionPelicula::class, 'recuperar_sesion']);
+
+
 
 

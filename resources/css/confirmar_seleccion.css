@@ -1,0 +1,239 @@
+/* Estilos del modal de Confirmar Selección */
+.modal_confirmar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.confirmar_container {
+    background-color: rgba(26, 26, 26, 0.9);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+
+    display: flex;
+    flex-direction: column;
+
+    width: 65%;
+    max-width: 65%;
+    height: 95vh;
+    max-height: 95vh;
+
+    justify-content: flex-start;
+    align-items: stretch;
+
+    box-sizing: border-box;
+}
+
+
+
+/* Estilos de los div de dentro de Confirmar Selección */
+
+/* Sección del Título */
+#confirmar_container_titulo {
+    grid-column: 1 / span 2; /* Ocupa ambas columnas de la cuadrícula padre */
+    text-align: center;
+    position: relative;      /* Necesario para el pseudo-elemento del separador */
+    margin-bottom: 20px;    /* Espacio para el separador y un poco de aire */
+}
+
+#confirmar_titulo {
+    font-size: 2em;        /* Tamaño de letra más grande */
+    font-weight: bold;
+}
+
+#confirmar_container_titulo::after {
+    content: '';
+    display: block;
+    width: 80%;              /* El separador cubre el 80% del ancho de su contenedor */
+    height: 1px;
+    background-color: white; /* --- IMPORTANTE ---
+                                "separador blanco" como solicitaste.
+                                Esto solo será visible si #confirmar_container_titulo o su padre
+                                #confirmar_container tiene un color de fondo que contraste con el blanco.
+                                Si el fondo también es blanco, este separador será invisible.
+                                Cambia a, por ejemplo, '#dddddd' para un separador gris claro
+                                si el fondo es claro, o asegúrate de que el fondo del título/contenedor sea oscuro.
+                             */
+    /* Para prueba, usar un color visible: */
+    /* background-color: #cccccc; */
+    position: absolute;
+    bottom: 0;               /* Al fondo de #confirmar_container_titulo */
+    left: 50%;
+    transform: translateX(-50%); /* Centra el separador */
+}
+
+/* Sección del Cuerpo (Cartel + Info Sesión) */
+#confirmar_container_body {
+    grid-column: 1 / span 2; /* Ocupa ambas columnas de la cuadrícula padre */
+    display: flex;
+    gap: 20px;               /* Espacio entre cartel, títulos y datos */
+    align-items: flex-start; /* Alinea los elementos al inicio (útil si tienen alturas diferentes) */
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 1.3em;
+}
+
+#confirmar_cartel_div {
+    flex: 0 0 35%;
+    max-width: 250px;
+    margin-left: 15%;
+}
+
+.confirmar_cartel_img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+#sesion_titulos_div {
+    flex: 0 0 20%;
+    height: 100%;
+    display: flex;
+    padding-left: 10px;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-around;
+    color: #6feaf6;
+}
+
+#sesion_datos_div {
+    height: 100%;
+    display: flex;
+    padding-left: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-around;
+    margin-right: 10%;
+}
+
+.sesion_titulos, .sesion_datos {
+    padding: 6px 0;
+    line-height: 1.5;
+}
+
+#sesion_datos_titulo {
+    font-weight: bolder;
+    margin-bottom: 5px;
+}
+
+/* Sección de Entradas Seleccionadas */
+#confirmar_container_entradas {
+    grid-column: 1 / 2; /* Ocupa la primera columna (60fr) en la fila inferior de la cuadrícula padre */
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-wrap: wrap;     /* Permite que los elementos (título y columnas de asientos) se ajusten */
+    gap: 15px;           /* Espacio entre título y columnas, y entre las propias columnas */
+    align-content: flex-start; /* Alinea las líneas envueltas al inicio */
+}
+
+#entradas_titulo {
+    width: fit-content;  /* El ancho se ajusta al contenido del texto */
+    flex-basis: 100%;    /* Asegura que ocupe toda la primera línea en el contexto de flex-wrap */
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px; /* Pequeño margen inferior antes de las columnas de asientos */
+}
+
+/* Estilo común para las "columnas" de detalles de asientos */
+/* Se usa un selector de atributo para apuntar a los IDs que empiezan con "asiento_columna_" */
+div[id^="asiento_columna_"] {
+    display: flex;
+    flex-direction: column; /* Apila los textos de la columna verticalmente */
+    gap: 5px;              /* Espacio entre los textos dentro de una columna */
+    padding: 8px;
+    background-color: #ffffff;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    /* Cada una de estas es una columna de datos, se ajustarán gracias a flex-wrap en el padre */
+}
+
+/* Tamaños y alineaciones específicas para cada columna de asiento */
+#asiento_columna_asiento { flex-grow: 3; flex-basis: 180px; }
+#asiento_columna_fila { flex-grow: 1; flex-basis: 50px; }
+#asiento_columna_numfila { flex-grow: 0; flex-basis: 40px; }
+#asiento_columna_columna { flex-grow: 1; flex-basis: 70px; }
+#asiento_columna_numcolumna { flex-grow: 0; flex-basis: 40px; }
+
+.asiento_columna_texto {
+    font-size: 0.95em;
+    padding: 3px 0;
+    color: #444;
+}
+
+/* Alineación para textos numéricos/específicos */
+#asiento_columna_numfila .asiento_columna_texto,
+#asiento_columna_numcolumna .asiento_columna_texto {
+    text-align: center;
+}
+#asiento_columna_asiento .asiento_columna_texto {
+    white-space: nowrap; /* Evita que "Asiento Seleccionado ->" se rompa si es largo */
+    color: #666;
+}
+
+
+/* Sección de Botones */
+#confirmar_container_botones {
+    grid-column: 2 / 3; /* Ocupa la segunda columna (40fr) en la fila inferior de la cuadrícula padre */
+    padding: 20px;
+    display: flex;
+    flex-direction: column; /* O 'row' si quieres botones lado a lado */
+    justify-content: flex-end; /* Alinea al final (abajo si es columna, derecha si es fila y no hay más espacio) */
+    align-items: flex-end;   /* Alinea a la derecha si es columna, o al centro/final si es fila */
+    gap: 10px;
+    border-left: 1px solid #e0e0e0; /* Línea sutil para separar de las entradas */
+}
+
+/* Placeholder para los botones (puedes reemplazar esto con tus botones reales) */
+#confirmar_container_botones::before {
+    content: "Botones (Volver, Continuar)"; /* Texto de placeholder */
+    color: #888;
+    display: block;
+    width: 100%;
+    height: 100%; /* Ocupa el espacio disponible */
+    text-align: center;
+    padding: 20px;
+    border: 2px dashed #cccccc;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: italic;
+}
+
+/* Ejemplo de estilo para botones reales (descomentar y adaptar) */
+/*
+.boton_accion {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.boton_continuar {
+    background-color: #27ae60;
+    color: white;
+}
+
+.boton_volver {
+    background-color: #bdc3c7;
+    color: #2c3e50;
+}
+*/
+
+

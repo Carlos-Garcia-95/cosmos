@@ -33,29 +33,25 @@
 }
 
 
-.seccion_sesiones,
-.seccion_asientos {
-    height: 100%; /* Cada mitad ocupa el 100% de la altura */
-    overflow-y: auto; /* Permite scroll individual si el contenido es muy largo */
-    padding: 15px; /* Añade padding interno a cada mitad */
-    box-sizing: border-box; /* Incluye padding en width/height */
-    /* Añade bordes o fondos para visualización durante el desarrollo */
-    /* border: 1px solid blue; */
-    /* background-color: rgba(255, 255, 255, 0.05); */
-}
-
 .seccion_asientos {
     width: 60%;
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-content: space-around;
+    padding: 15px; /* Añade padding interno a cada mitad */
+    box-sizing: border-box; /* Incluye padding en width/height */
+    border-left: 1px solid white;
 }
+
 
 .seccion_sesiones {
     width: 40%;
+    height: fit-content;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    border-right: 1px solid white;
-    gap: 10px; /* Espacio entre columnas y filas del grid */
-    /* text-align: center; /* Opcional: centra el texto dentro de las celdas si no se especifica */
+    gap: 40px;
     color: #f0f0f0; /* Color de texto para esta mitad */
 }
 
@@ -197,20 +193,21 @@
 
 
 /* Estilo para el botón "Comprar Entradas" en la sección de compra */
-#confirmarCompra {
-     padding: 12px 25px;
-     color: white;
-     background-color: #28a745; /* Verde */
-     border: none;
-     border-radius: 5px;
-     font-size: 1em;
-     cursor: pointer;
-     transition: background-color 0.3s ease;
-     margin-top: 15px; /* Espacio encima del botón */
+.confirmar_seleccion {
+    width: fit-content;
+    padding: 5px 10px;
+    margin: 2% 0;
+    color: white;
+    background-color: #d12d10;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-#confirmarCompra:hover {
-     background-color: #218838; /* Verde más oscuro */
+.confirmar_seleccion:hover {
+    background-color: #831d0b;
 }
 
 
@@ -385,10 +382,48 @@ p.text span {
 }
 
 
+/* Estilos del listado de los asientos seleccionados */
+.listado_asientos {
+    display: flex;
+}
+
+.listado_asientos_borde {
+    border-bottom: 1px solid white;
+}
+
+.columna_izquierda_lista {
+    width: 70%; /* Ocupa el 60% del ancho */
+    display: flex;
+    flex-direction: column; /* Los elementos internos se apilan verticalmente */
+    justify-content: space-between;
+}
+
+.columna_izquierda_titulo {
+    color: #6feaf6;
+    font-size: 1.2em;
+}
+
+.columna_derecha_titulo {
+    color: #6feaf6;
+    font-size: 1.2em;
+}
 
 
 
+.columna_derecha_lista {
+    width: 30%; /* Ocupa el 40% del ancho */
+    padding-left: 20px; /* Un poco de espacio para separarlo de la columna izquierda */
+    box-sizing: border-box; /* Para que el padding no aumente el ancho total */
+    display: flex;
+    flex-direction: column; /* Apila los elementos de información verticalmente */
+    justify-content: center; /* Alinea los elementos al inicio (arriba) */
+    align-items: flex-end;
+}
 
+.columna_derecha_lista div {
+    margin-bottom: 8px;
+    text-align: center;
+}
 
 
 
