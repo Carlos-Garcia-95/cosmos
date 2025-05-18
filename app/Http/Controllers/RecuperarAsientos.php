@@ -7,6 +7,7 @@ use App\Models\Asiento;
 use App\Models\Fecha;
 use App\Models\Hora;
 use App\Models\Pelicula;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -18,7 +19,9 @@ class RecuperarAsientos extends Controller
         $pelicula_seleccionada = Pelicula::with('generos')->find($sesion_seleccionada->id_pelicula);         // Película
         $fecha_seleccionada = Fecha::find($sesion_seleccionada->fecha);                     // Fecha
         $hora_seleccionada = Hora::find($sesion_seleccionada->hora);                        // Hora
-        $asientos = Asiento::where('id_sesion_pelicula', $sesion_seleccionada->id)->get();  // Min y max columnas y fila
+        $asientos = Asiento::where('id_sesion_pelicula', $sesion_seleccionada->id)
+                            ->where('id_sala', $sesion_seleccionada->id_sala)
+                            ->get();  // Min y max columnas y fila
         $asientos_minymax = Asiento::where('id_sesion_pelicula', $id_sesion)
             ->selectRaw('MIN(fila) as min_fila, MAX(fila) as max_fila, MIN(columna) as min_columna, MAX(columna) as max_columna')
             ->first();
@@ -37,6 +40,13 @@ class RecuperarAsientos extends Controller
         }
         $asientos_columnas = $columnas;
 
+        // Recuperamos si el usuario está logueado o es invitado
+        if (Auth::check()) {
+            $usuario = true;
+        } else {
+            $usuario = false;
+        }
+
         // Generamos un array con todos los datos
         $datos_sesion = [
             'sesion' => $sesion_seleccionada,
@@ -46,6 +56,7 @@ class RecuperarAsientos extends Controller
             'asientos' => $asientos,
             'asientos_filas' => $asientos_filas,
             'asientos_columnas' => $asientos_columnas,
+            'usuario' => $usuario,
         ];
 
         return $datos_sesion;

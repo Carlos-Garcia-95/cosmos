@@ -17,68 +17,47 @@
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
-
     display: flex;
     flex-direction: column;
-
     width: 65%;
     max-width: 65%;
-    height: 95vh;
+    height: 95vh;       /* Altura fija del modal */
     max-height: 95vh;
-
     justify-content: flex-start;
     align-items: stretch;
-
     box-sizing: border-box;
 }
-
-
 
 /* Estilos de los div de dentro de Confirmar Selección */
 
 /* Sección del Título */
 #confirmar_container_titulo {
-    grid-column: 1 / span 2; /* Ocupa ambas columnas de la cuadrícula padre */
     text-align: center;
-    position: relative;      /* Necesario para el pseudo-elemento del separador */
-    margin-bottom: 20px;    /* Espacio para el separador y un poco de aire */
+    position: relative;
+    flex-shrink: 0; /* Para que no se encoja si el contenido de entradas es mucho */
 }
 
 #confirmar_titulo {
-    font-size: 2em;        /* Tamaño de letra más grande */
+    font-size: 2em;
     font-weight: bold;
 }
 
-#confirmar_container_titulo::after {
-    content: '';
-    display: block;
-    width: 80%;              /* El separador cubre el 80% del ancho de su contenedor */
+.confirmar_container_separador {
+    width: 80%;
+    align-self: center;
+    background-color: white;
     height: 1px;
-    background-color: white; /* --- IMPORTANTE ---
-                                "separador blanco" como solicitaste.
-                                Esto solo será visible si #confirmar_container_titulo o su padre
-                                #confirmar_container tiene un color de fondo que contraste con el blanco.
-                                Si el fondo también es blanco, este separador será invisible.
-                                Cambia a, por ejemplo, '#dddddd' para un separador gris claro
-                                si el fondo es claro, o asegúrate de que el fondo del título/contenedor sea oscuro.
-                             */
-    /* Para prueba, usar un color visible: */
-    /* background-color: #cccccc; */
-    position: absolute;
-    bottom: 0;               /* Al fondo de #confirmar_container_titulo */
-    left: 50%;
-    transform: translateX(-50%); /* Centra el separador */
+    margin: 2%;
 }
 
 /* Sección del Cuerpo (Cartel + Info Sesión) */
 #confirmar_container_body {
-    grid-column: 1 / span 2; /* Ocupa ambas columnas de la cuadrícula padre */
     display: flex;
-    gap: 20px;               /* Espacio entre cartel, títulos y datos */
-    align-items: flex-start; /* Alinea los elementos al inicio (útil si tienen alturas diferentes) */
+    gap: 20px;
+    align-items: flex-start;
     font-weight: bold;
-    margin-bottom: 20px;
     font-size: 1.3em;
+    flex-shrink: 0; /* Para que no se encoja */
 }
 
 #confirmar_cartel_div {
@@ -126,114 +105,245 @@
     margin-bottom: 5px;
 }
 
-/* Sección de Entradas Seleccionadas */
+/* --- Contenedor Principal de Entradas --- */
 #confirmar_container_entradas {
-    grid-column: 1 / 2; /* Ocupa la primera columna (60fr) en la fila inferior de la cuadrícula padre */
-    padding: 20px;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    background-color: #f9f9f9;
     display: flex;
-    flex-wrap: wrap;     /* Permite que los elementos (título y columnas de asientos) se ajusten */
-    gap: 15px;           /* Espacio entre título y columnas, y entre las propias columnas */
-    align-content: flex-start; /* Alinea las líneas envueltas al inicio */
+    flex-direction: column;
+    gap: 10px; /* Reducido para dar más espacio a asiento_div si es necesario */
+    margin: 0 5%;
+    flex-grow: 1;
+    min-height: 0;
+}
+
+/* --- Fila Superior: Título "Asientos Seleccionados" y Botones --- */
+.asiento_div_superior {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 20px;
+    flex-shrink: 0;
 }
 
 #entradas_titulo {
-    width: fit-content;  /* El ancho se ajusta al contenido del texto */
-    flex-basis: 100%;    /* Asegura que ocupe toda la primera línea en el contexto de flex-wrap */
+    font-size: 1.3em;
     font-weight: bold;
-    color: #333;
-    margin-bottom: 5px; /* Pequeño margen inferior antes de las columnas de asientos */
 }
 
-/* Estilo común para las "columnas" de detalles de asientos */
-/* Se usa un selector de atributo para apuntar a los IDs que empiezan con "asiento_columna_" */
-div[id^="asiento_columna_"] {
+#confirmar_container_botones {
     display: flex;
-    flex-direction: column; /* Apila los textos de la columna verticalmente */
-    gap: 5px;              /* Espacio entre los textos dentro de una columna */
-    padding: 8px;
-    background-color: #ffffff;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    /* Cada una de estas es una columna de datos, se ajustarán gracias a flex-wrap en el padre */
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
 }
 
-/* Tamaños y alineaciones específicas para cada columna de asiento */
-#asiento_columna_asiento { flex-grow: 3; flex-basis: 180px; }
-#asiento_columna_fila { flex-grow: 1; flex-basis: 50px; }
-#asiento_columna_numfila { flex-grow: 0; flex-basis: 40px; }
-#asiento_columna_columna { flex-grow: 1; flex-basis: 70px; }
-#asiento_columna_numcolumna { flex-grow: 0; flex-basis: 40px; }
+/* --- Fila Inferior: Detalles de los Asientos --- */
+.asiento_div {
+    display: flex;
+    flex-direction: row;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+    flex-grow: 1;
+    overflow-y: auto;
+    min-height: 0;
+    gap: 10px;
+}
+
+/* NUEVO: Estilo para las columnas principales dentro de .asiento_div */
+.asiento_div_columna {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Específicamente para la columna de detalles de asientos */
+#asiento_div_asientos {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+/* Específicamente para la columna de detalles de precio */
+#asiento_div_precio {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 10%;
+    align-items: flex-start;
+    border-left: 1px solid black;
+}
+
+/* Estilos para las sub-columnas DENTRO de #asiento_div_asientos */
+.asiento_columna {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 
 .asiento_columna_texto {
-    font-size: 0.95em;
-    padding: 3px 0;
-    color: #444;
+    color: black;
+    line-height: 1.4;
+    white-space: nowrap; /* Evita que el texto interno se parta en varias líneas */
 }
 
-/* Alineación para textos numéricos/específicos */
-#asiento_columna_numfila .asiento_columna_texto,
-#asiento_columna_numcolumna .asiento_columna_texto {
-    text-align: center;
-}
-#asiento_columna_asiento .asiento_columna_texto {
-    white-space: nowrap; /* Evita que "Asiento Seleccionado ->" se rompa si es largo */
-    color: #666;
-}
-
-
-/* Sección de Botones */
-#confirmar_container_botones {
-    grid-column: 2 / 3; /* Ocupa la segunda columna (40fr) en la fila inferior de la cuadrícula padre */
-    padding: 20px;
-    display: flex;
-    flex-direction: column; /* O 'row' si quieres botones lado a lado */
-    justify-content: flex-end; /* Alinea al final (abajo si es columna, derecha si es fila y no hay más espacio) */
-    align-items: flex-end;   /* Alinea a la derecha si es columna, o al centro/final si es fila */
-    gap: 10px;
-    border-left: 1px solid #e0e0e0; /* Línea sutil para separar de las entradas */
-}
-
-/* Placeholder para los botones (puedes reemplazar esto con tus botones reales) */
-#confirmar_container_botones::before {
-    content: "Botones (Volver, Continuar)"; /* Texto de placeholder */
-    color: #888;
-    display: block;
-    width: 100%;
-    height: 100%; /* Ocupa el espacio disponible */
-    text-align: center;
-    padding: 20px;
-    border: 2px dashed #cccccc;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-style: italic;
-}
-
-/* Ejemplo de estilo para botones reales (descomentar y adaptar) */
-/*
-.boton_accion {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1em;
-    cursor: pointer;
-    text-transform: uppercase;
+.asiento_columna_textoprecio {
+    
+    font-size: 1.2em; /* Ligeramente reducido para más información */
+    color: #d12d10;
     font-weight: bold;
+    line-height: 1.4;
+    white-space: nowrap; /* Evita que el texto interno se parta en varias líneas */
 }
 
+.columna_asiento_precio {
+    color: black;
+}
+
+/* --- Estilos para los Botones --- */
 .boton_continuar {
-    background-color: #27ae60;
+    padding: 9px 18px;
     color: white;
+    background-color: #d12d10;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.boton_continuar:hover {
+    background-color: #b3250e;
 }
 
 .boton_volver {
-    background-color: #bdc3c7;
-    color: #2c3e50;
+    padding: 9px 18px;
+    color: #333;
+    background-color: #f0f0f0;
+    border: 1px solid #cccccc;
+    border-radius: 6px;
+    font-size: 0.95em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
 }
-*/
+.boton_volver:hover {
+    background-color: #e0e0e0;
+    border-color: #bbbbbb;
+}
+
+/* --- Diseño Responsive --- */
+@media (max-width: 768px) {
+    .confirmar_container {
+        width: 90%; /* Más ancho en tablets */
+    }
+
+    #confirmar_container_body {
+        flex-direction: column; /* Apila imagen e info en pantallas pequeñas */
+        align-items: center;
+    }
+    #confirmar_cartel_div {
+        margin-left: 0;
+        margin-bottom: 15px;
+        max-width: 200px;
+    }
+    #sesion_titulos_div, #sesion_datos_div {
+        align-items: center; /* Centra los textos de la sesión */
+        text-align: center;
+        width: 100%;
+        padding-left: 0;
+        margin-right: 0;
+    }
+    #sesion_titulos_div{
+        align-items: center;
+    }
+     #sesion_datos_div{
+        align-items: center;
+    }
 
 
+    .asiento_div_superior {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    #confirmar_container_botones {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .asiento_div { /* Contenedor de las dos columnas principales */
+        flex-direction: column; /* Apila las dos columnas principales */
+        padding: 10px;
+        gap: 15px;
+    }
+
+    .asiento_div_columna { /* Cada una de las dos columnas principales */
+        flex-basis: auto; /* Ocupan el ancho necesario en layout de columna */
+        width: 100%;
+    }
+    
+    #asiento_div_asientos {
+        flex-direction: column; /* Apila las sub-columnas de detalles de asiento */
+        align-items: stretch; /* Estira las sub-columnas */
+        gap: 5px;
+    }
+
+    .asiento_columna {
+        flex-direction: row; /* "Asiento:" y el dato en la misma fila */
+        justify-content: space-between; /* Separa etiqueta y valor */
+        padding: 3px 0;
+        border-bottom: 1px solid #eee; /* Separador visual */
+    }
+     #asiento_div_asientos > .asiento_columna:last-child {
+        border-bottom: none;
+    }
+
+
+    .asiento_columna_texto {
+        font-size: 0.9em;
+        white-space: normal; /* Permite que el texto se ajuste */
+    }
+}
+
+@media (max-width: 480px) {
+    .confirmar_container {
+        width: 95%; /* Casi todo el ancho en móviles */
+        padding: 5px;
+    }
+     #confirmar_container_entradas {
+        margin: 0 2%;
+    }
+
+    #entradas_titulo {
+        font-size: 1.2em;
+    }
+
+    #confirmar_container_botones {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .boton_confirmar {
+        display: flex;
+    }
+    .boton_confirmar button {
+        width: 100%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    /* Ajustes adicionales para la sección de asientos en móviles muy pequeños */
+    #asiento_div_asientos > .asiento_columna {
+       /* Podrías necesitar más ajustes aquí si el contenido es muy denso */
+    }
+}

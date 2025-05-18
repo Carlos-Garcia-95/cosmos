@@ -121,5 +121,4 @@ class User extends Authenticatable
         return $this->belongsTo(Ciudad::class, 'ciudad');
     }
 
-
 }

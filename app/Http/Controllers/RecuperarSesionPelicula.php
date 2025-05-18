@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Descuento;
 use App\Models\Fecha;
 use App\Models\SesionPelicula;
+use App\Models\User;
+use Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
@@ -46,6 +49,12 @@ class RecuperarSesionPelicula extends Controller
         $sesion->pelicula->poster_url = PeliculasController::formatear_url($sesion->pelicula->poster_ruta);
         $sesion->pelicula->backdrop_url = PeliculasController::formatear_url($sesion->pelicula->backdrop_ruta);
         $sesion->dia_semana = $this->recuperar_dia_semana($sesion->fecha);
+        if (Auth::check()) {
+            $sesion->usuario = Auth::getUser();
+            $sesion->descuento = Descuento::find($sesion->usuario->id_descuento);
+        } else {
+            $sesion->usuario = false;
+        }
 
         return $sesion;
     }

@@ -6,15 +6,13 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\CheckController;
 use App\Http\Controllers\Auth\AdminController;
-use App\Http\Controllers\Auth\MenuController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PeliculasController;
 use App\Http\Controllers\Auth\SalaController;
 use App\Http\Controllers\Auth\SessionController;
 use App\Http\Controllers\Auth\FechaController;
+use App\Http\Controllers\ProcesarPago;
 use App\Http\Controllers\RecuperarAsientos;
-use App\Http\Controllers\RecuperarSesion;
 use App\Http\Controllers\RecuperarSesionPelicula;
 
 //Ruta por get, al poner / en el buscador, nos saldra la pantalla de principal, que es devuelta por la clase HomeController y llama a la función index.
@@ -137,6 +135,6 @@ Route::get('/recuperar_asientos/id_sesion={id_sesion}', [RecuperarAsientos::clas
 // Recuperar la sesión a través de una sesion_id
 Route::get('/recuperar_sesion/id_sesion={id_sesion}', [RecuperarSesionPelicula::class, 'recuperar_sesion']);
 
-
-
+// Gestionar el Pago y Creación de Entradas
+Route::post('/procesar_pago', [ProcesarPago::class, 'procesar_pago'])->name('procesar_pago');
 
