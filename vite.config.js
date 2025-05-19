@@ -28,12 +28,9 @@ export default defineConfig({
                 "resources/js/adminDashboardGestionarMenu.js",
                 "resources/js/adminDashboardSesiones.js",
                 "resources/js/adminDashboardAñadirEmpleado.js",
-<<<<<<< HEAD
                 "resources/css/cartelera.css",
-=======
                 'resources/css/pago.css',
 
->>>>>>> 2f79ab2ad8c5ffb010f97af37e44638d37d306f0
             ],
             refresh: true,
         }),

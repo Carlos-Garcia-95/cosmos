@@ -142,9 +142,4 @@ class User extends Authenticatable
         return $this->tipo_usuario == 1;
     }
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 2f79ab2ad8c5ffb010f97af37e44638d37d306f0
 }
