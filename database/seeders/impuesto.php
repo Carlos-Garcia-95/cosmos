@@ -13,9 +13,18 @@ class impuesto extends Seeder
     public function run(): void
     {
         DB::table('impuesto')->insert([
-            ['cantidad' => 21.00],
-            ['cantidad' => 10.00],
-            ['cantidad' => 0],
+            [
+                'tipo' => 'IVA',
+                'cantidad' => 21.00
+            ],
+            [
+                'tipo' => 'Reducido',
+                'cantidad' => 10.00
+            ],
+            [
+                'tipo' => 'Ninguno',
+                'cantidad' => 0
+            ],
         ]);
     }
 }

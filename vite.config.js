@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import laravel from "laravel-vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
+import vue from '@vitejs/plugin-vue2';
 
 export default defineConfig({
     plugins: [
@@ -15,7 +16,6 @@ export default defineConfig({
                 "resources/js/login.js",
                 "resources/css/compraEntradas.css",
                 "resources/js/entradas.js",
-                "resources/js/compraEntradas.js",
                 "resources/css/user_modal.css",
                 "resources/css/adminLogin.css",
                 "resources/js/cartaCosmos.js",
@@ -28,13 +28,23 @@ export default defineConfig({
                 "resources/js/adminDashboardGestionarMenu.js",
                 "resources/js/adminDashboardSesiones.js",
                 "resources/js/adminDashboardAñadirEmpleado.js",
+<<<<<<< HEAD
                 "resources/css/cartelera.css",
+=======
+                'resources/css/pago.css',
+
+>>>>>>> 2f79ab2ad8c5ffb010f97af37e44638d37d306f0
             ],
             refresh: true,
-            manifest: 'manifest.json',
         }),
+        vue(),
         tailwindcss(),
     ],
+    resolve: {
+        alias: {
+            'vue': 'vue/dist/vue.esm.js',
+        },
+    },
     base: "/",
     build: {
         outDir: "public/build",

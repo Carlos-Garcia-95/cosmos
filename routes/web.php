@@ -6,7 +6,6 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\CheckController;
 use App\Http\Controllers\Auth\AdminController;
-use App\Http\Controllers\Auth\MenuController;
 use App\Http\Controllers\CiudadController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\SalaController;
@@ -15,6 +14,7 @@ use App\Http\Controllers\Auth\FechaController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\RecuperarAsientos;
 use App\Http\Controllers\NominaEmpleadoController;
+use App\Http\Controllers\ProcesarPago;
 use App\Http\Controllers\RecuperarSesionPelicula;
 
 //Ruta por get, al poner / en el buscador, nos saldra la pantalla de principal, que es devuelta por la clase HomeController y llama a la función index.
@@ -155,13 +155,14 @@ Route::get('/recuperar_sesion/id_sesion={id_sesion}', [RecuperarSesionPelicula::
 
 Route::post('/auth/google', [SocialAuthController::class, 'verifyGoogleToken']);
 
+//Gestionar nominas del empleado, obtener nominas y descargarlas.
+
 Route::get('/empleado/nominas', [NominaEmpleadoController::class, 'showNominas'])->name('empleado.nominas.index');
 
 Route::get('/empleado/nomina/{idNomina}/pdf', [NominaEmpleadoController::class, 'generarPdfNomina'])->name('empleado.nomina.pdf.stream');
 
 Route::get('/empleado/nomina/{idNomina}/download', [NominaEmpleadoController::class, 'downloadNominaPdf'])->name('empleado.nomina.pdf.download');
 
-
-
-
+// Gestionar el Pago y Creación de Entradas
+Route::post('/procesar_pago', [ProcesarPago::class, 'procesar_pago'])->name('procesar_pago');
 

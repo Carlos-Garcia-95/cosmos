@@ -1,3 +1,13 @@
+// Importar Vue
+import Vue from 'vue'; // Asegúrate de que Vue se importe o esté disponible globalmente
+import VueTheMask from 'vue-the-mask';
+
+// Registrar plugins de Vue
+Vue.use(VueTheMask);
+
+// Variable para mantener la instancia de Vue
+let vueAppInstance = null;
+
 // Función para mostrar el modal de detalle
 window.mostrar_detalle = function (peliculaId) {
 
@@ -39,7 +49,7 @@ window.mostrar_detalle = function (peliculaId) {
         comprar_btn.addEventListener('click', elegir_pelicula);
         comprar_btn.setAttribute('listener', 'true');
         comprar_btn.dataset.peliculaId = peliculaId;
-        
+
     }
 
 };
@@ -53,7 +63,7 @@ function elegir_pelicula() {
     const comprar_btn = document.getElementById('detalle_comprar_btn');
     const peliculaId = comprar_btn.dataset.peliculaId;
     const modal_detalle = document.getElementById('modal_detalle');
-    
+
     // Oculta el Modal
     modal_detalle.classList.remove('visible');
     modal_detalle.classList.add('hidden');
@@ -259,7 +269,6 @@ function generar_asientos(id_sesion) {
             return response.json();
         })
         .then(datos_sesion => {
-
             // Div container
             let container;
             if (container = document.getElementById('container')) {
@@ -315,7 +324,7 @@ function generar_asientos(id_sesion) {
                     // Crear una clave única para cada asiento basada en su fila y columna
                     const key = `${asiento.fila}-${asiento.columna}`;
                     asientosMap.set(key, asiento);
-        
+
                     // Actualizar las dimensiones máximas encontradas
                     if (asiento.fila > numFilas) numFilas = asiento.fila;
                     if (asiento.columna > numColumnas) numColumnas = asiento.columna;
@@ -334,14 +343,14 @@ function generar_asientos(id_sesion) {
             for (let i = 1; i <= numFilas; i++) {
                 const filaDiv = document.createElement('div');
                 filaDiv.classList.add('row');
-        
+
                 // Columnas
                 for (let j = 1; j <= numColumnas; j++) {
                     const key = `${i}-${j}`;
                     const asientoData = asientosMap.get(key); // Búsqueda O(1) en el Map
-        
+
                     const elementoCelda = document.createElement('div');
-        
+
                     // Generar asiento
                     if (asientoData) {
                         elementoCelda.classList.add('seat');
@@ -352,7 +361,7 @@ function generar_asientos(id_sesion) {
                         elementoCelda.dataset.id_sesion = id_sesion;
                         elementoCelda.dataset.id = asientoData.id_asiento;
                         elementoCelda.estado = asientoData.estado;
-        
+
                         // Aplicar clase según el estado del asiento
                         switch (asientoData.estado) {
                             // Disponible
@@ -372,14 +381,14 @@ function generar_asientos(id_sesion) {
                         elementoCelda.addEventListener('click', function () {
                             // Cuando se clique en el asiento se llamará a la función para seleccionar o deseleccionar asiento
                             const id_asiento = asientoData.id_asiento;
-                            seleccionar_asiento(id_asiento);
+                            seleccionar_asiento(datos_sesion, id_asiento);
                         });
-        
+
                     } else {
                         // Es un hueco / pasillo
                         elementoCelda.classList.add('gap');
                     }
-        
+
                     // Añadir la celda a la fila
                     filaDiv.appendChild(elementoCelda);
                 }
@@ -389,6 +398,7 @@ function generar_asientos(id_sesion) {
 
             // Añadir el fragmento al container
             container.appendChild(fragment);
+
         })
         .catch(error => {
             // Detectar errores
@@ -508,7 +518,7 @@ function generar_datos_sesion(datos_sesion) {
     inferior_izquierda.appendChild(hora_div);
     inferior_izquierda.appendChild(sala_div);
     inferior_izquierda.appendChild(duracion_div);
-    
+
 }
 
 
@@ -521,7 +531,7 @@ function generar_datos_sesion(datos_sesion) {
 
 
 // Seleccionar o deseleccionar un asiento
-function seleccionar_asiento(id_asiento) {
+function seleccionar_asiento(datos_sesion, id_asiento) {
     // Recoger asiento seleccionado
     const asiento = document.getElementById(id_asiento);
 
@@ -570,7 +580,7 @@ function seleccionar_asiento(id_asiento) {
     if (asiento.classList.contains('available')) {
         asiento.classList.remove('available');
         asiento.classList.add('selected');
-        anadir_asiento_selec(id_asiento);
+        anadir_asiento_selec(datos_sesion, id_asiento);
     } else if (asiento.classList.contains('selected')) {
         asiento.classList.remove('selected');
         asiento.classList.add('available');
@@ -583,7 +593,7 @@ function seleccionar_asiento(id_asiento) {
 
 
 
-function anadir_asiento_selec(id_asiento) {
+function anadir_asiento_selec(datos_sesion, id_asiento) {
     // Recuperar los datos del contenedor y asientos
     const columna_izquierda_lista = document.getElementById('columna_izquierda_lista');
     const columna_derecha_lista = document.getElementById('columna_derecha_lista');
@@ -639,14 +649,20 @@ function anadir_asiento_selec(id_asiento) {
     // Si no hay botón de CONFIRMAR SELECCIÓN, se añade
     let boton_confirmar_seleccion = document.getElementById('boton_confirmar_seleccion');
     if (!boton_confirmar_seleccion) {
-        
+
         boton_confirmar_seleccion = document.createElement('button');
         boton_confirmar_seleccion.classList.add('confirmar_seleccion');
         boton_confirmar_seleccion.id = 'boton_confirmar_seleccion';
         boton_confirmar_seleccion.innerHTML = "CONFIRMAR SELECCIÓN";
 
         boton_confirmar_seleccion.addEventListener('click', function () {
-            confirmar_seleccion();
+            // Si el usuario esta logueado se muestra el modal de Confirmar Selección
+            if (datos_sesion.usuario) {
+                confirmar_seleccion();
+                // Si es invitado, se muestra el modal de Compra como Invitado
+            } else {
+                compra_como_invitado();
+            }
         });
 
         columna_izquierda_abajo.appendChild(boton_confirmar_seleccion);
@@ -667,7 +683,7 @@ function anadir_asiento_selec(id_asiento) {
     }
 
     // Añadir el div al contenedor
-    columna_izquierda_lista.appendChild(asientoDiv); 
+    columna_izquierda_lista.appendChild(asientoDiv);
     columna_derecha_lista.appendChild(precioDiv);
 
     // Si no hay borde, se añade
@@ -675,7 +691,7 @@ function anadir_asiento_selec(id_asiento) {
     if (!container_asientos_selec.classList.contains('listado_asientos_borde')) {
         container_asientos_selec.classList.add('listado_asientos_borde');
     }
-    
+
 }
 
 
@@ -697,7 +713,7 @@ function quitar_asiento_selec(id_asiento) {
     // Seleccionar el precio a eliminar de la lista
     const asientoSelecPrecioId = `precio_selec_${id_asiento}`;
     const precioDiv = document.getElementById(asientoSelecPrecioId);
-    
+
     // Se elimina el asiento seleccionado si existe
     if (precioDiv) {
         precioDiv.remove();
@@ -715,7 +731,7 @@ function quitar_asiento_selec(id_asiento) {
     if (comprobar_asientos_seleccionados.length <= 1) {
         const container_asientos_selec = document.getElementById('container_asientos_selec');
         container_asientos_selec.classList.remove('listado_asientos_borde');
-        
+
         const columna_izquierda_titulo = document.getElementById('columna_izquierda_titulo');
         columna_izquierda_titulo.remove();
 
@@ -736,6 +752,16 @@ function quitar_asiento_selec(id_asiento) {
 
 
 
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////// CONFIRMAR SELECCIÓN ///////////////////////////////////////////////////
 
 
 
@@ -797,19 +823,13 @@ window.confirmar_seleccion = function () {
             }
         });
 
-
-
-
-
-
-
 }
 
 
 // Mostrar el modal de confirmar selección
 function mostrar_modal_confirmar(asientos, datos_sesion) {
     const modal_confirmar_seleccion = document.getElementById('modal_confirmar_seleccion');
-    
+
     if (modal_confirmar_seleccion.classList.contains('hidden')) {
         modal_confirmar_seleccion.classList.remove('hidden');
         modal_confirmar_seleccion.classList.add('visible');
@@ -819,8 +839,8 @@ function mostrar_modal_confirmar(asientos, datos_sesion) {
         crear_estructura(modal_confirmar_seleccion);
         generar_confirmar_titulo();
         generar_confirmar_body(datos_sesion);
-        generar_confirmar_entradas(asientos);
-        generar_confirmar_botones();
+        generar_confirmar_entradas(datos_sesion, asientos);
+        generar_confirmar_botones(datos_sesion, asientos);
     }
 
 }
@@ -848,15 +868,19 @@ function crear_estructura(modal_confirmar_seleccion) {
     confirmar_container_entradas.classList.add('confirmar_container_entradas');
     confirmar_container_entradas.id = 'confirmar_container_entradas';
 
-    // Div botones
-    let confirmar_container_botones = document.createElement('div');
-    confirmar_container_botones.classList.add('confirmar_container_botones');
-    confirmar_container_botones.id = 'confirmar_container_botones';
+    // Div separador 1
+    let confirmar_container_separador1 = document.createElement('div');
+    confirmar_container_separador1.classList.add('confirmar_container_separador');
+
+    // Div separador 2
+    let confirmar_container_separador2 = document.createElement('div');
+    confirmar_container_separador2.classList.add('confirmar_container_separador');
 
     confirmar_container.appendChild(confirmar_container_titulo);
+    confirmar_container.appendChild(confirmar_container_separador1);
     confirmar_container.appendChild(confirmar_container_body);
+    confirmar_container.appendChild(confirmar_container_separador2);
     confirmar_container.appendChild(confirmar_container_entradas);
-    confirmar_container.appendChild(confirmar_container_botones);
 
     modal_confirmar_seleccion.appendChild(confirmar_container);
 
@@ -1011,20 +1035,43 @@ function generar_confirmar_body(datos_sesion) {
 }
 
 // Generar asientos seleccionados
-function generar_confirmar_entradas(asientos) {
+function generar_confirmar_entradas(datos_sesion, asientos) {
+    // Recuperar usuario (si hay)
+    const usuario = datos_sesion.usuario;
+
     const confirmar_container_entradas = document.getElementById('confirmar_container_entradas');
+
+    // Div superior de asientos
+    let asiento_div_superior = document.createElement('div');
+    asiento_div_superior.classList.add('asiento_div_superior');
+    asiento_div_superior.id = 'asiento_div_superior';
 
     // Título de div
     let entradas_titulo = document.createElement('div');
     entradas_titulo.classList.add('entradas_titulo');
     entradas_titulo.id = 'entradas_titulo';
-    entradas_titulo.innerHTML = "Asientos Seleccionados";
+    entradas_titulo.innerHTML = "Resumen de Compra";
 
-    // Columna de 'Asiento Seleccionado -> '
-    let asiento_columna_asiento = document.createElement('div');
-    asiento_columna_asiento.classList.add('asiento_columna');
-    asiento_columna_asiento.id = 'asiento_columna_asiento';
-    
+    // Div de botones
+    let confirmar_container_botones = document.createElement('div');
+    confirmar_container_botones.classList.add('confirmar_container_botones');
+    confirmar_container_botones.id = 'confirmar_container_botones';
+
+    // Div inferior de asientos
+    let asiento_div_inferior = document.createElement('div');
+    asiento_div_inferior.classList.add('asiento_div');
+    asiento_div_inferior.id = 'asiento_div';
+
+    // Div de asientos seleccionados
+    let asiento_div_asientos = document.createElement('div');
+    asiento_div_asientos.classList.add('asiento_div_columna');
+    asiento_div_asientos.id = 'asiento_div_asientos';
+
+    // Div de precio de asientos
+    let asiento_div_precio = document.createElement('div');
+    asiento_div_precio.classList.add('asiento_div_columna');
+    asiento_div_precio.id = 'asiento_div_precio';
+
     // Columna de 'Nº Fila: '
     let asiento_columna_fila = document.createElement('div');
     asiento_columna_fila.classList.add('asiento_columna');
@@ -1045,15 +1092,18 @@ function generar_confirmar_entradas(asientos) {
     asiento_columna_numcolumna.classList.add('asiento_columna');
     asiento_columna_numcolumna.id = 'asiento_columna_numcolumna';
 
+    // Columna de Precio
+    let asiento_columna_precio = document.createElement('div');
+    asiento_columna_precio.classList.add('asiento_columna');
+    asiento_columna_precio.id = 'asiento_columna_precio';
+
 
     asientos.forEach(asiento => {
-        console.log(asiento);
         // Asiento Seleccionado ->
         let columna_asiento_asiento = document.createElement('div');
         columna_asiento_asiento.classList.add('asiento_columna_texto');
         columna_asiento_asiento.id = 'columna_asiento_asiento_' + asiento.id;
-        columna_asiento_asiento.innerHTML = "Asiento Seleccionado -> ";
-        asiento_columna_asiento.appendChild(columna_asiento_asiento);
+        columna_asiento_asiento.innerHTML = "- Asiento: ";
 
         // Fila:
         let columna_asiento_fila = document.createElement('div');
@@ -1082,21 +1132,210 @@ function generar_confirmar_entradas(asientos) {
         columna_asiento_numcolumna.id = 'columna_asiento_numcolumna_' + asiento.id;
         columna_asiento_numcolumna.innerHTML = asiento.dataset.columna;
         asiento_columna_numcolumna.appendChild(columna_asiento_numcolumna);
-        
+
+        // Precio
+        let columna_asiento_precio = document.createElement('div');
+        columna_asiento_precio.classList.add('asiento_columna_texto');
+        columna_asiento_precio.id = 'columna_asiento_precio_' + asiento.id;
+        columna_asiento_precio.innerHTML = "10 €";
+        asiento_columna_precio.appendChild(columna_asiento_precio);
     });
 
+    // Div de Precio Títulos
+    let asiento_columna_preciotitulos = document.createElement('div');
+    asiento_columna_preciotitulos.classList.add('asiento_columna');
+    asiento_columna_preciotitulos.id = 'asiento_columna_preciotitulos';
+
+
+    // Div de Precio Datos
+    let asiento_columna_preciodatos = document.createElement('div');
+    asiento_columna_preciodatos.classList.add('asiento_columna');
+    asiento_columna_preciodatos.id = 'asiento_columna_preciodatos';
+
+    // Título Precio
+    let div_precio_titulo = document.createElement('div');
+    div_precio_titulo.classList.add('asiento_columna_texto');
+    div_precio_titulo.id = 'div_precio_titulo';
+    div_precio_titulo.innerHTML = "Precio Total: ";
+
+
+    // Calcular precio total (PENDIENTE PRECIO ASIENTO DE BBDD)
+    const precio_asientos = asientos.size * 10;
+
+    // Precio Total
+    let div_precio_preciototal = document.createElement('div');
+    div_precio_preciototal.classList.add('asiento_columna_texto');
+    div_precio_preciototal.id = 'div_precio_preciototal';
+    div_precio_preciototal.innerHTML = precio_asientos + " € (PENDIENTE)";
+
+    // Recuperar descuento de usuario
+    let descuento_aplicado_cantidad;
+    let descuento_aplicado;
+
+    // Se recupera y procesa el tipo de usuario. Si es invitado, se muestra adecuandamente
+    if (usuario) {
+        descuento_aplicado_cantidad = datos_sesion.descuento.descuento;
+        let tipo_usuario = datos_sesion.descuento.tipo;
+        tipo_usuario = tipo_usuario.charAt(0).toUpperCase() + tipo_usuario.slice(1);
+        descuento_aplicado = tipo_usuario + " (" + descuento_aplicado_cantidad + "% )";
+    } else {
+        descuento_aplicado_cantidad = 0;
+        descuento_aplicado = "Invitado ( " + descuento_aplicado_cantidad + "% )";
+    }
+
+    // Título Descuento Aplicado
+    let div_descuento_titulo = document.createElement('div');
+    div_descuento_titulo.classList.add('asiento_columna_texto');
+    div_descuento_titulo.id = 'div_descuento_titulo';
+    div_descuento_titulo.innerHTML = "Descuento Aplicado: ";
+
+    // Descuento aplicado
+    let div_descuento_descuento = document.createElement('div');
+    div_descuento_descuento.classList.add('asiento_columna_texto');
+    div_descuento_descuento.id = 'div_descuento_descuento';
+    div_descuento_descuento.innerHTML = descuento_aplicado;
+
+    // Título Precio Final
+    let div_preciofinal_titulo = document.createElement('div');
+    div_preciofinal_titulo.classList.add('asiento_columna_texto');
+    div_preciofinal_titulo.id = 'div_preciofinal_titulo';
+    div_preciofinal_titulo.innerHTML = "Precio Final: ";
+
+    // Calcular precio final mediante el descuento
+    const precio_descontado = precio_asientos * (descuento_aplicado_cantidad / 100);
+    const precio_final = precio_asientos - precio_descontado;
+
+    // Precio Final
+    let div_preciofinal_preciofinal = document.createElement('div');
+    div_preciofinal_preciofinal.classList.add('asiento_columna_textoprecio');
+    div_preciofinal_preciofinal.id = 'div_preciofinal_preciofinal';
+    div_preciofinal_preciofinal.innerHTML = precio_final + " €";
+
+    // Guardar en datos_sesion
+    datos_sesion.precio_asientos = precio_asientos;
+    datos_sesion.precio_descuento = descuento_aplicado_cantidad;
+    datos_sesion.precio_final = precio_final;
+
+    // Añadir columnas a div superior
+    asiento_div_superior.appendChild(entradas_titulo);
+    asiento_div_superior.appendChild(confirmar_container_botones);
+
+    // Añadir columnas a div inferior Asientos
+    asiento_div_asientos.appendChild(asiento_columna_fila);
+    asiento_div_asientos.appendChild(asiento_columna_numfila);
+    asiento_div_asientos.appendChild(asiento_columna_columna);
+    asiento_div_asientos.appendChild(asiento_columna_numcolumna);
+    asiento_div_asientos.appendChild(asiento_columna_precio);
+
+    // Añadir Títulos de Precio y Descuento
+    asiento_columna_preciotitulos.appendChild(div_precio_titulo);
+    asiento_columna_preciotitulos.appendChild(div_descuento_titulo);
+    asiento_columna_preciotitulos.appendChild(div_preciofinal_titulo);
+
+    // Añadir datos de Precio y Descuento
+    asiento_columna_preciodatos.appendChild(div_precio_preciototal);
+    asiento_columna_preciodatos.appendChild(div_descuento_descuento);
+    asiento_columna_preciodatos.appendChild(div_preciofinal_preciofinal);
+
+    // Añadir div interiores a Div Precios
+    asiento_div_precio.appendChild(asiento_columna_preciotitulos);
+    asiento_div_precio.appendChild(asiento_columna_preciodatos);
+
+    // Añadir div interiores a div asientos
+    asiento_div_inferior.appendChild(asiento_div_asientos);
+    asiento_div_inferior.appendChild(asiento_div_precio);
+
     // Añadir todo al contenedor principal
-    confirmar_container_entradas.appendChild(entradas_titulo);
-    confirmar_container_entradas.appendChild(asiento_columna_asiento);
-    confirmar_container_entradas.appendChild(asiento_columna_fila);
-    confirmar_container_entradas.appendChild(asiento_columna_numfila);
-    confirmar_container_entradas.appendChild(asiento_columna_columna);
-    confirmar_container_entradas.appendChild(asiento_columna_numcolumna);
+    confirmar_container_entradas.appendChild(asiento_div_superior);
+    confirmar_container_entradas.appendChild(asiento_div_inferior);
+
 }
 
 // Generar botones de Volver y Continuar con el Pago
-function generar_confirmar_botones() {
+function generar_confirmar_botones(datos_sesion, asientos) {
+    // Recuperar div de botones
+    const confirmar_container_botones = document.getElementById('confirmar_container_botones');
 
+    if (!confirmar_container_botones) {
+        confirmar_container_botones.innerHTML('Error al cargar los botones. Inténtelo de nuevo más tarde')
+        return;
+    }
+
+    // Botón Volver div
+    let boton_volver_div = document.createElement('div');
+    boton_volver_div.classList.add('boton_confirmar');
+    boton_volver_div.id = 'boton_volver_div';
+
+    // Botón Volver
+    let boton_volver = document.createElement('button');
+    boton_volver.classList.add('boton_volver');
+    boton_volver.id = 'boton_volver';
+    boton_volver.innerHTML = "Volver";
+
+    // Añadir evento al botón Volver
+    boton_volver.addEventListener('click', function () {
+        const modal_confirmar_seleccion = document.querySelector('.modal_confirmar');
+
+        if (modal_confirmar_seleccion && modal_confirmar_seleccion.classList.contains('visible')) {
+            modal_confirmar_seleccion.classList.remove('visible');
+            modal_confirmar_seleccion.classList.add('hidden');
+            modal_confirmar_seleccion.innerHTML = "";
+        }
+    });
+
+    // Botón Continuar div
+    let boton_continuar_div = document.createElement('div');
+    boton_continuar_div.classList.add('boton_confirmar');
+    boton_continuar_div.id = 'boton_continuar_div';
+
+    // Botón Continuar
+    let boton_continuar = document.createElement('button');
+    boton_continuar.classList.add('boton_continuar');
+    boton_continuar.id = 'boton_continuar';
+    boton_continuar.innerHTML = "Continuar";
+
+    // Añadir evento al botón Continuar
+    boton_continuar.addEventListener('click', function () {
+        const modal_confirmar_seleccion = document.querySelector('.modal_confirmar');
+
+        if (modal_confirmar_seleccion && modal_confirmar_seleccion.classList.contains('visible')) {
+            modal_confirmar_seleccion.classList.remove('visible');
+            modal_confirmar_seleccion.classList.add('hidden');
+            modal_confirmar_seleccion.innerHTML = "";
+        }
+
+        // Guardar los valores de la sesión y asientos seleccionados en el navegador
+        // Se guarda por si hay errores en el pago y se recarga la página, poder recuperarlos
+        // Se guarda la sesión
+        localStorage.setItem('datos_sesion', JSON.stringify(datos_sesion));
+
+        // Se convierten los asientos seleccionados a array
+        const asientos_array = [];
+        asientos.forEach(asiento => {
+            const asiento_datos = {
+                fila : asiento.dataset.fila,
+                columna : asiento.dataset.columna,
+                sesion : asiento.dataset.sesion,
+                id : asiento.dataset.id,
+                estado : asiento.estado,
+            };
+            asientos_array.push(asiento_datos);
+        });
+
+        // Se guardan los asientos
+        localStorage.setItem('asientos', JSON.stringify(asientos_array));
+        
+
+        mostrar_modal_pago(datos_sesion, asientos);
+    });
+
+    // Añadir botones a sus div
+    boton_volver_div.appendChild(boton_volver);
+    boton_continuar_div.appendChild(boton_continuar);
+
+    // Añadir div de botones al div principal de botones
+    confirmar_container_botones.appendChild(boton_volver_div);
+    confirmar_container_botones.appendChild(boton_continuar_div);
 }
 
 
@@ -1135,3 +1374,383 @@ if (modal_confirmar_seleccion) {
         }
     });
 }
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////// COMPRA COMO INVITADO ///////////////////////////////////////////////////
+
+
+// Modal de Comprar como Invitado
+window.compra_como_invitado = function () {
+    const modal_invitado = document.getElementById('modal_invitado');
+
+    if (!modal_invitado) {
+        return;
+    }
+
+    if (modal_invitado.classList.contains('hidden')) {
+        modal_invitado.classList.remove('hidden');
+        modal_invitado.classList.add('visible');
+    }
+}
+
+
+
+// Añadir eventos a botones de Volver y Continuar como Invitado
+if (modal_invitado) {
+    const modal_invitado = document.getElementById('modal_invitado');
+    const boton_invitado_volver = document.getElementById('boton_invitado_volver');
+    const boton_invitado_continuar = document.getElementById('boton_invitado_continuar');
+
+    // Añadir evento al botón Volver
+    boton_invitado_volver.addEventListener('click', function () {
+
+        if (modal_invitado && modal_invitado.classList.contains('visible')) {
+            modal_invitado.classList.remove('visible');
+            modal_invitado.classList.add('hidden');
+        }
+    });
+
+    boton_invitado_continuar.addEventListener('click', function () {
+        if (modal_invitado && modal_invitado.classList.contains('visible')) {
+            modal_invitado.classList.remove('visible');
+            modal_invitado.classList.add('hidden');
+        }
+
+        confirmar_seleccion();
+    });
+}
+
+
+
+// Para que el modal Comprar como Invitado se cierre al presionar Escape (también se limpia de datos)
+if (modal_invitado) {
+    document.addEventListener('keydown', function (event) {
+        if ((event.key === 'Escape' || event.keyCode === 27) && modal_invitado.classList.contains('visible')) {
+
+            event.preventDefault();
+
+            // Hide the modal by reversing the class logic from mostrar_detalle
+            modal_invitado.classList.remove('visible');
+            modal_invitado.classList.add('hidden');
+        }
+    });
+}
+
+
+// Para que el modal Comprar como Invitado se cierre al clicar fuera del modal (también se limpia de datos)
+if (modal_invitado) {
+    modal_invitado.addEventListener('click', function (event) {
+        if (event.target === modal_invitado && modal_invitado.classList.contains('visible')) {
+            modal_invitado.classList.remove('visible');
+            modal_invitado.classList.add('hidden');
+        }
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////// PAGO ///////////////////////////////////////////////////
+
+// Modal de Pago con tarjeta
+function mostrar_modal_pago(datos_sesion, asientos) {
+    console.log(asientos);
+    console.log(datos_sesion);
+    const modal_pago = document.getElementById('modal_pago');
+
+    if (!modal_pago) {
+        return;
+    }
+
+    if (modal_pago.classList.contains('hidden')) {
+        modal_pago.classList.remove('hidden');
+        modal_pago.classList.add('visible');
+    }
+
+    // Guardar la sesión y asientos para el formulario
+    // Si ya tienen valores, se borran
+    // Asientos (se generan tantos como haya)
+    const asientos_div = document.getElementById('asientos_div');
+    asientos_div.innerHTML = "";
+    asientos.forEach(asiento => {
+        const asiento_input = document.createElement('input');
+        asiento_input.setAttribute('type', 'hidden');
+        asiento_input.setAttribute('name', 'asiento[]');
+        asiento_input.setAttribute('value', asiento.id);
+        asientos_div.appendChild(asiento_input);
+    });
+
+    // Sesión
+    const datos_sesion_div = document.getElementById('datos_sesion_div');
+    datos_sesion_div.innerHTML = "";
+    const datos_sesion_input = document.createElement('input');
+    datos_sesion_input.setAttribute('type', 'hidden');
+    datos_sesion_input.setAttribute('name', 'sesion_id');
+    datos_sesion_input.setAttribute('value', datos_sesion.id);
+    datos_sesion_div.appendChild(datos_sesion_input);
+
+
+    // Precio
+    const precio_div = document.getElementById('precio_div');
+    precio_div.innerHTML = "";
+
+    // Precio Total
+    const precio_total_input = document.createElement('input');
+    precio_total_input.setAttribute('type', 'hidden');
+    precio_total_input.setAttribute('name', 'precio_total');
+    precio_total_input.setAttribute('value', datos_sesion.precio_asientos);
+    // Descuento
+    const precio_descuento_input = document.createElement('input');
+    precio_descuento_input.setAttribute('type', 'hidden');
+    precio_descuento_input.setAttribute('name', 'precio_descuento');
+    precio_descuento_input.setAttribute('value', datos_sesion.precio_descuento);
+    // Precio Final
+    const precio_final_input = document.createElement('input');
+    precio_final_input.setAttribute('type', 'hidden');
+    precio_final_input.setAttribute('name', 'precio_final');
+    precio_final_input.setAttribute('value', datos_sesion.precio_final);
+
+    precio_div.appendChild(precio_total_input);
+    precio_div.appendChild(precio_descuento_input);
+    precio_div.appendChild(precio_final_input);
+
+
+    // Usuario (si existe)
+    if (datos_sesion.usuario) {
+        const usuario_div = document.getElementById('usuario_div');
+        usuario_div.innerHTML = "";
+        const usuario_input = document.createElement('input');
+        usuario_input.setAttribute('type', 'hidden');
+        usuario_input.setAttribute('name', 'usuario_id');
+        usuario_input.setAttribute('value', datos_sesion.usuario.id);
+        usuario_div.appendChild(usuario_input);
+    }
+    
+
+
+    if (!vueAppInstance || !document.body.contains(vueAppInstance.$el)) { // Verifica si la instancia existe y su elemento aún está en el DOM
+        if (vueAppInstance) {
+            vueAppInstance.$destroy(); // Destruye la instancia anterior si es necesario
+        }
+
+        const input_antiguo = window.laravel_antiguo_input || {};
+
+        vueAppInstance = new Vue({
+            el: "#app", // Este elemento DEBE existir en tu HTML cuando se ejecute esto
+            data() {
+                return {
+                    currentCardBackground: Math.floor(Math.random() * 25 + 1),
+                    cardName: input_antiguo.cardName || "",
+                    cardNumber: input_antiguo.cardNumber || "",
+                    cardMonth: input_antiguo.cardMonth || "",
+                    cardYear: input_antiguo.cardYear || "",
+                    cardCvv: input_antiguo.cardCvv || "",
+                    minCardYear: new Date().getFullYear(),
+                    amexCardMask: "#### ###### #####",
+                    otherCardMask: "#### #### #### ####",
+                    cardNumberTemp: "",
+                    isCardFlipped: false,
+                    focusElementStyle: null,
+                    isInputFocused: false
+                };
+            },
+            mounted() {
+                this.cardNumberTemp = this.cardNumber ? this.cardNumber : this.otherCardMask;
+                // Esperar un momento para que el DOM se actualice si el modal acaba de mostrarse
+                this.$nextTick(() => {
+                    const cardNumberInput = document.getElementById("cardNumber");
+                    if (cardNumberInput) {
+                        cardNumberInput.focus();
+                    }
+                });
+            },
+            computed: {
+                getCardType() {
+                    let number = this.cardNumber;
+                    if (!number) return "visa"; // Por defecto si no hay número
+                    
+                    let re = new RegExp("^4");
+                    if (number.match(re) != null) return "visa";
+
+                    re = new RegExp("^(34|37)");
+                    if (number.match(re) != null) return "amex";
+
+                    re = new RegExp("^5[1-5]");
+                    if (number.match(re) != null) return "mastercard";
+
+                    re = new RegExp("^6011");
+                    if (number.match(re) != null) return "discover";
+
+                    re = new RegExp('^9792')
+                    if (number.match(re) != null) return 'troy'
+
+                    return "visa";  // Por defecto
+                },
+                generateCardNumberMask() {
+                    return this.getCardType === "amex" ? this.amexCardMask : this.otherCardMask;
+                },
+                minCardMonth() {
+                    if (this.cardYear === this.minCardYear) return new Date().getMonth() + 1;
+                    return 1;
+                }
+            },
+            watch: {
+                cardYear() {
+                    if (this.cardMonth && parseInt(this.cardMonth) < this.minCardMonth) {
+                        this.cardMonth = "";
+                    }
+                }
+            },
+            methods: {
+                flipCard(status) {
+                    this.isCardFlipped = status;
+                },
+                focusInput(e) {
+                    this.isInputFocused = true;
+                    let targetRef = e.target.dataset.ref;
+                    // Asegurarse de que $refs esté disponible
+                    if (this.$refs && this.$refs[targetRef]) {
+                        let target = this.$refs[targetRef];
+                        this.focusElementStyle = {
+                            width: `${target.offsetWidth}px`,
+                            height: `${target.offsetHeight}px`,
+                            transform: `translateX(${target.offsetLeft}px) translateY(${target.offsetTop}px)`
+                        }
+                    }
+                },
+                blurInput() {
+                    let vm = this;
+                    setTimeout(() => {
+                        if (!vm.isInputFocused) {
+                            vm.focusElementStyle = null;
+                        }
+                    }, 300);
+                    vm.isInputFocused = false;
+                }
+            }
+        });
+    } else {    
+        const cardNumberInput = document.getElementById("cardNumber");
+        if (cardNumberInput) {
+            cardNumberInput.focus();
+        }
+    }
+
+}
+
+window.mostrar_modal_pago = mostrar_modal_pago;
+
+
+
+
+// TODO -> Eliminar datos introducidos en el modal
+
+// Para que el modal pago se cierre al presionar Escape (también se limpia de datos)
+if (modal_pago) {
+    document.addEventListener('keydown', function (event) {
+        if ((event.key === 'Escape' || event.keyCode === 27) && modal_pago.classList.contains('visible')) {
+
+            event.preventDefault();
+
+            // Ocultar modal
+            modal_pago.classList.remove('visible');
+            modal_pago.classList.add('hidden');
+
+            // Limpiar datos
+            limpiar_datos_pago();
+
+        }
+    });
+}
+
+
+// Para que el modal pago se cierre al clicar fuera del modal (también se limpia de datos)
+if (modal_pago) {
+    modal_pago.addEventListener('click', function (event) {
+        if (event.target === modal_pago && modal_pago.classList.contains('visible')) {
+            // Ocultar modal
+            modal_pago.classList.remove('visible');
+            modal_pago.classList.add('hidden');
+
+            // Limpiar datos
+            limpiar_datos_pago();
+        }
+    });
+}
+
+
+
+
+
+
+function limpiar_datos_pago() {
+    const cardNumber = document.getElementById('cardNumber');
+    if (cardNumber) {
+        cardNumber.value = "";
+    }
+
+    const cardNameInput = document.getElementById('cardName');
+    if (cardNameInput) {
+        cardNameInput.value = ""; // Usar .value para inputs
+    }
+
+    const cardMonthSelect = document.getElementById('cardMonth');
+    if (cardMonthSelect) {
+        cardMonthSelect.value = ""; // Para <select>, esto seleccionará la <option value="">
+    }
+
+    const cardYearSelect = document.getElementById('cardYear');
+    if (cardYearSelect) {
+        cardYearSelect.value = ""; // Para <select>, esto seleccionará la <option value="">
+    }
+
+    const cardCvvInput = document.getElementById('cardCvv');
+    if (cardCvvInput) {
+        cardCvvInput.value = ""; // Usar .value para inputs
+    }
+
+    // Limpiar instancia de Vue
+    if (vueAppInstance) {
+        vueAppInstance.cardNumber = "";
+        vueAppInstance.cardName = "";
+        vueAppInstance.cardMonth = "";
+        vueAppInstance.cardYear = "";
+        vueAppInstance.cardCvv = "";
+        vueAppInstance.isCardFlipped = false;
+        vueAppInstance.focusElementStyle = null;
+    }
+}
+
+
+
+

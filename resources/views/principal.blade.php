@@ -16,8 +16,7 @@
         'resources/js/registro.js', 
         'resources/js/login.js', 
         'resources/js/entradas.js', 
-        'resources/css/compraEntradas.css', 
-        'resources/js/compraEntradas.js',
+        'resources/css/compraEntradas.css',
         'resources/js/user.js',
         'resources/css/user_modal.css', 
         'resources/js/cartaCosmos.js',
@@ -26,6 +25,8 @@
         'resources/css/detalle_pelicula.css',
         'resources/js/detalle_y_asientos.js',
         'resources/css/confirmar_seleccion.css',
+        'resources/css/invitado.css',
+        'resources/css/pago.css',
     ])
     <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
 
@@ -89,11 +90,18 @@
     <!-- Modal de detalle de la película y COMPRAR ENTRADAS -->
     <x-modal.modal_detalle_pelicula/>
 
+    <!-- Modal de Comprar como Invitado -->
+    <x-modal.modal_comprar_como_invitado/>
+
     <!-- Modal de confirmar selección de asientos -->
     <x-modal.modal_confirmar_seleccion/>
     
+    <!-- Modal de pago -->
+    <x-modal.modal_pago/>
 
     @stack('scripts')
+
+    
 
 </body>
 
