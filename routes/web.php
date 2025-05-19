@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\RecuperarAsientos;
 use App\Http\Controllers\NominaEmpleadoController;
 use App\Http\Controllers\ProcesarPago;
+use App\Http\Controllers\EntradaController;
 use App\Http\Controllers\RecuperarSesionPelicula;
 
 //Ruta por get, al poner / en el buscador, nos saldra la pantalla de principal, que es devuelta por la clase HomeController y llama a la función index.
@@ -165,4 +166,12 @@ Route::get('/empleado/nomina/{idNomina}/download', [NominaEmpleadoController::cl
 
 // Gestionar el Pago y Creación de Entradas
 Route::post('/procesar_pago', [ProcesarPago::class, 'procesar_pago'])->name('procesar_pago');
+
+Route::get('/entrada/{id_entrada}/pdf', [EntradaController::class, 'descargarEntradaPdf'])
+    ->name('entrada.pdf.download');
+
+//Ruta de prueba
+
+Route::get('/test/entrada-pdf/{id_entrada}', [EntradaController::class, 'previsualizarEntradaPdf'])
+    ->name('test.entrada.pdf');
 

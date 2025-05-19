@@ -51,7 +51,7 @@ class Entrada extends Model
     }
 
     // Relación a tabla user
-    public function user()
+    public function usuario()
     {
         return $this->belongsTo(User::class, 'usuario_id', 'id');
     }
@@ -63,8 +63,12 @@ class Entrada extends Model
     }
 
      // Relación a tabla tipo_entrada
-    public function tipo_entrada()
+    public function tipoEntrada()
     {
         return $this->belongsTo(TipoEntrada::class, 'tipo_entrada', 'id_tipo_entrada');
+    }
+
+    public function salaEntrada() { // Nombre diferente a 'sala' para evitar conflicto con el campo 'sala'
+        return $this->belongsTo(Sala::class, 'sala_id', 'id_sala');
     }
 }
