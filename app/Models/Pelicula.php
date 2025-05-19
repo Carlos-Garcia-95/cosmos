@@ -48,4 +48,9 @@ class Pelicula extends Model
             'id_genero_pelicula'        // Clave foránea del modelo relacionado (GeneroPelicula) en la tabla pivote
         );
     }
+
+    public function sessions()
+{
+    return $this->hasMany(Sesion::class, 'id_pelicula');
+}
 }

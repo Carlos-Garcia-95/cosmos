@@ -72,15 +72,16 @@ return new class extends Migration
             $table->string('direccion', 150)->nullable();
             $table->string('codigo_postal', 10); 
             $table->string('password', 200);
+            $table->string('google_id')->nullable();
             $table->rememberToken();
             $table->tinyInteger('mayor_edad')->default(0); 
             $table->unsignedBigInteger('id_descuento')->nullable(); 
             $table->unsignedBigInteger('tipo_usuario')->nullable(); 
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->nullable(); 
             $table->foreign('ciudad')->references('id')->on('ciudades'); 
             $table->foreign('id_descuento')->references('id_descuento')->on('descuento');
             $table->foreign('tipo_usuario')->references('id_tipo_usuario')->on('tipo_usuario');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->nullable(); 
         });
     }
 
@@ -89,6 +90,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::table('users', function (Blueprint $table) {
+            // Eliminar la columna google_id
+            $table->dropColumn('google_id');
+        });
     }
 };

@@ -28,6 +28,7 @@ export default defineConfig({
                 "resources/js/adminDashboardGestionarMenu.js",
                 "resources/js/adminDashboardSesiones.js",
                 "resources/js/adminDashboardAñadirEmpleado.js",
+                "resources/css/cartelera.css",
             ],
             refresh: true,
             manifest: 'manifest.json',

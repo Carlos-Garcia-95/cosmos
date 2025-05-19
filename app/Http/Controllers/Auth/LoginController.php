@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 
 class LoginController extends Controller
 {
@@ -15,61 +16,72 @@ class LoginController extends Controller
     const ID_TIPO_USUARIO_EMPLEADO = 2;
     const ID_TIPO_USUARIO_ADMINISTRADOR = 1;
 
-    public function login(Request $request) {
-
+    public function login(Request $request)
+    {
         $mensajes = [
             'login_email.required' => 'Por favor, introduce tu dirección de email.',
+            'login_email.string' => 'El email debe ser una cadena de texto.',
             'login_email.email' => 'Por favor, introduce una dirección de email válida.',
             'login_password.required' => 'Por favor, introduce tu contraseña.',
+            'login_password.string' => 'La contraseña debe ser una cadena de texto.',
         ];
 
-        // Validar los campos de email y contraseña del formulario
-        // Los nombres de los campos en el formulario deben ser 'login_email' y 'login_password'
         $credentials = $request->validate([
-            'login_email' => ['required', 'email'],
-            'login_password' => ['required']
+            'login_email' => ['required', 'string', 'email'],
+            'login_password' => ['required', 'string']
         ], $mensajes);
 
-        // Preparamos las credenciales para Auth::attempt.
-        // Auth::attempt espera las claves 'email' y 'password' por defecto.
+        $recaptchaResponse = $request->input('g-recaptcha-response');
+        $recaptchaSecret = env('RECAPTCHA_SECRET_KEY');
+
+        if (empty($recaptchaResponse)) {
+            return back()->withErrors([
+                'recaptcha' => 'Por favor, completa el desafío reCAPTCHA.',
+            ])->onlyInput('login_email');
+        }
+
+        $verificationUrl = 'https://www.google.com/recaptcha/api/siteverify';
+        $response = Http::asForm()->post($verificationUrl, [
+            'secret' => $recaptchaSecret,
+            'response' => $recaptchaResponse,
+            'remoteip' => $request->ip(),
+        ]);
+
+        $recaptchaResult = $response->json();
+
+        if (!isset($recaptchaResult['success']) || !$recaptchaResult['success']) {
+             return back()->withErrors([
+                 'recaptcha' => 'La verificación reCAPTCHA falló. Inténtalo de nuevo.',
+             ])->onlyInput('login_email');
+        }
+
         $authCredentials = [
             'email' => $credentials['login_email'],
             'password' => $credentials['login_password'],
         ];
 
-        // --- Intentar login estándar usando email y password ---
         if (Auth::attempt($authCredentials, $request->has('remember'))) {
+            $request->session()->regenerate();
 
-            // --- PASO 1: Login estándar exitoso en tabla 'users' ---
             $user = Auth::user();
 
-            // --- PASO 2: Verificar si el tipo_usuario es 'Cliente'/'Empleado'/'Administrador' ---
             if ($user->tipo_usuario === self::ID_TIPO_USUARIO_CLIENTE) {
-
                 $request->session()->regenerate();
-                Log::info('Session data after Auth::attempt success:', $request->session()->all());
-
                 return redirect()->intended('/')->with('success', "¡Bienvenido Cliente {$user->nombre} {$user->apellidos}!");
 
             } else if($user->tipo_usuario === self::ID_TIPO_USUARIO_EMPLEADO){
-
                 $request->session()->regenerate();
-                Log::info('Session data after Auth::attempt success:', $request->session()->all());
-
                 return redirect()->intended('/')->with('success', "¡Bienvenido Empleado {$user->nombre} {$user->apellidos}!");
+
             } else if($user->tipo_usuario === self::ID_TIPO_USUARIO_ADMINISTRADOR){
-
                 $request->session()->regenerate();
-                Log::info('Session data after Auth::attempt success:', $request->session()->all());
-
                 return redirect()->intended('/')->with('success', "¡Bienvenido Administrador {$user->nombre} {$user->apellidos}!");
             }
 
         } else {
-            // --- PASO 5: El login falló. ---
             return back()->withErrors([
-                'login_email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.' // Mensaje genérico de error de credenciales
-            ])->onlyInput('login_email'); // Mantener el email en el formulario
+                'login_email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.'
+            ])->onlyInput('login_email');
         }
     }
 

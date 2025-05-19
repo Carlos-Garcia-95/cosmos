@@ -53,13 +53,16 @@
                                 <a href="#" class="sidebar-link" data-section="manage-movies">Gestionar películas</a>
                             </li>
                             <li>
-                                <a href="#" class="sidebar-link" data-section="manage-menu">Gestionar Menú Cosmos</a>
+                                <a href="#" class="sidebar-link" id="menu" data-section="manage-menu">Gestionar Menú Cosmos</a>
                             </li>
                             <li>
                                 <a href="#" class="sidebar-link" data-section="create-session">Gestionar Sesión</a>
                             </li>
                             <li>
                                 <a href="#" class="sidebar-link" data-section="add-user">Añadir Empleado</a>
+                            </li>
+                            <li>
+                                <a href="#" class="sidebar-link" data-section="add-user">Facturación</a>
                             </li>
                         </ul>
                     </div>
@@ -298,7 +301,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="nombre" class="form-label">Nombre</label>
-                                        <input type="text" class="form-control @error('nombre') is-invalid @enderror" id="nombre" name="nombre" value="{{ old('nombre') }}" placeholer="Nombre" required>
+                                        <input type="text" class="form-control @error('nombre') is-invalid @enderror" id="nombre" name="nombre" value="{{ old('nombre') }}" placeholder="Nombre" required>
                                         @error('nombre')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -308,7 +311,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="apellidos" class="form-label">Apellidos</label>
-                                        <input type="text" class="form-control @error('apellidos') is-invalid @enderror" id="apellidos" name="apellidos" value="{{ old('apellidos') }}" placeholer="Apellidos" required>
+                                        <input type="text" class="form-control @error('apellidos') is-invalid @enderror" id="apellidos" name="apellidos" value="{{ old('apellidos') }}" placeholder="Apellidos" required>
                                         @error('apellidos')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -331,7 +334,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="numero_telefono" class="form-label">Número de Teléfono</label>
-                                        <input type="text" class="form-control @error('numero_telefono') is-invalid @enderror" id="numero_telefono" name="numero_telefono" value="{{ old('numero_telefono') }}" pattern="^\d{9}$" title="El teléfono debe tener 9 dígitos." maxlength="9" minlength="9" placeholer="000000000" required>
+                                        <input type="text" class="form-control @error('numero_telefono') is-invalid @enderror" id="numero_telefono" name="numero_telefono" value="{{ old('numero_telefono') }}" pattern="^\d{9}$" title="El teléfono debe tener 9 dígitos." maxlength="9" minlength="9" placeholder="000000000" required>
                                         @error('numero_telefono')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -344,7 +347,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="dni" class="form-label">DNI</label>
-                                        <input type="text" class="form-control @error('dni') is-invalid @enderror" id="dni" name="dni" value="{{ old('dni') }}" pattern="^\d{8}[A-Za-z]$" title="El DNI debe tener 8 dígitos seguidos de una letra." maxlength="9" minlength="9" placeholer="00000000X" required>
+                                        <input type="text" class="form-control @error('dni') is-invalid @enderror" id="dni" name="dni" value="{{ old('dni') }}" pattern="^\d{8}[A-Za-z]$" title="El DNI debe tener 8 dígitos seguidos de una letra." maxlength="9" minlength="9" placeholder="00000000X" required>
                                         @error('dni')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -375,8 +378,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="mb-3">
-                                        <label for="direccion" class="form-label">Dirección (Opcional)</label>
-                                        <input type="text" class="form-control @error('direccion') is-invalid @enderror" id="direccion" name="direccion" value="{{ old('direccion') }}" placeholer="C/ calle NºX">
+                                        <label for="direccion" class="form-label">Dirección</label>
+                                        <input type="text" class="form-control @error('direccion') is-invalid @enderror" id="direccion" name="direccion" value="{{ old('direccion') }}" placeholder="C/ calle NºX">
                                         @error('direccion')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -389,7 +392,7 @@
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="codigo_postal" class="form-label">Código Postal</label>
-                                        <input type="text" class="form-control @error('codigo_postal') is-invalid @enderror" id="codigo_postal" name="codigo_postal" value="{{ old('codigo_postal') }}" pattern="^\d{5}$" title="El Código Postal debe tener exactamente 5 dígitos numéricos." maxlength="5" minlength="5" placeholer="00000" required>
+                                        <input type="text" class="form-control @error('codigo_postal') is-invalid @enderror" id="codigo_postal" name="codigo_postal" value="{{ old('codigo_postal') }}" pattern="^\d{5}$" title="El Código Postal debe tener exactamente 5 dígitos numéricos." maxlength="5" minlength="5" placeholder="00000" required>
                                         @error('codigo_postal')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -421,8 +424,6 @@
                         </div>
 
                         </form>
-
-                        
 
                     </div>
                 </section>

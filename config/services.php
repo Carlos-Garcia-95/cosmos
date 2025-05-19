@@ -14,6 +14,12 @@ return [
     |
     */
 
+    'google' => [
+    'client_id' => env('GOOGLE_CLIENT_ID'),      // Tu ID de cliente de Google
+    'client_secret' => env('GOOGLE_CLIENT_SECRET'), // Tu Secreto del cliente de Google
+    'redirect' => env('GOOGLE_REDIRECT_URI'),   // La URI de redireccionamiento que configuraste en Google Console
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

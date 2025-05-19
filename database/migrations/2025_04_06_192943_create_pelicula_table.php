@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('titulo_original');
             $table->text('sinopsis');
             $table->string('poster_ruta');
-            $table->string('fecha_estreno');
+            $table->date('fecha_estreno');
             $table->string('titulo');
             $table->boolean('video');
             $table->unsignedInteger('duracion')->nullable();
@@ -30,9 +30,6 @@ return new class extends Migration
             $table->boolean('activa');
             $table->boolean('estreno');
             $table->timestamp('created_at')->useCurrent();
-            
-            $table->unsignedBigInteger('id_sala')->nullable();              // id sala
-            $table->foreign('id_sala')->references('id_sala')->on('sala');
         });
     }
 

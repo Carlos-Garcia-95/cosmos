@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             tipo_usuario::class,
             users::class,
             administrador::class,
+            NominaEmpleadoSeeder::class,
             genero_pelicula::class,
             MenuSeeder::class,
             pelicula::class,
