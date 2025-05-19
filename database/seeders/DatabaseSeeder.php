@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             sesion_pelicula::class,
             asiento_estado::class,
             asiento::class,
+            tipo_entrada::class,
         ]);
     }
 }

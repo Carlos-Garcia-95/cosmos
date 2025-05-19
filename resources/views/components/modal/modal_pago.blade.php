@@ -1,4 +1,22 @@
-@vite(['resources/scss/credit-card-form.scss'])
+@vite(['resources/css/pago.css'])
+
+@php
+    // Para mantener los valores introducidos
+    $input_antiguo = [
+        'cardNumber' => old('cardNumber'),
+        'cardName' => old('cardName'),
+        'cardMonth' => old('cardMonth'),
+        'cardYear' => old('cardYear'),
+        'cardCvv' => old('cardCvv'),
+    ];
+@endphp
+
+{{-- Pass old input to JavaScript so Vue can pick it up --}}
+<script>
+    window.laravel_antiguo_input = @json($input_antiguo);
+    // This flag tells your JS to open the modal if payment errors exist
+    window.abrir_modalpago_sierrores = {{ $errors->getBag('procesar_pago')->any() ? 'true' : 'false' }};
+</script>
 
 <div class='modal_pago hidden' id='modal_pago'>
     <div class='container_pago' id='container_pago'>
@@ -69,7 +87,7 @@
                                                     <span v-else key="2">MM</span>
                                                 </transition>
                                             </label>
-                                            /
+                                             / &nbsp;
                                             <label for="cardYear" class="card-item__dateItem">
                                                 <transition name="slide-fade-up">
                                                     <span v-if="cardYear" v-bind:key="cardYear">@{{String(cardYear).slice(2,4)}}</span>
@@ -103,23 +121,23 @@
                     <div class="card-form__inner">
                         <div class="card-input">
                             <label for="cardNumber" class="card-input__label">Nº Tarjeta</label>
-                            <input type="text" id="cardNumber" class="card-input__input" v-mask="generateCardNumberMask" v-model="cardNumber" v-on:focus="focusInput" v-on:blur="blurInput" data-ref="cardNumber" placeholder='#### #### #### ####' autocomplete="off">
+                            <input type="text" name="cardNumber" id="cardNumber" class="card-input__input" v-mask="generateCardNumberMask" v-model="cardNumber" v-on:focus="focusInput" v-on:blur="blurInput" data-ref="cardNumber" placeholder='#### #### #### ####' autocomplete="off" required>
                         </div>
                         <div class="card-input">
                             <label for="cardName" class="card-input__label">Titular de la Tarjeta</label>
-                            <input type="text" id="cardName" class="card-input__input" v-model="cardName" v-on:focus="focusInput" v-on:blur="blurInput" data-ref="cardName" placeholder='NOMBRE COMPLETO' autocomplete="off">
+                            <input type="text" name="cardName" id="cardName" class="card-input__input" v-model="cardName" v-on:focus="focusInput" v-on:blur="blurInput" data-ref="cardName" placeholder='NOMBRE COMPLETO' autocomplete="off" required>
                         </div>
                         <div class="card-form__row">
                             <div class="card-form__col">
                                 <div class="card-form__group">
                                     <label for="cardMonth" class="card-input__label">Fecha de Caducidad</label>
-                                    <select class="card-input__input -select" id="cardMonth" v-model="cardMonth" v-on:focus="focusInput" v-on:blur="blurInput" data-ref="cardDate">
+                                    <select class="card-input__input -select" name="cardMonth" id="cardMonth" v-model="cardMonth" v-on:focus="focusInput" v-on:blur="blurInput" data-ref="cardDate" required>
                                         <option value="" disabled selected>Mes</option>
                                         <option v-bind:value="n < 10 ? '0' + n : n" v-for="n in 12" v-bind:disabled="n < minCardMonth" v-bind:key="n">
                                             @{{n < 10 ? '0' + n : n}}
                                         </option>
                                     </select>
-                                    <select class="card-input__input -select" id="cardYear" v-model="cardYear" v-on:focus="focusInput" v-on:blur="blurInput" data-ref="cardDate">
+                                    <select class="card-input__input -select" name="cardYear" id="cardYear" v-model="cardYear" v-on:focus="focusInput" v-on:blur="blurInput" data-ref="cardDate" required>
                                         <option value="" disabled selected>Año</option>
                                         <option v-bind:value="$index + minCardYear" v-for="(n, $index) in 12" v-bind:key="n">
                                             @{{$index + minCardYear}}
@@ -130,10 +148,24 @@
                             <div class="card-form__col -cvv">
                                 <div class="card-input">
                                     <label for="cardCvv" class="card-input__label">CVV</label>
-                                    <input type="text" class="card-input__input" id="cardCvv" v-mask="'####'" maxlength="3" v-model="cardCvv" v-on:focus="flipCard(true)" v-on:blur="flipCard(false)" placeholder='123' autocomplete="off">
+                                    <input type="text" class="card-input__input" name="cardCvv" id="cardCvv" v-mask="'####'" maxlength="4" v-model="cardCvv" v-on:focus="flipCard(true)" v-on:blur="flipCard(false)" placeholder='123' autocomplete="off" required>
                                 </div>
                             </div>
                         </div>
+
+                        <div id='asientos_div'></div>
+                        <div id='datos_sesion_div'></div>
+                        <div id='precio_div'></div>
+                        <div id='usuario_div'></div>
+
+                        @if ($errors->getBag('procesar_pago')->any())
+                            <div class='errores_pago' id='errores_pago'>
+                                @foreach ($errors->getBag('procesar_pago')->all() as $error)
+                                    <p class='error-text text-center'>{{ $error }}</p>
+                                @endforeach
+                            </div>
+                        @endif
+                        
 
                         <button type='submit' class="card-form__button">
                             CONFIRMAR PAGO
@@ -145,3 +177,20 @@
     </div>
 </div>
 
+<script>
+    // Abre el modal de nuevo si hay algún error en el pago 
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.abrir_modalpago_sierrores) {
+            const datos_sesion = JSON.parse(localStorage.getItem('datos_sesion'));
+            const asientos = JSON.parse(localStorage.getItem('asientos'));
+            console.log(datos_sesion);
+            console.log(asientos);
+            
+            if (typeof mostrar_modal_pago === 'function') {
+                mostrar_modal_pago(datos_sesion, asientos);
+            } else {
+                console.error('La función mostrar_modal_pago no se encontró');
+            }
+        }
+    });
+</script>

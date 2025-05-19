@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('impuesto', function (Blueprint $table) {
             $table->id('id_impuesto');
+            $table->string('tipo');
             $table->decimal('cantidad', 5, 2);
         });
     }

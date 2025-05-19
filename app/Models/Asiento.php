@@ -35,7 +35,7 @@ class Asiento extends Model
     // Relación a tabla sala
     public function sala()
     {
-        return $this->belongsTo(Sala::class, 'id_sala', 'id');
+        return $this->belongsTo(Sala::class, 'id_sala', 'id_sala');
     }
 
     // Relación a tabla tipo_asiento

@@ -840,7 +840,7 @@ function mostrar_modal_confirmar(asientos, datos_sesion) {
         generar_confirmar_titulo();
         generar_confirmar_body(datos_sesion);
         generar_confirmar_entradas(datos_sesion, asientos);
-        generar_confirmar_botones();
+        generar_confirmar_botones(datos_sesion, asientos);
     }
 
 }
@@ -1211,6 +1211,9 @@ function generar_confirmar_entradas(datos_sesion, asientos) {
     div_preciofinal_preciofinal.id = 'div_preciofinal_preciofinal';
     div_preciofinal_preciofinal.innerHTML = precio_final + " €";
 
+    // Guardar en datos_sesion
+    datos_sesion.precio_asientos = precio_asientos;
+    datos_sesion.precio_descuento = descuento_aplicado_cantidad;
     datos_sesion.precio_final = precio_final;
 
     // Añadir columnas a div superior
@@ -1249,7 +1252,7 @@ function generar_confirmar_entradas(datos_sesion, asientos) {
 }
 
 // Generar botones de Volver y Continuar con el Pago
-function generar_confirmar_botones() {
+function generar_confirmar_botones(datos_sesion, asientos) {
     // Recuperar div de botones
     const confirmar_container_botones = document.getElementById('confirmar_container_botones');
 
@@ -1301,7 +1304,29 @@ function generar_confirmar_botones() {
             modal_confirmar_seleccion.innerHTML = "";
         }
 
-        mostrar_modal_pago();
+        // Guardar los valores de la sesión y asientos seleccionados en el navegador
+        // Se guarda por si hay errores en el pago y se recarga la página, poder recuperarlos
+        // Se guarda la sesión
+        localStorage.setItem('datos_sesion', JSON.stringify(datos_sesion));
+
+        // Se convierten los asientos seleccionados a array
+        const asientos_array = [];
+        asientos.forEach(asiento => {
+            const asiento_datos = {
+                fila : asiento.dataset.fila,
+                columna : asiento.dataset.columna,
+                sesion : asiento.dataset.sesion,
+                id : asiento.dataset.id,
+                estado : asiento.estado,
+            };
+            asientos_array.push(asiento_datos);
+        });
+
+        // Se guardan los asientos
+        localStorage.setItem('asientos', JSON.stringify(asientos_array));
+        
+
+        mostrar_modal_pago(datos_sesion, asientos);
     });
 
     // Añadir botones a sus div
@@ -1457,8 +1482,10 @@ if (modal_invitado) {
 
 /////////////////////////////////////////////////// PAGO ///////////////////////////////////////////////////
 
-// Modal de Pago con tarjetae
-function mostrar_modal_pago() {
+// Modal de Pago con tarjeta
+function mostrar_modal_pago(datos_sesion, asientos) {
+    console.log(asientos);
+    console.log(datos_sesion);
     const modal_pago = document.getElementById('modal_pago');
 
     if (!modal_pago) {
@@ -1470,20 +1497,84 @@ function mostrar_modal_pago() {
         modal_pago.classList.add('visible');
     }
 
+    // Guardar la sesión y asientos para el formulario
+    // Si ya tienen valores, se borran
+    // Asientos (se generan tantos como haya)
+    const asientos_div = document.getElementById('asientos_div');
+    asientos_div.innerHTML = "";
+    asientos.forEach(asiento => {
+        const asiento_input = document.createElement('input');
+        asiento_input.setAttribute('type', 'hidden');
+        asiento_input.setAttribute('name', 'asiento[]');
+        asiento_input.setAttribute('value', asiento.id);
+        asientos_div.appendChild(asiento_input);
+    });
+
+    // Sesión
+    const datos_sesion_div = document.getElementById('datos_sesion_div');
+    datos_sesion_div.innerHTML = "";
+    const datos_sesion_input = document.createElement('input');
+    datos_sesion_input.setAttribute('type', 'hidden');
+    datos_sesion_input.setAttribute('name', 'sesion_id');
+    datos_sesion_input.setAttribute('value', datos_sesion.id);
+    datos_sesion_div.appendChild(datos_sesion_input);
+
+
+    // Precio
+    const precio_div = document.getElementById('precio_div');
+    precio_div.innerHTML = "";
+
+    // Precio Total
+    const precio_total_input = document.createElement('input');
+    precio_total_input.setAttribute('type', 'hidden');
+    precio_total_input.setAttribute('name', 'precio_total');
+    precio_total_input.setAttribute('value', datos_sesion.precio_asientos);
+    // Descuento
+    const precio_descuento_input = document.createElement('input');
+    precio_descuento_input.setAttribute('type', 'hidden');
+    precio_descuento_input.setAttribute('name', 'precio_descuento');
+    precio_descuento_input.setAttribute('value', datos_sesion.precio_descuento);
+    // Precio Final
+    const precio_final_input = document.createElement('input');
+    precio_final_input.setAttribute('type', 'hidden');
+    precio_final_input.setAttribute('name', 'precio_final');
+    precio_final_input.setAttribute('value', datos_sesion.precio_final);
+
+    precio_div.appendChild(precio_total_input);
+    precio_div.appendChild(precio_descuento_input);
+    precio_div.appendChild(precio_final_input);
+
+
+    // Usuario (si existe)
+    if (datos_sesion.usuario) {
+        const usuario_div = document.getElementById('usuario_div');
+        usuario_div.innerHTML = "";
+        const usuario_input = document.createElement('input');
+        usuario_input.setAttribute('type', 'hidden');
+        usuario_input.setAttribute('name', 'usuario_id');
+        usuario_input.setAttribute('value', datos_sesion.usuario.id);
+        usuario_div.appendChild(usuario_input);
+    }
+    
+
+
     if (!vueAppInstance || !document.body.contains(vueAppInstance.$el)) { // Verifica si la instancia existe y su elemento aún está en el DOM
         if (vueAppInstance) {
             vueAppInstance.$destroy(); // Destruye la instancia anterior si es necesario
         }
+
+        const input_antiguo = window.laravel_antiguo_input || {};
+
         vueAppInstance = new Vue({
             el: "#app", // Este elemento DEBE existir en tu HTML cuando se ejecute esto
             data() {
                 return {
                     currentCardBackground: Math.floor(Math.random() * 25 + 1),
-                    cardName: "",
-                    cardNumber: "",
-                    cardMonth: "",
-                    cardYear: "",
-                    cardCvv: "",
+                    cardName: input_antiguo.cardName || "",
+                    cardNumber: input_antiguo.cardNumber || "",
+                    cardMonth: input_antiguo.cardMonth || "",
+                    cardYear: input_antiguo.cardYear || "",
+                    cardCvv: input_antiguo.cardCvv || "",
                     minCardYear: new Date().getFullYear(),
                     amexCardMask: "#### ###### #####",
                     otherCardMask: "#### #### #### ####",
@@ -1494,7 +1585,7 @@ function mostrar_modal_pago() {
                 };
             },
             mounted() {
-                this.cardNumberTemp = this.otherCardMask;
+                this.cardNumberTemp = this.cardNumber ? this.cardNumber : this.otherCardMask;
                 // Esperar un momento para que el DOM se actualice si el modal acaba de mostrarse
                 this.$nextTick(() => {
                     const cardNumberInput = document.getElementById("cardNumber");
@@ -1506,6 +1597,8 @@ function mostrar_modal_pago() {
             computed: {
                 getCardType() {
                     let number = this.cardNumber;
+                    if (!number) return "visa"; // Por defecto si no hay número
+                    
                     let re = new RegExp("^4");
                     if (number.match(re) != null) return "visa";
 
@@ -1521,7 +1614,7 @@ function mostrar_modal_pago() {
                     re = new RegExp('^9792')
                     if (number.match(re) != null) return 'troy'
 
-                    return "visa"; // default type
+                    return "visa";  // Por defecto
                 },
                 generateCardNumberMask() {
                     return this.getCardType === "amex" ? this.amexCardMask : this.otherCardMask;
@@ -1533,7 +1626,7 @@ function mostrar_modal_pago() {
             },
             watch: {
                 cardYear() {
-                    if (this.cardMonth < this.minCardMonth) {
+                    if (this.cardMonth && parseInt(this.cardMonth) < this.minCardMonth) {
                         this.cardMonth = "";
                     }
                 }
@@ -1566,16 +1659,7 @@ function mostrar_modal_pago() {
                 }
             }
         });
-    } else {
-        // Si la instancia ya existe, podrías necesitar refrescar/resetear algunos datos
-        // si el modal se reutiliza con diferente información.
-        // Por ejemplo:
-        // vueAppInstance.cardName = "";
-        // vueAppInstance.cardNumber = "";
-        // etc.
-        // O, si el estado se maneja bien con v-if/v-show dentro del modal,
-        // puede que no necesites hacer nada aquí.
-        // También, volver a enfocar el input si es necesario:
+    } else {    
         const cardNumberInput = document.getElementById("cardNumber");
         if (cardNumberInput) {
             cardNumberInput.focus();
@@ -1583,6 +1667,8 @@ function mostrar_modal_pago() {
     }
 
 }
+
+window.mostrar_modal_pago = mostrar_modal_pago;
 
 
 
@@ -1660,6 +1746,8 @@ function limpiar_datos_pago() {
         vueAppInstance.cardMonth = "";
         vueAppInstance.cardYear = "";
         vueAppInstance.cardCvv = "";
+        vueAppInstance.isCardFlipped = false;
+        vueAppInstance.focusElementStyle = null;
     }
 }
 

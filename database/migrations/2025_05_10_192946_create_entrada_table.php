@@ -14,19 +14,39 @@ return new class extends Migration
         Schema::create('entrada', function (Blueprint $table) {
             $table->id('id_entrada');
             $table->string('codigo_qr', 50);
-            $table->integer('cantidad');
-            $table->timestamp('fecha_compra')->useCurrent();
-            $table->unsignedBigInteger('id_tipo_entrada');
-            $table->double('monto_total_tipo_entrada');
-            $table->unsignedBigInteger('id_factura');
-            $table->unsignedBigInteger('id_pelicula');
-            $table->unsignedBigInteger('id_asiento');
-            $table->unsignedBigInteger('id_user');
-            $table->foreign('id_tipo_entrada')->references('id_tipo_entrada')->on('tipo_entrada');
-            $table->foreign('id_factura')->references('id_factura')->on('factura');
-            //$table->foreign('id_pelicula')->references('id')->on('pelicula');
-            $table->foreign('id_asiento')->references('id_asiento')->on('asiento');
-            $table->foreign('id_user')->references('id')->on('users');
+            // Precio
+            $table->double('precio_total');
+            $table->mediumInteger('descuento');
+            $table->double('precio_final');
+            // Sala
+            $table->bigInteger('sala');
+            $table->unsignedBigInteger('sala_id');
+            // Sesión
+            $table->string('pelicula_titulo', 255);
+            $table->unsignedBigInteger('pelicula_id');
+            $table->string('hora');
+            $table->string('fecha');
+            // Asiento
+            $table->unsignedBigInteger('asiento_id');
+            $table->mediumInteger('asiento_fila');
+            $table->mediumInteger('asiento_columna');
+            // Usuario
+            $table->unsignedBigInteger('usuario_id');
+            // Factura
+            $table->unsignedBigInteger('factura_id');
+            // Tipo Entrada
+            $table->unsignedBigInteger('tipo_entrada');
+            // Timestamps
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->nullable(); 
+
+            // Relaciones
+            $table->foreign('sala_id')->references('id_sala')->on('sala');
+            $table->foreign('pelicula_id')->references('id')->on('pelicula');
+            $table->foreign('asiento_id')->references('id_asiento')->on('asiento');
+            $table->foreign('usuario_id')->references('id')->on('users');
+            $table->foreign('factura_id')->references('id_factura')->on('factura');
+            $table->foreign('tipo_entrada')->references('id_tipo_entrada')->on('tipo_entrada');
         });
     }
 

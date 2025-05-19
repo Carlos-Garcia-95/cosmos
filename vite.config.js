@@ -16,7 +16,6 @@ export default defineConfig({
                 "resources/js/login.js",
                 "resources/css/compraEntradas.css",
                 "resources/js/entradas.js",
-                "resources/js/compraEntradas.js",
                 "resources/css/user_modal.css",
                 "resources/css/adminLogin.css",
                 "resources/js/cartaCosmos.js",
