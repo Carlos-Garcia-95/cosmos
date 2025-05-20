@@ -12,6 +12,12 @@ body {
     min-height: 100vh; 
 }
 
+.general-errors{
+
+    color:#e50914;
+    margin-top: 5px;
+}
+
 .background {
     position: fixed;
     top: 0;

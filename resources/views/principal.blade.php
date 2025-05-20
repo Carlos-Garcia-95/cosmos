@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Cosmos Cinema</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <!--GSAPLaravel_8 No borrar, para entrar en GSAP. correo diegito866@gmail.com-->
     @vite([

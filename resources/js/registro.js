@@ -14,6 +14,28 @@ document.addEventListener("DOMContentLoaded", function () {
         ".client-side-errors"
     );
 
+    function calculateDniLetter(dniNumber) {
+        const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+        const number = parseInt(dniNumber, 10);
+        if (isNaN(number)) {
+            return null;
+        }
+        return letras[number % 23];
+    }
+
+    function isValidDniLetter(dni) {
+        const dniRegex = /^\d{8}[A-Za-z]$/;
+        if (!dniRegex.test(dni)) {
+            return false;
+        }
+
+        const numberPart = dni.substring(0, 8);
+        const letterPart = dni.substring(8).toUpperCase();
+        const calculatedLetter = calculateDniLetter(numberPart);
+
+        return calculatedLetter !== null && calculatedLetter === letterPart;
+    }
+
     passwordContainers.forEach((container) => {
         const passwordInput = container.querySelector(
             'input[type="password"], input[type="text"]'
@@ -61,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
             hideErrors();
             clearInvalidClasses();
             modalRegistro
-                .querySelectorAll(".error-message")
+                .querySelectorAll(".error-messages")
                 .forEach((el) => (el.style.display = "none"));
         }
     }
@@ -347,7 +369,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (dniInput) dniInput.classList.add("invalid");
                 isStepValid = false;
             } else if (!isValidDniLetter(dniValue)) {
-                // <<-- AÑADIDO: Verificar la letra del DNI
                 displayFieldError(
                     dniInput,
                     "La letra del DNI no se corresponde con los números."
@@ -355,14 +376,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (dniInput) dniInput.classList.add("invalid");
                 isStepValid = false;
             } else {
-                // Si el formato y la letra son correctos
                 clearFieldError(dniInput);
                 if (dniInput) dniInput.classList.remove("invalid");
 
-                // >> Verificación de unicidad del DNI vía AJAX <<
                 const isDniUnique = await checkDniExists(dniInput);
                 if (!isDniUnique) {
-                    // checkDniExists ya mostró el error "Ya existe" y añadió 'invalid'
                     isStepValid = false;
                 }
             }
@@ -664,4 +682,43 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     });
+
+    // Lógica para detectar errores de servidor al cargar la página y mostrar el modal/paso
+    const registrationForm = modalRegistro?.querySelector("form");
+    const hasServerErrors =
+        registrationForm &&
+        registrationForm.querySelector(".error-messages") !== null;
+
+    if (hasServerErrors) {
+        console.log(
+            "Errores de servidor detectados en el formulario de registro. Abriendo modal y mostrando paso con error."
+        );
+
+        if (modalRegistro && modalRegistro.classList.contains("hidden")) {
+            openModal();
+        } else if (modalRegistro && !modalRegistro.classList.contains("flex")) {
+            modalRegistro.classList.add("flex");
+            modalRegistro.classList.remove("hidden");
+        }
+
+        let stepToShow = 0;
+        for (let i = 0; i < steps.length; i++) {
+            if (steps[i].querySelector(".error-messages") !== null) {
+                stepToShow = i;
+                break;
+            }
+        }
+
+        setTimeout(() => {
+            showStep(stepToShow);
+            modalRegistro
+                .querySelectorAll(".error-messages")
+                .forEach((el) => (el.style.display = "block"));
+        }, 100);
+    } else {
+        if (modalRegistro && !modalRegistro.classList.contains("flex")) {
+            modalRegistro.classList.add("hidden");
+            modalRegistro.classList.remove("flex");
+        }
+    }
 });

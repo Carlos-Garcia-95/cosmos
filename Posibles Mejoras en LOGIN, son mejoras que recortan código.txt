@@ -42,7 +42,7 @@ class LoginController extends Controller
         return view('components.login');
     }
 
-    // Opcional: Método para cerrar sesión
+    //Método para cerrar sesión
     public function logout(Request $request)
     {
         Auth::logout(); // Cierra la sesión del usuario actualmente autenticado

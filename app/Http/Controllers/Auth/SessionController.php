@@ -24,8 +24,7 @@ class SessionController extends Controller
      */
     public function getPeliculasActivasEnCartelera()
     {
-        $peliculas = Pelicula::where('activa', 1)
-            ->where('estreno', 0)
+        $peliculas = Pelicula::where('estreno', 0)
             ->get(['id', 'titulo']);
         return response()->json($peliculas);
     }

@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             tipo_usuario::class,
             users::class,
             administrador::class,
+            NominaEmpleadoSeeder::class,
             genero_pelicula::class,
             MenuSeeder::class,
             pelicula::class,
@@ -33,6 +34,7 @@ class DatabaseSeeder extends Seeder
             asiento_estado::class,
             asiento::class,
             tipo_entrada::class,
+            EntradaSeeder::class,
         ]);
     }
 }

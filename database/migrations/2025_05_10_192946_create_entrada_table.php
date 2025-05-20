@@ -33,7 +33,7 @@ return new class extends Migration
             // Usuario
             $table->unsignedBigInteger('usuario_id')->nullable();
             // Factura
-            $table->unsignedBigInteger('factura_id');
+            /* $table->unsignedBigInteger('factura_id'); */
             // Tipo Entrada
             $table->unsignedBigInteger('tipo_entrada');
             // Timestamps
@@ -45,7 +45,7 @@ return new class extends Migration
             $table->foreign('pelicula_id')->references('id')->on('pelicula');
             $table->foreign('asiento_id')->references('id_asiento')->on('asiento');
             $table->foreign('usuario_id')->references('id')->on('users');
-            $table->foreign('factura_id')->references('id_factura')->on('factura');
+            /* $table->foreign('factura_id')->references('id_factura')->on('factura'); */
             $table->foreign('tipo_entrada')->references('id_tipo_entrada')->on('tipo_entrada');
         });
     }

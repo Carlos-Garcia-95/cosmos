@@ -12,12 +12,19 @@ body {
     padding: 0; /* Elimina padding por defecto del body */
 }
 
+#admin-code-container {
+    display: none;
+}
+
+.g-recaptcha { 
+    margin-bottom: 15px; 
+}
+
 .login-container {
     background-color: black;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 0 30px #444;
-    width: 18%;
     text-align: center;
 }
 

@@ -5,6 +5,7 @@
 
         <div class="modal-header">
             <h2 class="modal-title">Mi Cuenta</h2>
+            <button class="btn btn-primary edit-button" id="editarPerfilBtn">Editar Perfil</button>
         </div>
 
         <div class="modal-body">
@@ -99,7 +100,6 @@
             </div>
 
             <div class="modal-actions">
-                <button class="btn btn-primary edit-button" id="editarPerfilBtn">Editar Perfil</button>
 
                 <button class="btn btn-primary" id="guardarCambiosBtn" style="display: none;">Guardar Cambios</button>
 

@@ -144,11 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             );
                         }
                     } else {
-                        alert(
-                            "Error: " +
-                                (result.error ||
-                                    `Error al cambiar estado (Estado ${response.status}).`)
-                        );
+                        alert((`No puedes activar una pelicula si no tiene ninguna sesión ACTIVA programada.`));
                         console.error("Error response from backend:", result);
                         button.textContent = originalButtonText;
                     }

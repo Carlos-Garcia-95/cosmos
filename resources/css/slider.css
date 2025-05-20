@@ -116,6 +116,12 @@ body {
     position: absolute;
 }
 
+.general-errors{
+    color:#e50914;
+    margin-top: 5px;
+}
+
+
 /* Estilos internos de la superposición */
 .overlay-inner {
     flex-flow: column;
@@ -268,34 +274,29 @@ body {
     font-weight: bold;
 }
 
+.client-side-field-error{
+    color: #d12d10;
+}
+
 /* Estilo para campos inválidos */
 .invalid {
     border-color: #d12d10 !important;
     box-shadow: 0 0 0 0.2rem rgba(229, 9, 20, 0.25);
 }
 
-/* Estilo para el contenedor de errores JS */
-.client-side-errors {
-    color: #d12d10;
-    border: 1px solid #d12d10;
-    background-color: #fdd;
-    padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    text-align: left;
-}
 
 /* Estilo para el contenedor de errores de Laravel de Registro */
-.error-messages {
+.error-messages, .error-text {
     color: #d12d10;
-    border: 1px solid #d12d10;
-    background-color: #fdd;
-    padding: 10px;
-    margin-top: 10px;
     margin-bottom: 15px;
-    border-radius: 4px;
-    text-align: left;
+    text-align: center;
+}
+.error-text {
+    color: #d12d10;
+    /* font-size: 0.9em; */
+    /* margin-top: 5px; */
+    margin-bottom: 5px;
+    font-weight: bold;
 }
 
 .error-messages ul {
@@ -306,7 +307,11 @@ body {
 
 .error-messages li {
     color: #d12d10;
-    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.g_id_signin{
+    margin-bottom: 5%;
 }
 
 /* Estilos del modal */

@@ -118,7 +118,28 @@ class User extends Authenticatable
     public function city()
     {
         // Indica que un Usuario 'pertenece a' (belongsTo) una Ciudad.
-        return $this->belongsTo(Ciudad::class, 'ciudad');
+        return $this->belongsTo(Ciudad::class, 'ciudad', 'id');
+    }
+
+    
+
+    //Helper para verificar si el usuario es un empleado
+    public function isEmployee()
+    {
+        return $this->tipo_usuario === 2;
+    }
+
+    //Método para definir la relación con las nóminas de empleado
+    public function nominas()
+    {
+        return $this->hasMany(NominaEmpleados::class, 'id_empleado', 'id');
+        
+    }
+
+    //Si 'tipo_usuario' es un campo numérico y '1' significa admin
+    public function isAdmin(): bool
+    {
+        return $this->tipo_usuario == 1;
     }
 
 }

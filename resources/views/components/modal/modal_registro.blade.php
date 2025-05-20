@@ -149,10 +149,8 @@
                     <label><input type="checkbox" name="mayor_edad" value="on" required> Soy mayor de 14 años</label>
                     <span class="client-side-field-error" style="color: red; display: none;"></span>
                 </div>
-                <div class="button-group">
-                    <button type="button" class="btn prev-step">Anterior</button>
-                    <button type="submit" class="btn">Registrarse</button>
-                </div>
+
+                <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
 
                 <!-- Mostrar errores generales si existen -->
                 @if ($errors->registro->any())
@@ -164,8 +162,11 @@
                     </ul>
                 </div>
                 @endif
-
-
+                
+                <div class="button-group">
+                    <button type="button" class="btn prev-step">Anterior</button>
+                    <button type="submit" class="btn">Registrarse</button>
+                </div>
 
             </div>
         </form>

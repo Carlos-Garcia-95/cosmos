@@ -24,6 +24,18 @@
     padding-bottom: 15px;
 }
 
+.modal-header {
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    align-items: center;
+}
+
+.modal-header .modal-title {
+
+    margin-bottom: 0;
+}
+
 #modalCuenta .modal-title {
     font-size: 1.8em;
     font-weight: bold;
