@@ -16,11 +16,11 @@ return new class extends Migration
             $table->double('monto_total');
             $table->bigInteger('ultimos_digitos');
             $table->string('titular');
-            $table->unsignedBigInteger('id_user');
+            $table->unsignedBigInteger('id_user')->nullable();
             $table->unsignedBigInteger('id_impuesto');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->nullable(); 
-            $table->foreign('id_user')->references('id')->on('users');
+            $table->foreign('id_user')->references('id')->on('users');  
             $table->foreign('id_impuesto')->references('id_impuesto')->on('impuesto');
         });
     }

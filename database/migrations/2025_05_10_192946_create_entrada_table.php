@@ -31,7 +31,7 @@ return new class extends Migration
             $table->mediumInteger('asiento_fila');
             $table->mediumInteger('asiento_columna');
             // Usuario
-            $table->unsignedBigInteger('usuario_id');
+            $table->unsignedBigInteger('usuario_id')->nullable();
             // Factura
             $table->unsignedBigInteger('factura_id');
             // Tipo Entrada

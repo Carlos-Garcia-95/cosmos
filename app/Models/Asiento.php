@@ -10,6 +10,8 @@ class Asiento extends Model
     use HasFactory;
 
     protected $table = 'asiento';
+    protected $primaryKey = 'id_asiento';
+    public $timestamps = true;
 
     protected $fillable = [
         'id_sesion_pelicula',

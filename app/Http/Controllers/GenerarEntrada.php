@@ -3,32 +3,37 @@
 namespace App\Http\Controllers;
 
 use App\Models\Asiento;
+use App\Models\AsientoEstado;
 use App\Models\Entrada;
 use App\Models\Factura;
+use App\Models\Pelicula;
+use App\Models\Sala;
 use App\Models\SesionPelicula;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Str;
 
 class GenerarEntrada
 {
     private array $datos_validados;
 
-    private array $asientos;
+    private ?\Illuminate\Database\Eloquent\Collection $asientos;
     private ?SesionPelicula $sesion = null;
     private ?User $usuario = null;
+    private ?Factura $factura = null;
+    private ?array $entradas = null;
 
     public ?string $ultimoError = null;
 
     public function generar_entrada($datos_validados) {
-        return true;
-        
         // Recuperar datos
         $this->datos_validados = $datos_validados;
 
         // Se resetea el ultimoError por si hay que devolverlo
         $this->ultimoError = null;
+
         // Se inicia una nueva transacción
         DB::beginTransaction();
 
@@ -56,7 +61,7 @@ class GenerarEntrada
                 return false;
             }
 
-            if (!$this->guardar_entrada()) {
+            if (!$this->generar_entradas()) {
                 DB::rollBack();
                 return false;
             }
@@ -97,15 +102,25 @@ class GenerarEntrada
 
     private function recuperar_asientos(): bool {
         try {
+            // Recuperar el id de Disponible
+            $estado = AsientoEstado::where('estado', 'disponible')->first();
+
+            // Si no se puede recuperar lanzamos un error
+            if (!$estado) {
+                $this->ultimoError = "No se pudo encontrar la definición del estado 'disponible'. Por favor, verifica la configuración del sistema.";
+                Log::error($this->ultimoError);
+                return false;
+            }
+
             // Recuperar asientos por id
             $this->asientos = Asiento::whereIn('id_asiento', $this->datos_validados['asiento'])
-                                           ->where('estado', 'disponible')
+                                           ->where('estado', $estado->id)
                                            ->lockForUpdate()        // Bloquear esos asientos hasta que termine la transacción
                                            ->get();
 
             // Comprobar que se han recuperado la cantidad de asientos correcta
-            if (count($this->asientos) !== count($this->datos_validados['asiento'])) {
-                $this->ultimoError = 'Algunos de los asientos seleccionados ya no están disponibles o no existen. Por favor, selecciona otros.';
+            if ($this->asientos->count() !== count($this->datos_validados['asiento'])) {
+                $this->ultimoError = "Algunos asientos seleccionados ya no están disponibles. Por favor, inténtelo de nuevo más tarde"; 
                 Log::warning($this->ultimoError, ['solicitados' => $this->datos_validados['asiento'], 'encontrados' => collect($this->asientos)->pluck('id_asiento')->toArray()]);
                 return false;
             }
@@ -153,11 +168,18 @@ class GenerarEntrada
 
 
     private function recuperar_usuario(): bool {
-        try {
-            // Recuperar asientos por id
-            $this->usuario = SesionPelicula::find($this->datos_validados["usuario_id"]);
 
-            // Comprobar que se han recuperado la sesión
+        // Comprobar si el usuario es invitado. Si es invitado usuario será null
+        if (!isset($this->datos_validados['usuario_id']) || is_null($this->datos_validados['usuario_id'])) {
+            $this->usuario = null;
+            return true;
+        }
+
+        try {
+            // Recuperar usuario por id
+            $this->usuario = User::find($this->datos_validados["usuario_id"]);
+
+            // Comprobar que se ha recuperado el usuario
             if (!$this->usuario) {
                 $this->ultimoError = 'La información del usuario asociado a la compra no es válida o el usuario no existe.';
                 Log::warning($this->ultimoError, [
@@ -184,13 +206,20 @@ class GenerarEntrada
         try {
             // TODO -> Mirar a ver si se puede arreglar el id_impuesto
             // Se crea la factura con los datos recuperados
-            Factura::create([
-                'nombre' => $this->datos_validados["precio_final"],                     
-                'ultimos_digitos' => $ultimos_digitos,               
+            $this->factura = Factura::create([
+                'monto_total' => $this->datos_validados["precio_final"],             
+                'ultimos_digitos' => $ultimos_digitos,
                 'titular' => $this->datos_validados["cardName"],                       
-                'id_user' => $this->usuario->id, 
+                'id_user' => $this->usuario ? $this->usuario->id : null, 
                 'id_impuesto' => 1,
             ]);
+
+            // Si no se genera correctamente, se lanza un error
+            if (!$this->factura) {
+                $this->ultimoError = "Error al crear el registro de la factura.";
+                Log::error($this->ultimoError);
+                return false;
+            }
 
             return true;
         } catch (\Exception $e) {
@@ -201,40 +230,113 @@ class GenerarEntrada
     }
 
 
-    private function guardar_entrada(): bool {
-        /* $this->precio_array["precio_total"] = $datos_validados["precio_total"];
-        $this->precio_array["precio_descuento"] = $datos_validados["precio_descuento"];
-        $this->precio_array["precio_final"] = $datos_validados["precio_final"]; */
+    private function generar_entradas(): bool {
+        try {
+            // Recuperar número de sala
+            $sala = Sala::find($this->sesion->id_sala);
 
-        $codigo_qr = $this->generar_codigo_qr();
-        return true;
+            if (!$sala) {
+                $this->ultimoError = 'Hubo un error en la generación de entradas. Por favor, inténtelo más tarde.';
+                Log::warning($this->ultimoError, [
+                    'sala_id' => $this->sesion->id_sala, 'sala' => $sala
+                ]);
+                return false;
+            }
 
-        Entrada::create([
+            // Recuperar título de película
+            $pelicula = Pelicula::find($this->sesion->id_pelicula);
 
-        ]);
+            if (!$pelicula) {
+                $this->ultimoError = 'Hubo un error en la generación de entradas. Por favor, inténtelo más tarde.';
+                Log::warning($this->ultimoError, [
+                    'pelicula_id' => $this->sesion->id_pelicula, 'pelicula' => $pelicula
+                ]);
+                return false;
+            }
+    
+            // Se genera una entrada por cada asiento distinto que hay
+            foreach ($this->asientos as $asiento) {
+                // Generar un código QR por cada entrada
+                $codigo_qr = $this->generar_codigo_qr();
+
+                // Si no se genera correctamente, se lanza un error
+                if (!$codigo_qr) {
+                    $this->ultimoError = 'Hubo un error en la generación de entradas. Por favor, inténtelo más tarde.';
+                    Log::warning($this->ultimoError, [
+                        'codigo_qr_generado' => $codigo_qr
+                    ]);
+                    return false;
+                }
+
+                // Calcular precios y descuentos de cada entrada
+                $precio_total = 10;
+                $porcentaje_descuento = $this->datos_validados['precio_descuento'];
+                $precio_final = $precio_total * (1 - ($porcentaje_descuento / 100));
+
+                // TODO -> Ver que se puede hacer con tipo_entrada
+                // TODO -> Ver si se puede arreglar id_sala para que sea un sala_numero o algo así
+                // TODO -> Ver lo del los precios de las entradas (sacarlo de BBDD)
+                $entrada = Entrada::create([
+                    'codigo_qr' => $codigo_qr,
+                    'precio_total' => $precio_total,
+                    'descuento' => $porcentaje_descuento,
+                    'precio_final' => $precio_final,
+                    'sala' => $sala->id_sala,
+                    'sala_id' => $this->sesion->id_sala,
+                    'pelicula_titulo' => $pelicula->titulo,
+                    'pelicula_id' => $this->sesion->id_pelicula,
+                    'hora' => $this->sesion->hora,
+                    'fecha' => $this->sesion->fecha,
+                    'asiento_id' => $asiento->id_asiento,
+                    'asiento_fila' => $asiento->fila,
+                    'asiento_columna' => $asiento->columna,
+                    'usuario_id' => $this->usuario ? $this->usuario->id : null,
+                    'factura_id' => $this->factura->id_factura,
+                    'tipo_entrada' => 1,
+                ]);
+
+                if (!$entrada) {
+                    $this->ultimoError = 'Hubo un error en la generación de entradas. Por favor, inténtelo más tarde.';
+                    Log::warning($this->ultimoError, [
+                        'entrada' => $entrada
+                    ]);
+                    return false;
+                };
+
+                $this->entradas[] = $entrada;
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            Log::error("Error generando las entradas: " . $e->getMessage());
+            $this->ultimoError = "Error al generar las entradas. Por favor, inténtalo más tarde." . $e->getMessage();
+            return false;
+        }
     }
 
 
     private function actualizar_asientos(): bool {
-
-        return true;
+        $this->ultimoError = "BIEN LLEGAMOS A ASIENTOS";
+        return false;
     }
 
 
     private function generar_pdf(): bool {
-        return true;
+        return false;
 
     }
 
 
     private function enviar_correo(): bool {
-        return true;
+        return false;
 
     }
 
 
-    private function generar_codigo_qr(): bool {
-        return true;
-
+    private function generar_codigo_qr(): string {
+        // Se utiliza una herramienta Str para generar un String de 128 bits único (prácticamente imposible repetir)
+        $codigo_unico = 'ENTRADA-' . Str::uuid()->toString();
+        
+        return $codigo_unico;
     }
 }
