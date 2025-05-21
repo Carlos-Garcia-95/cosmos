@@ -43,10 +43,9 @@ class ProcesarPago extends Controller
                 ->withErrors($validator, 'procesar_pago')   // Errores
                 ->withInput();                              // Devolver input ya escrito
         }
-
-        // Recuperar los datos validados
+        
+        // Si la validación es correcta, se cambia el estado de la validación
         $datos_validados = $validator->validated();
-
 
         // Comprobar que el precio total es correcto
         // Recuperar los datos del precio
@@ -71,9 +70,6 @@ class ProcesarPago extends Controller
                 ->withInput();
         }
 
-        // Si la validación es correcta, se cambia el estado de la validación
-        $validatedData = $validator->validated();
-
         // Se intentan generar Entradas y Factura. Si hay algún error, return con errores
         $generarEntrada = new GenerarEntrada();
         if (!$generarEntrada->generar_entrada($datos_validados)) {
@@ -86,7 +82,7 @@ class ProcesarPago extends Controller
         }
 
         // Mirar si esto hace falta con Redsys o no (quitar espacios al número de tarjeta)
-        $validatedData['cardNumber'] = str_replace(' ', '', $validatedData['cardNumber']);
+        $datos_validados['cardNumber'] = str_replace(' ', '', $datos_validados['cardNumber']);
 
         // Introducir aquí la lógica de pago. Si es exitosa, se vuelve al principal
         // Quizás se puede hacer otro modal de éxito de pago mostrando una preview del pdf o algo

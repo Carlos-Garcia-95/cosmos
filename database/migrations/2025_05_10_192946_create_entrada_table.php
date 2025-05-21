@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('entrada', function (Blueprint $table) {
             $table->id('id_entrada');
             $table->string('codigo_qr', 50);
+            $table->string('ruta_pdf', 255);
             // Precio
             $table->double('precio_total');
             $table->mediumInteger('descuento');
@@ -31,9 +32,9 @@ return new class extends Migration
             $table->mediumInteger('asiento_fila');
             $table->mediumInteger('asiento_columna');
             // Usuario
-            $table->unsignedBigInteger('usuario_id');
+            $table->unsignedBigInteger('usuario_id')->nullable();
             // Factura
-            /* $table->unsignedBigInteger('factura_id'); */
+            $table->unsignedBigInteger('factura_id');
             // Tipo Entrada
             $table->unsignedBigInteger('tipo_entrada');
             // Timestamps
@@ -45,7 +46,7 @@ return new class extends Migration
             $table->foreign('pelicula_id')->references('id')->on('pelicula');
             $table->foreign('asiento_id')->references('id_asiento')->on('asiento');
             $table->foreign('usuario_id')->references('id')->on('users');
-            /* $table->foreign('factura_id')->references('id_factura')->on('factura'); */
+            $table->foreign('factura_id')->references('id_factura')->on('factura');
             $table->foreign('tipo_entrada')->references('id_tipo_entrada')->on('tipo_entrada');
         });
     }

@@ -15,6 +15,7 @@ class Entrada extends Model
 
     protected $fillable = [
         'codigo_qr',
+        'ruta_pdf',
         'precio_total',
         'descuento',
         'precio_final',

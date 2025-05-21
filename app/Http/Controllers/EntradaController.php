@@ -52,4 +52,27 @@ class EntradaController extends Controller
 
         return $pdf->stream('vista_previa_entrada_'.$entrada->id_entrada.'.pdf');
     }
+
+
+
+    public function generar_pdf($id_entrada)
+    {
+        // Cargar la entrada con sus relaciones necesarias
+        // Es importante cargar todas las relaciones que usas en la vista del PDF
+        $entrada = Entrada::with(['pelicula', 'salaEntrada', 'asiento', 'usuario', 'tipoEntrada'])
+                        ->findOrFail($id_entrada);
+
+        // Datos de la empresa (puedes obtenerlos de config o de una tabla)
+        $empresa = (object) [
+            'nombre_legal' => config('company.name', 'Cosmos Cinema (Test)'),
+            'cif' => config('company.cif', 'B99999999'),
+            // Añade más datos de empresa si tu PDF los usa
+        ];
+
+        // O, para ver el PDF directamente en el navegador (como stream):
+        $pdf = Pdf::loadView('pdf.entrada_cine', compact('entrada', 'empresa'));
+        // $pdf->setPaper([0, 0, 283.46, 566.93], 'portrait'); // 100mm x 200mm
+
+        return $pdf->stream('vista_previa_entrada_'.$entrada->id_entrada.'.pdf');
+    }
 }
