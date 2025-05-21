@@ -16,6 +16,7 @@ use App\Http\Controllers\RecuperarAsientos;
 use App\Http\Controllers\NominaEmpleadoController;
 use App\Http\Controllers\ProcesarPago;
 use App\Http\Controllers\EntradaController;
+use App\Http\Controllers\FacturacionController;
 use App\Http\Controllers\RecuperarSesionPelicula;
 
 //Ruta por get, al poner / en el buscador, nos saldra la pantalla de principal, que es devuelta por la clase HomeController y llama a la función index.
@@ -174,4 +175,19 @@ Route::get('/entrada/{id_entrada}/pdf', [EntradaController::class, 'descargarEnt
 
 Route::get('/test/entrada-pdf/{id_entrada}', [EntradaController::class, 'previsualizarEntradaPdf'])
     ->name('test.entrada.pdf');
+
+//Facturación
+
+Route::get('administrador/reporte/diario', [FacturacionController::class, 'generarReporteDiarioPdf'])->name('pdf.diario');
+
+Route::get('administrador/reporte/mensual', [FacturacionController::class, 'generarReporteMensualPdf'])->name('pdf.mensual');
+
+Route::get('administrador/reporte/anual', [FacturacionController::class, 'generarReporteAnualPdf'])->name('pdf.anual');
+
+    // Rutas para datos del Dashboard y AJAX
+Route::get('administrador/facturacion/charts/ingresos-mensuales', [FacturacionController::class, 'datosIngresosMensuales'])->name('charts.ingresos');
+
+Route::get('administrador/facturacion/resumen-hoy', [FacturacionController::class, 'getResumenHoy'])->name('resumen.hoy');
+
+Route::get('administrador/facturacion/lista-facturas', [FacturacionController::class, 'getListaFacturas'])->name('lista');
 

@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
             asiento::class,
             tipo_entrada::class,
             EntradaSeeder::class,
+            FacturaSeeder::class,
         ]);
     }
 }

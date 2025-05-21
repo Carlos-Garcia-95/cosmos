@@ -17,7 +17,6 @@ use App\Models\User;
 use App\Models\Ciudad;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
 use App\Models\MenuItem;
 use Illuminate\Http\JsonResponse;
 use App\Models\NominaEmpleados;
@@ -675,9 +674,9 @@ class AdminController extends Controller
                 }
 
                 $nominas = $query->orderBy('anio', 'desc')
-                                 ->orderBy('mes', 'desc')
-                                 ->paginate(15)
-                                 ->appends($request->except('page')); // Mantener todos los filtros en la paginación
+                                ->orderBy('mes', 'desc')
+                                ->paginate(15)
+                                ->appends($request->except('page')); // Mantener todos los filtros en la paginación
             }
         }
 

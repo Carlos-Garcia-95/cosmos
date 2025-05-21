@@ -62,7 +62,7 @@
                                 <a href="#" class="sidebar-link" data-section="add-user">Añadir Empleado</a>
                             </li>
                             <li>
-                                <a href="#" class="sidebar-link" data-section="add-user">Facturación</a>
+                                <a href="#" class="sidebar-link" data-section="facturacion">Facturación</a>
                             </li>
                         </ul>
                     </div>
@@ -269,21 +269,21 @@
                             <h2>Sesiones Creadas<span id="selected-session-date"></span></h2>
                             <p id="noSessionsMessage" style="display: none;">No hay sesiones creadas para esta fecha.</p>
                             <div class="table-responsive-container">
-                            <table id="sessionsTable" class="sessions-table">
-                                <thead>
-                                    <tr>
-                                        <th>Sesión</th>
-                                        <th>Película</th>
-                                        <th>Hora</th>
-                                        <th>Hora Final</th>
-                                        <th>Sala</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                                <table id="sessionsTable" class="sessions-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Sesión</th>
+                                            <th>Película</th>
+                                            <th>Hora</th>
+                                            <th>Hora Final</th>
+                                            <th>Sala</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
 
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -421,9 +421,173 @@
                             </div>
 
                             <div id="user-creation-message" style="margin-top: 10px; padding: 10px; text-align: center; font-weight: bold; display: none;">
-                        </div>
+                            </div>
 
                         </form>
+
+                    </div>
+                </section>
+
+                <section id="facturacion-section" class="content-section hidden">
+                    <h3>Facturación</h3>
+
+                    <!-- Contenido del Dashboard de Facturación -->
+                    <div class="container-fluid"> {{-- Usamos container-fluid para que ocupe el ancho --}}
+
+                        <!-- Fila 1: Resumen del Día/Periodo y Gráfico Principal -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Resumen Hoy ({{ now()->format('d/m/Y') }})
+                                    </div>
+                                    <div class="card-body">
+                                        <p><strong>Ingresos Brutos (Total):</strong> <span id="fact-resumen-bruto-hoy">Cargando...</span></p>
+                                        <p><strong>Total Impuestos:</strong> <span id="fact-resumen-impuestos-hoy">Cargando...</span></p>
+                                        <p><strong>Ingresos Netos (Base):</strong> <span id="fact-resumen-neto-hoy">Cargando...</span></p>
+                                        <p><strong>Nº Facturas:</strong> <span id="fact-resumen-num-facturas-hoy">Cargando...</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Ingresos Mensuales (Año: <span id="fact-chartYear">{{ now()->year }}</span>)
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="fact-chartYearForm" class="row gx-2 gy-2 align-items-center mb-3">
+                                            <div class="col-auto">
+                                                <label for="fact-select_chart_year" class="visually-hidden">Año</label>
+                                                <select name="ano" id="fact-select_chart_year" class="form-select form-select-sm">
+                                                    @for ($year = now()->year; $year >= now()->year - 5; $year--) {{-- Ajusta el rango --}}
+                                                    <option value="{{ $year }}" {{ $year == now()->year ? 'selected' : '' }}>{{ $year }}</option>
+                                                    @endfor
+                                                </select>
+                                            </div>
+                                            <div class="col-auto">
+                                                <button type="submit" class="btn btn-primary btn-sm">Actualizar Gráfico</button>
+                                            </div>
+                                        </form>
+                                        <div style="height: 300px;"> {{-- Contenedor con altura fija para el canvas --}}
+                                            <canvas id="fact-ingresosMensualesChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fila 2: Generación de Reportes PDF (MODIFICADA) -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Generar Reportes PDF
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="fact-report-generator-form" class="row gx-3 gy-3 align-items-end">
+                                            <div class="col-md-3">
+                                                <label for="fact-report-type" class="form-label">Tipo de Reporte:</label>
+                                                <select id="fact-report-type" class="form-select form-select-sm">
+                                                    <option value="diario" selected>Diario</option>
+                                                    <option value="mensual">Mensual</option>
+                                                    <option value="anual">Anual</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Controles para Reporte Diario -->
+                                            <div class="col-md-3 fact-report-controls" id="fact-diario-controls">
+                                                <label for="fact-report-fecha_diario" class="form-label">Seleccionar Fecha:</label>
+                                                <input type="date" name="fecha" id="fact-report-fecha_diario" class="form-control form-control-sm" value="{{ now()->format('Y-m-d') }}" required>
+                                            </div>
+
+                                            <!-- Controles para Reporte Mensual (inicialmente ocultos) -->
+                                            <div class="col-md-2 fact-report-controls" id="fact-mensual-controls-mes" style="display: none;">
+                                                <label for="fact-report-mes_mensual" class="form-label">Mes:</label>
+                                                <select name="mes" id="fact-report-mes_mensual" class="form-select form-select-sm" required>
+                                                    @for ($m=1; $m<=12; $m++)
+                                                        <option value="{{ $m }}" {{ $m == now()->month ? 'selected' : '' }}>{{ \Carbon\Carbon::create()->month($m)->translatedFormat('F') }}</option>
+                                                        @endfor
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2 fact-report-controls" id="fact-mensual-controls-ano" style="display: none;">
+                                                <label for="fact-report-ano_mensual" class="form-label">Año:</label>
+                                                <select name="ano_mensual" id="fact-report-ano_mensual" class="form-select form-select-sm" required>
+                                                    @for ($year = now()->year; $year >= now()->year - 5; $year--)
+                                                    <option value="{{ $year }}" {{ $year == now()->year ? 'selected' : '' }}>{{ $year }}</option>
+                                                    @endfor
+                                                </select>
+                                            </div>
+
+                                            <!-- Controles para Reporte Anual (inicialmente ocultos) -->
+                                            <div class="col-md-3 fact-report-controls" id="fact-anual-controls" style="display: none;">
+                                                <label for="fact-report-ano_anual" class="form-label">Año:</label>
+                                                <select name="ano_anual" id="fact-report-ano_anual" class="form-select form-select-sm" required>
+                                                    @for ($year = now()->year; $year >= now()->year - 5; $year--)
+                                                    <option value="{{ $year }}" {{ $year == now()->year ? 'selected' : '' }}>{{ $year }}</option>
+                                                    @endfor
+                                                </select>
+                                            </div>
+
+                                            <div class="col-md-auto"> {{-- Ajustado para que el botón se alinee mejor --}}
+                                                <button type="button" id="fact-generate-pdf-btn" class="btn btn-info btn-sm w-100">Generar PDF</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fila 3: Listado de Últimas Facturas (Opcional, o con filtros) -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        Últimas Facturas Registradas
+                                        <form id="fact-filter-form" class="float-end row gx-2 gy-2 align-items-center">
+                                            <div class="col-auto">
+                                                <input type="date" name="fecha_desde" id="fact-filter-fecha_desde" class="form-control form-control-sm" placeholder="Desde">
+                                            </div>
+                                            <div class="col-auto">
+                                                <input type="date" name="fecha_hasta" id="fact-filter-fecha_hasta" class="form-control form-control-sm" placeholder="Hasta">
+                                            </div>
+                                            <div class="col-auto">
+                                                <button type="button" id="fact-apply-filters-btn" class="btn btn-secondary btn-sm">Filtrar</button>
+                                                <button type="button" id="fact-clear-filters-btn" class="btn btn-outline-secondary btn-sm">Limpiar</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>ID Factura</th>
+                                                        <th>Fecha</th>
+                                                        <th>Titular</th>
+                                                        <th>Impuesto</th>
+                                                        <th class="text-end">Neto (Base)</th>
+                                                        <th class="text-end">Impuesto</th>
+                                                        <th class="text-end">Bruto (Total)</th>
+                                                        {{-- <th>Acciones</th> --}}
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="fact-facturas-list">
+                                                    {{-- Las filas de facturas se cargarán aquí vía AJAX o con paginación de Laravel --}}
+                                                    <tr>
+                                                        <td colspan="7" class="text-center">Cargando facturas...</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <nav aria-label="Paginación de facturas">
+                                            <ul class="pagination pagination-sm justify-content-center" id="fact-pagination-links">
+                                                {{-- Los enlaces de paginación se cargarán aquí --}}
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </section>

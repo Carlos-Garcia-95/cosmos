@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Validation\ValidationException; // Importa la clase ValidationException
 
 class SessionController extends Controller

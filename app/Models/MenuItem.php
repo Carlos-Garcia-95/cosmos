@@ -27,4 +27,6 @@ class MenuItem extends Model
         'activo' => 'boolean',
         'precio' => 'decimal:2',
     ];
+
+    
 }

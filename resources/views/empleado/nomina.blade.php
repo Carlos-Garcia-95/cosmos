@@ -60,8 +60,6 @@
                 <section id="mis-nominas-section" class="content-section">
                     <h3>Mis Nóminas</h3>
 
-                    {{-- *** Sección de Filtros *** --}}
-                    {{-- El formulario enviará los filtros al mismo controlador usando GET --}}
                     <form method="GET" action="{{ route('empleado.nominas.index') }}" class="filters-form">
                         @csrf {{-- Aunque es GET, @csrf es buena práctica --}}
                         <div class="row g-3"> {{-- Usar clases de Bootstrap para layout --}}

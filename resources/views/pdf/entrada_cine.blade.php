@@ -190,7 +190,7 @@
             color: #333;
             /* Más oscuro */
             display: inline-block;
-            width: 40px;
+            width: 50px;
             /* Ajusta si es necesario */
             margin-right: 4px;
             vertical-align: top;
@@ -343,7 +343,6 @@
                     <div class="detail-item"><span class="label">ASIENTO:</span> <span class="value">{{ $entrada->asiento_columna }}</span></div>
                     <div class="detail-item"><span class="label">TIPO:</span> <span class="value">{{ $entrada->tipoEntrada->nombre ?? 'General' }}</span></div>
                 </div>
-                <div style="clear: both; height: 0; line-height: 0;"></div> {{-- Clearfix más explícito --}}
             </section>
 
             <hr class="content-divider">
@@ -356,31 +355,9 @@
             </section>
 
             <footer class="ticket-info-footer">
-                <p>ID Entrada: {{ $entrada->id_entrada }}</p>
                 <p>Presenta esta entrada en el acceso. No reembolsable.</p>
             </footer>
         </div>
-
-        <!-- <div class="ticket-stub">
-            <div class="stub-header">
-                <span>COSMOS CINEMA</span>
-            </div>
-            <div class="stub-movie-title">
-                {{ Str::limit($entrada->pelicula_titulo, 25) }}
-            </div>
-            <div class="stub-session">
-                {{ \Carbon\Carbon::parse($entrada->fecha)->format('d M') }} - {{ \Carbon\Carbon::parse($entrada->hora)->format('H:i') }}
-            </div>
-            <div class="stub-seat">
-                S:{{ $entrada->sala_id }} F:{{ $entrada->asiento_fila }} A:{{ $entrada->asiento_columna }}
-            </div>
-            <div class="qr-code-area">
-                {!! QrCode::size(90)->generate($entrada->codigo_qr) !!}
-            </div>
-            <div class="ticket-id-stub">
-                ID: {{ $entrada->id_entrada }}
-            </div> -->
-        <!-- </div> -->
     </div>
 </body>
 
