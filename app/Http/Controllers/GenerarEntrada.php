@@ -10,9 +10,10 @@ use App\Models\Pelicula;
 use App\Models\Sala;
 use App\Models\SesionPelicula;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Storage;
 use Str;
 
 class GenerarEntrada
@@ -24,6 +25,7 @@ class GenerarEntrada
     private ?User $usuario = null;
     private ?Factura $factura = null;
     private ?array $entradas = null;
+    private ?array $rutas_pdf = null;
 
     public ?string $ultimoError = null;
 
@@ -278,6 +280,7 @@ class GenerarEntrada
                 // TODO -> Ver lo del los precios de las entradas (sacarlo de BBDD)
                 $entrada = Entrada::create([
                     'codigo_qr' => $codigo_qr,
+                    'ruta_pdf' => "",
                     'precio_total' => $precio_total,
                     'descuento' => $porcentaje_descuento,
                     'precio_final' => $precio_final,
@@ -309,25 +312,97 @@ class GenerarEntrada
             return true;
         } catch (\Exception $e) {
             Log::error("Error generando las entradas: " . $e->getMessage());
-            $this->ultimoError = "Error al generar las entradas. Por favor, inténtalo más tarde." . $e->getMessage();
+            $this->ultimoError = "Error al generar las entradas. Por favor, inténtalo más tarde.";
             return false;
         }
     }
 
 
     private function actualizar_asientos(): bool {
-        $this->ultimoError = "BIEN LLEGAMOS A ASIENTOS";
-        return false;
+        try {
+
+            // Comprobar que hay asientos
+            if ($this->asientos->isEmpty()) {
+                Log::info("No hay asientos para actualizar su estado.", ['datos_validados' => $this->datos_validados]);
+                $this->ultimoError = "Error al actualizar los asientos. Por favor, inténtalo más tarde.";
+                return false;
+            }
+
+            // Se guardan los ids de los asientos en un array
+            $asientos_id = $this->asientos->pluck('id_asiento')->toArray();
+
+            // Se establece el id de estado 'Ocupado'
+            $ocupado = AsientoEstado::where('estado', 'ocupado')->first();
+
+            if (!$ocupado) {
+                Log::info("Error al recuperar el estado 'ocupado' del asiento.", ['datos_validados' => $this->datos_validados]);
+                $this->ultimoError = "Error al actualizar los asientos. Por favor, inténtalo más tarde.";
+                return false;
+            }
+
+            // Se actualizan todos los id de asientos recogidos al id ocupado
+            $filas_afectadas = Asiento::whereIn('id_asiento', $asientos_id)
+                                        ->update(['estado' => $ocupado->id]);
+
+            if ($filas_afectadas !== $this->asientos->count()) {
+                $this->ultimoError = "No se pudieron actualizar todos los asientos. Por favor, inténtalo más tarde.";
+                Log::warning($this->ultimoError, [
+                    'ids_a_actualizar' => $asientos_id,
+                    'filas_afectadas_db' => $filas_afectadas
+                ]);
+                return false; 
+            }
+
+            return true;
+        } catch (\Exception $e) {
+            Log::error("Error generando las entradas: " . $e->getMessage());
+            $this->ultimoError = "Error al generar las entradas. Por favor, inténtalo más tarde.";
+            return false;
+        }
     }
 
 
     private function generar_pdf(): bool {
-        return false;
+        
+        try {
+            // Se generan los pdf y se guardan todas las ruta de los pdf generados (para luego mandarlos)
+            foreach ($this->entradas as $entrada) {
+                $pdf_ruta = $this->crear_pdf($entrada);
 
+                if (!$pdf_ruta) {
+                    Log::error("Error generando los pdf de las entradas: " . $entrada->id);
+                    $this->ultimoError = "Error al generar las entradas. Por favor, inténtalo más tarde.";
+                    return false;
+                }
+
+                $this->rutas_pdf[] = $pdf_ruta;
+
+                Entrada::where('id_entrada', $entrada->id)
+                            ->update(['ruta_pdf' => $pdf_ruta]);
+            }
+
+            // Comprobar que se han generado tantos pdf como entradas entradas
+            if (count($this->rutas_pdf) !== count($this->entradas)) {
+                    Log::error("Error generando los pdf de las entradas: " . $this->rutas_pdf);
+                    $this->ultimoError = "Error al generar las entradas. Por favor, inténtalo más tarde.";
+                    return false;
+            }
+
+            return true;
+
+        } catch (\Exception $e) {
+            Log::error("Error generando los pdf de las entradas: " . $e->getMessage());
+            $this->ultimoError = "Error al generar las entradas. Por favor, inténtalo más tarde." . $e->getMessage();
+            return false;
+        }
     }
 
 
+    
+
+
     private function enviar_correo(): bool {
+        $this->ultimoError = "BIEN LLEGAMOS A ENVIAR CORREO";
         return false;
 
     }
@@ -338,5 +413,44 @@ class GenerarEntrada
         $codigo_unico = 'ENTRADA-' . Str::uuid()->toString();
         
         return $codigo_unico;
+    }
+
+
+    private function crear_pdf(Entrada $entrada): ?string {
+        try {
+            if (!$entrada) {
+                return null;
+            }
+
+            // Crear objeto con datos de empresa
+            $empresa = (object) [
+                'nombre_legal' => config('company.name', 'Cosmos Cinema (Test)'),
+                'cif' => config('company.cif', 'B99999999'),
+            ];
+
+            // Cargar la vista Blade para la entrada
+            $pdf = Pdf::loadView('pdf.entrada_cine', compact('entrada', 'empresa')); // ej. resources/views/pdfs/entrada_individual.blade.php
+
+            // Se crea un nombre de archivo único
+            $nombreArchivo = 'entrada-' . $entrada->id_entrada . '-' . Str::random(10) . '.pdf';
+            
+            // Se crea la ruta del directorio
+            $rutaDirectorio = 'public/entradas_pdf';
+
+            // Se guarda el pdf
+            Storage::put($rutaDirectorio . '/' . $nombreArchivo, $pdf->output());
+            
+            // Crea la ruta entera y devolverla
+            $rutaAlmacenada = $rutaDirectorio . '/' . $nombreArchivo;
+            Log::info("PDF de entrada generado y guardado: " . $rutaAlmacenada);
+
+            return Storage::path($rutaAlmacenada); // Devuelve la ruta completa del sistema de archivos
+
+        } catch (\Exception $e) {
+            Log::error("Error generando PDF para entrada ID {$entrada->id_entrada}: " . $e->getMessage(), ['exception' => $e]);
+            // No setear $this->ultimoError aquí directamente, dejar que el método llamador lo haga
+            // si este fallo es crítico para el proceso general.
+            return null;
+        }
     }
 }

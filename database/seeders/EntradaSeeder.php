@@ -60,6 +60,7 @@ class EntradaSeeder extends Seeder
 
             Entrada::create([
                 'codigo_qr' => strtoupper(Str::random(8)) . '-' . rand(1000, 9999), // Código QR simple
+                'ruta_pdf' => "",
                 'precio_total' => $precioTotal,
                 'descuento' => $descuentoPorcentaje,
                 'precio_final' => $precioFinal,
@@ -78,12 +79,11 @@ class EntradaSeeder extends Seeder
                 // Usuario
                 'usuario_id' => $usuario->id,
                 // Tipo Entrada
+                'factura_id' => 1,
                 'tipo_entrada' => $tipoEntrada->id_tipo_entrada,
                 // Timestamps se manejan automáticamente
             ]);
             
         }
-
-        $this->command->info($numeroDeEntradasACrear . ' entradas de ejemplo creadas.');
     }
 }
