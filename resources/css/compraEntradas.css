@@ -308,9 +308,9 @@
 
 .seat{
     background-color: #444451;
-    height: 24px;
-    width: 30px;
-    margin: 3px;
+    height: 22px;
+    width: 26px;
+    margin: 2px;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     transition: transform .3s ease;
@@ -325,9 +325,16 @@
     background-color: #d12d10;
 }
 
-.seat:not(.occupied):hover {
+.seat:not(.occupied):not(.selected):hover {
     cursor: pointer;
     transform: scale(1.2);
+    background-color: #767990;
+}
+
+.seat.selected:not(.occupied):hover {
+    cursor: pointer;
+    transform: scale(1.2);
+    background-color: #aef8fe;
 }
 
 .gap {
@@ -358,6 +365,10 @@
 
 .showcase li small {
     margin-left: 2px;
+}
+
+.leyenda_text {
+    margin-left: 6%;
 }
 
 .row {

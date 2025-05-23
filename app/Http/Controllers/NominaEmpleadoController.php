@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\NominaEmpleados;
 use Barryvdh\DomPDF\Facade\Pdf;
 
-class NominaEmpleadoController extends Controller // CAMBIADO: Nombre de clase a NominaEmpleadoController por convención
+class NominaEmpleadoController extends Controller
 {
     /**
      * Muestra la lista de nóminas del empleado autenticado con filtros.

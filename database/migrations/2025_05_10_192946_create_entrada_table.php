@@ -23,6 +23,7 @@ return new class extends Migration
             $table->bigInteger('sala');
             $table->unsignedBigInteger('sala_id');
             // Sesión
+            $table->string('poster_ruta', 255);
             $table->string('pelicula_titulo', 255);
             $table->unsignedBigInteger('pelicula_id');
             $table->string('hora');

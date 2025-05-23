@@ -80,7 +80,6 @@ function elegir_pelicula() {
     });
 
     // Se llama a la función que genera dinámicamente la sección de selección de asientos
-    // OJO: 'peliculaId' se capturará del scope de la función 'mostrar_detalle'
     mostrar_seleccion_asientos(peliculaId);
 }
 
@@ -422,7 +421,8 @@ function generar_leyenda() {
     let elemento1_li = document.createElement('li');
     let elemento1_div = document.createElement('div');
     elemento1_div.classList.add('seat');
-    let elemento1_small = document.createElement('small');
+    let elemento1_small = document.createElement('div');
+    elemento1_small.classList.add("leyenda_text");
     elemento1_small.innerHTML = "Disponible";
     elemento1_li.appendChild(elemento1_div);
     elemento1_li.appendChild(elemento1_small);
@@ -431,7 +431,8 @@ function generar_leyenda() {
     let elemento2_div = document.createElement('div');
     elemento2_div.classList.add('seat');
     elemento2_div.classList.add('selected');
-    let elemento2_small = document.createElement('small');
+    let elemento2_small = document.createElement('div');
+    elemento2_small.classList.add("leyenda_text");
     elemento2_small.innerHTML = "Seleccionado";
     elemento2_li.appendChild(elemento2_div);
     elemento2_li.appendChild(elemento2_small);
@@ -440,7 +441,8 @@ function generar_leyenda() {
     let elemento3_div = document.createElement('div');
     elemento3_div.classList.add('seat');
     elemento3_div.classList.add('occupied');
-    let elemento3_small = document.createElement('small');
+    let elemento3_small = document.createElement('div');
+    elemento3_small.classList.add("leyenda_text");
     elemento3_small.innerHTML = "Ocupado";
     elemento3_li.appendChild(elemento3_div);
     elemento3_li.appendChild(elemento3_small);
@@ -656,6 +658,12 @@ function anadir_asiento_selec(datos_sesion, id_asiento) {
         boton_confirmar_seleccion.innerHTML = "CONFIRMAR SELECCIÓN";
 
         boton_confirmar_seleccion.addEventListener('click', function () {
+            // Se limpia el correo de invitado guardado anteriormente en sessionStorage
+            const email_invitado = sessionStorage.getItem('email_invitado');
+            if (email_invitado) {
+                sessionStorage.removeItem('email_invitado');
+            }
+            
             // Si el usuario esta logueado se muestra el modal de Confirmar Selección
             if (datos_sesion.usuario) {
                 confirmar_seleccion();
@@ -806,14 +814,8 @@ window.confirmar_seleccion = function () {
                 throw new error("Error al recuperar los asientos seleccionados");
             }
 
-            console.log(asientos);
-            console.log(datos_sesion);
-
             // Mostrar el modal de confirmar selección
             mostrar_modal_confirmar(asientos, datos_sesion);
-
-
-
         })
         .catch(error => {
             console.error('Error al obtener los datos de las sesiones:', error);
@@ -1172,7 +1174,7 @@ function generar_confirmar_entradas(datos_sesion, asientos) {
     let descuento_aplicado_cantidad;
     let descuento_aplicado;
 
-    // Se recupera y procesa el tipo de usuario. Si es invitado, se muestra adecuandamente
+    // Se recupera y procesa el tipo de usuario. Si es invitado, se muestra adecuadamente
     if (usuario) {
         descuento_aplicado_cantidad = datos_sesion.descuento.descuento;
         let tipo_usuario = datos_sesion.descuento.tipo;
@@ -1409,6 +1411,7 @@ if (modal_invitado) {
     const modal_invitado = document.getElementById('modal_invitado');
     const boton_invitado_volver = document.getElementById('boton_invitado_volver');
     const boton_invitado_continuar = document.getElementById('boton_invitado_continuar');
+    const input_email_invitado = document.getElementById('email_invitado');
 
     // Añadir evento al botón Volver
     boton_invitado_volver.addEventListener('click', function () {
@@ -1419,14 +1422,87 @@ if (modal_invitado) {
         }
     });
 
-    boton_invitado_continuar.addEventListener('click', function () {
+    // Clicar en el botón Continuar como Invitado
+    boton_invitado_continuar.addEventListener('click', function (event) {
+
+        event.preventDefault();
+
+        // Limpiar errores anteriores
+        quitar_error_email();
+
+        // Limpiar el input introducido
+        const email_invitado = input_email_invitado.value.trim();
+
+        // Validación 1: No está vacío
+        if (email_invitado === '') {
+            mostrar_error_email('Por favor, introduce tu dirección de correo electrónico.');
+            return;
+        }
+
+        // Validación 2: Formato de email válido
+        if (!email_valido(email_invitado)) {
+            mostrar_error_email('Por favor, introduce una dirección de correo electrónico válida.');
+            return; // Detener la ejecución
+        }
+
+        // Si ambas validaciones pasan:
         if (modal_invitado && modal_invitado.classList.contains('visible')) {
             modal_invitado.classList.remove('visible');
             modal_invitado.classList.add('hidden');
         }
 
+        // Guardar el email de invitado
+        sessionStorage.setItem('email_invitado', email_invitado);
+        
         confirmar_seleccion();
     });
+}
+
+
+// Comprobar que el email de invitado es válido
+function email_valido(email) {
+    // Expresión regular simple para validar formato de email.
+    // Puedes usar una más compleja si necesitas una validación más estricta.
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+
+
+
+
+function mostrar_error_email(mensaje) {
+    // 1. Quitar errores previos
+    let errorExistente = document.getElementById('error_email_invitado');
+    if (errorExistente) {
+        errorExistente.remove();
+    }
+
+    // 2. Crear y añadir el nuevo mensaje de error
+    const divCorreo = document.querySelector('.invitado_correo');
+    if (divCorreo) {
+        const pError = document.createElement('p');
+        pError.id = 'error_email_invitado';
+        pError.textContent = mensaje;
+        pError.style.color = 'red';
+        pError.style.fontSize = '0.9em';
+        pError.style.marginTop = '5px';
+        divCorreo.appendChild(pError);
+    }
+    inputEmailInvitado.focus();
+}
+
+
+
+
+
+
+// Quita el mensaje de error del email de invitado
+function quitar_error_email() {
+    let errorExistente = document.getElementById('error_email_invitado');
+    if (errorExistente) {
+        errorExistente.remove();
+    }
 }
 
 
@@ -1438,9 +1514,10 @@ if (modal_invitado) {
 
             event.preventDefault();
 
-            // Hide the modal by reversing the class logic from mostrar_detalle
+            // Ocultar el modal y limpiar los errores de email
             modal_invitado.classList.remove('visible');
             modal_invitado.classList.add('hidden');
+            quitar_error_email();
         }
     });
 }
@@ -1484,8 +1561,6 @@ if (modal_invitado) {
 
 // Modal de Pago con tarjeta
 function mostrar_modal_pago(datos_sesion, asientos) {
-    console.log(asientos);
-    console.log(datos_sesion);
     const modal_pago = document.getElementById('modal_pago');
 
     if (!modal_pago) {
@@ -1518,8 +1593,18 @@ function mostrar_modal_pago(datos_sesion, asientos) {
     datos_sesion_input.setAttribute('name', 'sesion_id');
     datos_sesion_input.setAttribute('value', datos_sesion.id);
     datos_sesion_div.appendChild(datos_sesion_input);
-
-
+    
+    // Email de invitado (si existe)
+    const email_invitado = sessionStorage.getItem('email_invitado');
+    
+    if (email_invitado) {
+        const email_invitado_input = document.createElement('input');
+        email_invitado_input.setAttribute('type', 'hidden');
+        email_invitado_input.setAttribute('name', 'email_invitado');
+        email_invitado_input.setAttribute('value', email_invitado);
+        datos_sesion_div.appendChild(email_invitado_input);
+    }
+  
     // Precio
     const precio_div = document.getElementById('precio_div');
     precio_div.innerHTML = "";
@@ -1539,34 +1624,26 @@ function mostrar_modal_pago(datos_sesion, asientos) {
     precio_final_input.setAttribute('type', 'hidden');
     precio_final_input.setAttribute('name', 'precio_final');
     precio_final_input.setAttribute('value', datos_sesion.precio_final);
-
+    
+    
     precio_div.appendChild(precio_total_input);
     precio_div.appendChild(precio_descuento_input);
     precio_div.appendChild(precio_final_input);
-
-
-    // Usuario (si existe)
-    if (datos_sesion.usuario) {
-        const usuario_div = document.getElementById('usuario_div');
-        usuario_div.innerHTML = "";
-        const usuario_input = document.createElement('input');
-        usuario_input.setAttribute('type', 'hidden');
-        usuario_input.setAttribute('name', 'usuario_id');
-        usuario_input.setAttribute('value', datos_sesion.usuario.id);
-        usuario_div.appendChild(usuario_input);
+    if (email_invitado) {
+        
     }
-    
 
-
-    if (!vueAppInstance || !document.body.contains(vueAppInstance.$el)) { // Verifica si la instancia existe y su elemento aún está en el DOM
+    // Verifica si la instancia existe y su elemento aún está en el DOM
+    if (!vueAppInstance || !document.body.contains(vueAppInstance.$el)) {
+        // Destruye la instancia anterior si es necesario
         if (vueAppInstance) {
-            vueAppInstance.$destroy(); // Destruye la instancia anterior si es necesario
+            vueAppInstance.$destroy();
         }
 
         const input_antiguo = window.laravel_antiguo_input || {};
 
         vueAppInstance = new Vue({
-            el: "#app", // Este elemento DEBE existir en tu HTML cuando se ejecute esto
+            el: "#app",
             data() {
                 return {
                     currentCardBackground: Math.floor(Math.random() * 25 + 1),
@@ -1721,22 +1798,22 @@ function limpiar_datos_pago() {
 
     const cardNameInput = document.getElementById('cardName');
     if (cardNameInput) {
-        cardNameInput.value = ""; // Usar .value para inputs
+        cardNameInput.value = "";
     }
 
     const cardMonthSelect = document.getElementById('cardMonth');
     if (cardMonthSelect) {
-        cardMonthSelect.value = ""; // Para <select>, esto seleccionará la <option value="">
+        cardMonthSelect.value = "";
     }
 
     const cardYearSelect = document.getElementById('cardYear');
     if (cardYearSelect) {
-        cardYearSelect.value = ""; // Para <select>, esto seleccionará la <option value="">
+        cardYearSelect.value = ""; 
     }
 
     const cardCvvInput = document.getElementById('cardCvv');
     if (cardCvvInput) {
-        cardCvvInput.value = ""; // Usar .value para inputs
+        cardCvvInput.value = "";
     }
 
     // Limpiar instancia de Vue

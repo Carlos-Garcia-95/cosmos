@@ -28,7 +28,7 @@ class LoginController extends Controller
             'login_password' => ['required', 'string']
         ], $mensajes);
 
-        $recaptchaResponse = $request->input('g-recaptcha-response');
+        /* $recaptchaResponse = $request->input('g-recaptcha-response');
         $recaptchaSecret = env('RECAPTCHA_SECRET_KEY');
 
         if (empty($recaptchaResponse)) {
@@ -50,7 +50,7 @@ class LoginController extends Controller
              return back()->withErrors([
                  'recaptcha' => 'La verificación reCAPTCHA falló. Inténtalo de nuevo.',
              ])->onlyInput('login_email');
-        }
+        } */
 
         $authCredentials = [
             'email' => $credentials['login_email'],
