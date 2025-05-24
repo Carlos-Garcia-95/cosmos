@@ -61,7 +61,7 @@ class Entrada extends Model
     // Relación a tabla factura
     public function factura()
     {
-        return $this->belongsTo(Factura::class, 'factura_id', 'id_factura');
+        return $this->belongsTo(Factura::class, 'id_factura', 'factura_id');
     }
 
      // Relación a tabla tipo_entrada

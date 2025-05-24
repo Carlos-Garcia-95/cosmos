@@ -66,16 +66,29 @@ class User extends Authenticatable
         'nombre',
         'apellidos',
         'email',
-        'password',
-        'direccion',
-        'ciudad',
-        'codigo_postal',
-        'numero_telefono',
-        'dni',
-        'mayor_edad',
+        'password', // Incluso si es nullable, para cuando se establece una contraseña local
+        'email_verified_at',
         'fecha_nacimiento',
-        'tipo_usuario',
-        'id_descuento'
+        'numero_telefono',
+        'ciudad_id', // Corresponde a la clave foránea
+        'dni',
+        'direccion',
+        'codigo_postal',
+        'google_id',
+        'avatar',
+        'mayor_edad_confirmado',
+        'acepta_publicidad',
+        'id_descuento',      // Corresponde a la clave foránea
+        'tipo_usuario_id',   // Corresponde a la clave foránea
+    ];
+
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'fecha_nacimiento' => 'date', // Para que Eloquent lo trate como un objeto Carbon (fecha)
+        'mayor_edad_confirmado' => 'boolean',
+        'acepta_publicidad' => 'boolean',
+        'created_at' => 'datetime', // Si usas $table->timestamps() o definiciones explícitas
+        'updated_at' => 'datetime', // Si usas $table->timestamps() o definiciones explícitas
     ];
     
 
@@ -115,10 +128,10 @@ class User extends Authenticatable
     }
 
     //Sacar nombre de Ciudades
-    public function city()
+    public function ciudad()
     {
         // Indica que un Usuario 'pertenece a' (belongsTo) una Ciudad.
-        return $this->belongsTo(Ciudad::class, 'ciudad', 'id');
+        return $this->belongsTo(Ciudad::class, 'ciudad_id', 'id');
     }
 
     
@@ -140,6 +153,11 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->tipo_usuario == 1;
+    }
+
+    public function descuento()
+    {
+        return $this->belongsTo(Descuento::class, 'id_descuento', 'id_descuento'); // Ajusta 'id_descuento' (PK) si es diferente
     }
 
 }

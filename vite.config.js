@@ -30,7 +30,8 @@ export default defineConfig({
                 "resources/js/adminDashboardAñadirEmpleado.js",
                 "resources/css/cartelera.css",
                 'resources/css/pago.css',
-
+                'resources/css/detalle_pelicula.css',
+                "resources/js/detalle_y_asientos.js",
             ],
             refresh: true,
         }),

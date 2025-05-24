@@ -1,485 +1,623 @@
+import moment from 'moment';
+import 'moment/locale/es';
+
 document.addEventListener("DOMContentLoaded", function () {
     const modalCuenta = document.getElementById("modalCuenta");
+    if (!modalCuenta) {
+        return;
+    }
+
     const mostrarCuentaModalBtn = document.getElementById("miCuenta");
-    const cerrarCuentaModalBtn = modalCuenta?.querySelector("#cerrarCuentaModal");
+    const cerrarCuentaModalBtn = modalCuenta.querySelector("#cerrarCuentaModal");
+    const editarPerfilBtn = modalCuenta.querySelector("#editarPerfilBtn");
+    const guardarCambiosBtn = modalCuenta.querySelector("#guardarCambiosBtn");
+    const cancelarEdicionBtn = modalCuenta.querySelector("#cancelarEdicionBtn");
+    const cuentaModalTitle = modalCuenta.querySelector("#cuentaModalTitle");
 
-    const editarPerfilBtn = modalCuenta?.querySelector("#editarPerfilBtn");
-    const guardarCambiosBtn = modalCuenta?.querySelector("#guardarCambiosBtn");
-    const cancelarEdicionBtn = modalCuenta?.querySelector("#cancelarEdicionBtn");
+    const infoNombreDisplay = modalCuenta.querySelector("#infoNombreDisplay");
+    const infoNombreEdit = modalCuenta.querySelector("#infoNombreEdit");
+    const infoNombreError = modalCuenta.querySelector("#infoNombreError");
+    const formRowNombre = infoNombreEdit?.closest(".form-row");
 
-    const infoNombreDisplay = modalCuenta?.querySelector("#infoNombreDisplay");
-    const infoNombreEdit = modalCuenta?.querySelector("#infoNombreEdit");
-    const infoNombreError = modalCuenta?.querySelector("#infoNombreError");
-    const formRowNombre = infoNombreDisplay?.closest('.form-row');
-    const infoApellidosDisplay = modalCuenta?.querySelector("#infoApellidosDisplay");
-    const infoApellidosEdit = modalCuenta?.querySelector("#infoApellidosEdit");
-    const infoApellidosError = modalCuenta?.querySelector("#infoApellidosError");
-    const formRowApellidos = infoApellidosDisplay?.closest('.form-row');
-    const infoEmailDisplay = modalCuenta?.querySelector("#infoEmailDisplay");
-    const infoFechaNacimientoDisplay = modalCuenta?.querySelector("#infoFechaNacimientoDisplay");
-    const infoTelefonoDisplay = modalCuenta?.querySelector("#infoTelefonoDisplay");
-    const infoTelefonoEdit = modalCuenta?.querySelector("#infoTelefonoEdit");
-    const infoTelefonoError = modalCuenta?.querySelector("#infoTelefonoError");
-    const formRowTelefono = infoTelefonoDisplay?.closest('.form-row');
-    const infoDniDisplay = modalCuenta?.querySelector("#infoDniDisplay");
-    const infoDireccionDisplay = modalCuenta?.querySelector("#infoDireccionDisplay");
-    const infoDireccionEdit = modalCuenta?.querySelector("#infoDireccionEdit");
-    const infoCiudadDisplay = modalCuenta?.querySelector("#infoCiudadDisplay");
-    const infoCiudadEdit = modalCuenta?.querySelector("#infoCiudadEdit");
-    const infoCiudadError = modalCuenta?.querySelector("#infoCiudadError");
-    const formRowCiudad = infoCiudadDisplay?.closest('.form-row');
-    const infoCodigoPostalDisplay = modalCuenta?.querySelector("#infoCodigoPostalDisplay");
-    const infoCodigoPostalEdit = modalCuenta?.querySelector("#infoCodigoPostalEdit");
-    const infoCodigoPostalError = modalCuenta?.querySelector("#infoCodigoPostalError");
-    const formRowCodigoPostal = infoCodigoPostalDisplay?.closest('.form-row');
-    const infoIdDescuentoDisplay = modalCuenta?.querySelector("#infoIdDescuentoDisplay");
+    const infoApellidosDisplay = modalCuenta.querySelector("#infoApellidosDisplay");
+    const infoApellidosEdit = modalCuenta.querySelector("#infoApellidosEdit");
+    const infoApellidosError = modalCuenta.querySelector("#infoApellidosError");
+    const formRowApellidos = infoApellidosEdit?.closest(".form-row");
 
-    const serverSideErrorsArea = modalCuenta?.querySelector(".server-side-errors ul");
-    const serverSideErrorsContainer = modalCuenta?.querySelector(".server-side-errors");
+    const infoEmailDisplay = modalCuenta.querySelector("#infoEmailDisplay");
+    const infoEmailEdit = modalCuenta.querySelector("#infoEmailEdit");
 
+    const infoFechaNacimientoDisplay = modalCuenta.querySelector("#infoFechaNacimientoDisplay");
+    const infoFechaNacimientoEdit = modalCuenta.querySelector("#infoFechaNacimientoEdit");
+    const infoFechaNacimientoError = modalCuenta.querySelector("#infoFechaNacimientoError");
+    const formRowFechaNacimiento = infoFechaNacimientoEdit?.closest(".form-row");
+
+    const infoTelefonoDisplay = modalCuenta.querySelector("#infoTelefonoDisplay");
+    const infoTelefonoEdit = modalCuenta.querySelector("#infoTelefonoEdit");
+    const infoTelefonoError = modalCuenta.querySelector("#infoTelefonoError");
+    const formRowTelefono = infoTelefonoEdit?.closest(".form-row");
+
+    const infoDniDisplay = modalCuenta.querySelector("#infoDniDisplay");
+    const infoDniEdit = modalCuenta.querySelector("#infoDniEdit");
+    const infoDniError = modalCuenta.querySelector("#infoDniError");
+    const formRowDni = infoDniEdit?.closest(".form-row");
+
+    const infoDireccionDisplay = modalCuenta.querySelector("#infoDireccionDisplay");
+    const infoDireccionEdit = modalCuenta.querySelector("#infoDireccionEdit");
+    const infoDireccionError = modalCuenta.querySelector("#infoDireccionError");
+    const formRowDireccion = infoDireccionEdit?.closest(".form-row");
+
+    const infoCiudadDisplay = modalCuenta.querySelector("#infoCiudadDisplay");
+    const infoCiudadEdit = modalCuenta.querySelector("#infoCiudadEdit");
+    const infoCiudadError = modalCuenta.querySelector("#infoCiudadError");
+    const formRowCiudad = infoCiudadEdit?.closest(".form-row");
+
+    const infoCodigoPostalDisplay = modalCuenta.querySelector("#infoCodigoPostalDisplay");
+    const infoCodigoPostalEdit = modalCuenta.querySelector("#infoCodigoPostalEdit");
+    const infoCodigoPostalError = modalCuenta.querySelector("#infoCodigoPostalError");
+    const formRowCodigoPostal = infoCodigoPostalEdit?.closest(".form-row");
+
+    const infoMayorEdadConfirmadoEdit = modalCuenta.querySelector("#infoMayorEdadConfirmadoEdit");
+    const infoMayorEdadConfirmadoError = modalCuenta.querySelector("#infoMayorEdadConfirmadoError");
+    const formRowMayorEdadConfirmado = infoMayorEdadConfirmadoEdit?.closest(".form-row");
+
+    const infoAceptaPublicidadEdit = modalCuenta.querySelector("#infoAceptaPublicidadEdit");
+
+    const serverSideErrorsArea = modalCuenta.querySelector(".client-side-errors ul");
+    const serverSideErrorsContainer = modalCuenta.querySelector(".client-side-errors");
     const profileUpdateSuccessMessage = modalCuenta.querySelector("#profileUpdateSuccessMessage");
 
-    let currentUserCityId = null;
+    let currentUserData = null;
+    let isCompletingProfileGlobal = false;
 
-    function openCuentaModal() {
+    function openCuentaModal(forceCompleteMode = false) {
         if (modalCuenta) {
-            modalCuenta.classList.remove('hidden');
-            modalCuenta.classList.add('flex');
-            exitEditMode();
+            loadAndPopulateUserData(forceCompleteMode);
         }
     }
 
     function closeCuentaModal() {
         if (modalCuenta) {
-            modalCuenta.classList.remove('flex');
-            modalCuenta.classList.add('hidden');
-            exitEditMode();
-            clearFieldErrors();
-            clearServerErrors();
+            modalCuenta.classList.remove("flex");
+            modalCuenta.classList.add("hidden");
+            switchToDisplayMode();
+            clearAllClientErrors();
         }
     }
 
-    function enterEditMode() {
-        if (modalCuenta) {
-            modalCuenta.classList.add('is-editing');
-            editarPerfilBtn.style.display = 'none';
-            guardarCambiosBtn.style.display = 'inline-block';
-            cancelarEdicionBtn.style.display = 'inline-block';
+    function switchToEditMode(isCompleting = false) {
+        isCompletingProfileGlobal = isCompleting;
+        if (!modalCuenta || !currentUserData) return;
 
-            infoNombreEdit.style.display = 'inline-block';
-            infoApellidosEdit.style.display = 'inline-block';
-            infoTelefonoEdit.style.display = 'inline-block';
-            infoDireccionEdit.style.display = 'inline-block';
-            infoCodigoPostalEdit.style.display = 'inline-block';
-            infoCiudadEdit.style.display = 'inline-block';
+        modalCuenta.classList.add("is-editing");
+        if(editarPerfilBtn) editarPerfilBtn.style.display = "none";
+        if(guardarCambiosBtn) guardarCambiosBtn.style.display = "inline-block";
+        if(cancelarEdicionBtn) cancelarEdicionBtn.style.display = "inline-block";
 
-            infoNombreDisplay.style.display = 'none';
-            infoApellidosDisplay.style.display = 'none';
-            infoTelefonoDisplay.style.display = 'none';
-            infoDireccionDisplay.style.display = 'none';
-            infoCodigoPostalDisplay.style.display = 'none';
-            infoCiudadDisplay.style.display = 'none';
+        modalCuenta.querySelectorAll(".display-field").forEach((el) => (el.style.display = "none"));
+        modalCuenta.querySelectorAll(".edit-field-container").forEach((el) => (el.style.display = "block"));
 
-            if (infoNombreEdit && infoNombreDisplay) infoNombreEdit.value = infoNombreDisplay.textContent.trim();
-            if (infoApellidosEdit && infoApellidosDisplay) infoApellidosEdit.value = infoApellidosDisplay.textContent.trim();
-            if (infoTelefonoEdit && infoTelefonoDisplay) infoTelefonoEdit.value = infoTelefonoDisplay.textContent.trim();
-            if (infoDireccionEdit && infoDireccionDisplay) infoDireccionEdit.value = infoDireccionDisplay.textContent.trim();
-            if (infoCodigoPostalEdit && infoCodigoPostalDisplay) infoCodigoPostalEdit.value = infoCodigoPostalDisplay.textContent.trim();
+        if(infoNombreEdit) infoNombreEdit.disabled = false;
+        if(infoApellidosEdit) infoApellidosEdit.disabled = false;
+        if(infoTelefonoEdit) infoTelefonoEdit.disabled = false;
+        if(infoDireccionEdit) infoDireccionEdit.disabled = false;
+        if(infoCiudadEdit) infoCiudadEdit.disabled = false;
+        if(infoCodigoPostalEdit) infoCodigoPostalEdit.disabled = false;
+        if(infoMayorEdadConfirmadoEdit) infoMayorEdadConfirmadoEdit.disabled = false;
+        if(infoAceptaPublicidadEdit) infoAceptaPublicidadEdit.disabled = false;
+        if(infoEmailEdit) infoEmailEdit.disabled = true;
 
-            if (infoCiudadEdit) populateCitiesSelect(infoCiudadEdit, currentUserCityId);
+        if (infoFechaNacimientoEdit) infoFechaNacimientoEdit.disabled = !(isCompleting || !currentUserData.fecha_nacimiento);
+        if (infoDniEdit) infoDniEdit.disabled = !(isCompleting || !currentUserData.dni);
 
-            clearFieldErrors();
-            clearServerErrors();
-        }
-    }
+        const ID_TIPO_CLIENTE = 3; // Asegúrate que este sea el ID correcto para "cliente"
+        const dniFieldContainer = formRowDni; // Asumiendo que formRowDni es el contenedor del campo DNI
 
-    function exitEditMode() {
-        if (modalCuenta) {
-            modalCuenta.classList.remove('is-editing');
-            editarPerfilBtn.style.display = 'inline-block';
-            guardarCambiosBtn.style.display = 'none';
-            cancelarEdicionBtn.style.display = 'none';
-            
-            infoNombreEdit.style.display = 'none';
-            infoApellidosEdit.style.display = 'none';
-            infoTelefonoEdit.style.display = 'none';
-            infoDireccionEdit.style.display = 'none';
-            infoCodigoPostalEdit.style.display = 'none';
-            infoCiudadEdit.style.display = 'none';
-
-            infoNombreDisplay.style.display = 'inline-block';
-            infoApellidosDisplay.style.display = 'inline-block';
-            infoTelefonoDisplay.style.display = 'inline-block';
-            infoDireccionDisplay.style.display = 'inline-block';
-            infoCodigoPostalDisplay.style.display = 'inline-block';
-            infoCiudadDisplay.style.display = 'inline-block';
-
-            clearFieldErrors();
-            clearServerErrors();
-        }
-    }
-
-    function validateNoNumbers(value, errorElement, formRowElement, errorMessage) {
-        const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s\.\-]*$/;
-        if (!regex.test(value) || value.trim() === '') {
-            displayFieldError(errorElement, formRowElement, errorMessage);
-            return false;
-        }
-        clearFieldError(errorElement, formRowElement);
-        return true;
-    }
-
-    function validateFiveDigitsNumeric(value, errorElement, formRowElement, errorMessage) {
-        const regex = /^\d{5}$/;
-        const cleanedValue = value.replace(/\s/g, '');
-        if (!regex.test(cleanedValue)) {
-            displayFieldError(errorElement, formRowElement, errorMessage);
-            return false;
-        }
-        clearFieldError(errorElement, formRowElement);
-        return true;
-    }
-
-    function validateNineDigitsNumeric(value, errorElement, formRowElement, errorMessage) {
-        const regex = /^\d{9}$/;
-        const cleanedValue = value.replace(/\s/g, '');
-        if (!regex.test(cleanedValue)) {
-            displayFieldError(errorElement, formRowElement, errorMessage);
-            return false;
-        }
-        clearFieldError(errorElement, formRowElement);
-        return true;
-    }
-
-    function displayFieldError(errorElement, formRowElement, message) {
-        if (errorElement) {
-            errorElement.textContent = message;
-            errorElement.style.display = 'block';
-            const inputElement = errorElement.previousElementSibling;
-            if (inputElement && inputElement.classList) {
-                inputElement.classList.add('invalid');
-            }
-            if (formRowElement) {
-                formRowElement.classList.add('has-error');
+        if (dniFieldContainer) {
+            if (currentUserData && currentUserData.tipo_usuario_id == ID_TIPO_CLIENTE) {
+                dniFieldContainer.style.display = 'none';
+                if(infoDniEdit) infoDniEdit.disabled = true;
             } else {
-                const foundFormRow = errorElement.closest('.form-row');
-                if (foundFormRow) foundFormRow.classList.add('has-error');
+                dniFieldContainer.style.display = 'flex'; // O 'block' según tu CSS para .form-row
+                 // La lógica anterior de habilitar/deshabilitar basado en isCompleting o si tiene valor ya se aplica
             }
         }
-    }
 
-    function clearFieldError(errorElement, formRowElement) {
-        if (errorElement) {
-            errorElement.textContent = '';
-            errorElement.style.display = 'none';
-            const inputElement = errorElement.previousElementSibling;
-            if (inputElement && inputElement.classList) {
-                inputElement.classList.remove('invalid');
-            }
-            if (formRowElement) {
-                formRowElement.classList.remove('has-error');
-            } else {
-                const foundFormRow = errorElement.closest('.form-row');
-                if (foundFormRow) foundFormRow.classList.remove('has-error');
-            }
+
+        if (isCompleting) {
+            if(cuentaModalTitle) cuentaModalTitle.textContent = "Completa tu Perfil";
+        } else {
+            if(cuentaModalTitle) cuentaModalTitle.textContent = "Editar Mi Cuenta";
         }
+        clearAllClientErrors();
+        if(profileUpdateSuccessMessage) profileUpdateSuccessMessage.style.display = "none";
     }
 
-    function clearFieldErrors() {
-        modalCuenta?.querySelectorAll('.client-side-field-error').forEach(errorEl => {
-            const formRow = errorEl.closest('.form-row');
+    function switchToDisplayMode() {
+        isCompletingProfileGlobal = false;
+        if (!modalCuenta) return;
+
+        modalCuenta.classList.remove("is-editing");
+        if(editarPerfilBtn) editarPerfilBtn.style.display = "inline-block";
+        if(guardarCambiosBtn) guardarCambiosBtn.style.display = "none";
+        if(cancelarEdicionBtn) cancelarEdicionBtn.style.display = "none";
+        if(cuentaModalTitle) cuentaModalTitle.textContent = "Mi Cuenta";
+
+        modalCuenta.querySelectorAll(".display-field").forEach((el) => (el.style.display = "inline-block"));
+        modalCuenta.querySelectorAll(".edit-field-container").forEach((el) => (el.style.display = "none"));
+        clearAllClientErrors();
+    }
+
+    function clearAllClientErrors() {
+        modalCuenta?.querySelectorAll(".client-side-field-error").forEach((errorEl) => {
+            const formRow = errorEl.closest(".form-row");
             clearFieldError(errorEl, formRow);
+            const input = formRow?.querySelector("input, select");
+            if (input) input.classList.remove("invalid");
         });
-    }
-
-    function displayServerErrors(errors) {
-        if (serverSideErrorsArea && serverSideErrorsContainer) {
-            serverSideErrorsArea.innerHTML = '';
-            const errorsList = Array.isArray(errors) ? errors : [JSON.stringify(errors)];
-
-            if (errorsList.length > 0) {
-                errorsList.forEach(error => {
-                    const li = document.createElement('li');
-                    li.textContent = error;
-                    serverSideErrorsArea.appendChild(li);
-                });
-                serverSideErrorsContainer.style.display = 'block';
-            } else {
-                serverSideErrorsContainer.style.display = 'none';
-            }
-        }
-    }
-
-    function clearServerErrors() {
-        if (serverSideErrorsArea && serverSideErrorsContainer) {
-            serverSideErrorsArea.innerHTML = '';
-            serverSideErrorsContainer.style.display = 'none';
-        }
+        if (serverSideErrorsContainer) serverSideErrorsContainer.style.display = "none";
+        if (serverSideErrorsArea) serverSideErrorsArea.innerHTML = "";
     }
 
     async function populateCitiesSelect(selectElement, selectedCityId = null) {
         if (!selectElement) return;
-
         selectElement.innerHTML = '<option value="">Cargando ciudades...</option>';
         selectElement.disabled = true;
-
         try {
-            const response = await fetch('/ciudades', {
-                method: 'GET',
-                headers: { 'Accept': 'application/json' }
+            const response = await fetch("/ciudades", {
+                method: "GET",
+                headers: { Accept: "application/json" },
             });
-
-            if (!response.ok) {
-                console.error('Error al obtener lista de ciudades:', response.status, response.statusText);
-                selectElement.innerHTML = '<option value="">Error al cargar ciudades</option>';
-                return;
-            }
-
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const cities = await response.json();
-
             selectElement.innerHTML = '<option value="">Selecciona una ciudad</option>';
-
             if (Array.isArray(cities)) {
-                cities.forEach(city => {
-                    const option = document.createElement('option');
+                cities.forEach((city) => {
+                    const option = document.createElement("option");
                     option.value = city.id;
                     option.textContent = city.nombre;
-                    if (selectedCityId !== null && city.id == selectedCityId) {
+                    if (selectedCityId && city.id == selectedCityId) {
                         option.selected = true;
                     }
                     selectElement.appendChild(option);
                 });
             }
-
             selectElement.disabled = false;
-
         } catch (error) {
-            console.error('Error en fetch para obtener ciudades:', error);
+            console.error("Error en fetch para obtener ciudades:", error);
             selectElement.innerHTML = '<option value="">Error al cargar ciudades</option>';
+            selectElement.disabled = false;
+        }
+    }
+
+    function populateFormFields(userData) {
+        if (!userData) return;
+
+        if (infoNombreDisplay) infoNombreDisplay.textContent = userData.nombre || "No especificado";
+        if (infoApellidosDisplay) infoApellidosDisplay.textContent = userData.apellidos || "No especificado";
+        if (infoEmailDisplay) infoEmailDisplay.textContent = userData.email || "No especificado";
+        if (infoFechaNacimientoDisplay) infoFechaNacimientoDisplay.textContent = userData.fecha_nacimiento ? moment(userData.fecha_nacimiento, "YYYY-MM-DD").format("DD/MM/YYYY") : "No especificado";
+        if (infoTelefonoDisplay) infoTelefonoDisplay.textContent = userData.numero_telefono || "No especificado";
+        if (infoDniDisplay) infoDniDisplay.textContent = userData.dni || "No especificado";
+        if (infoDireccionDisplay) infoDireccionDisplay.textContent = userData.direccion || "No especificado";
+        if (infoCiudadDisplay) infoCiudadDisplay.textContent = userData.ciudad_nombre || "No especificado";
+        if (infoCodigoPostalDisplay) infoCodigoPostalDisplay.textContent = userData.codigo_postal || "No especificado";
+
+        if (infoNombreEdit) infoNombreEdit.value = userData.nombre || "";
+        if (infoApellidosEdit) infoApellidosEdit.value = userData.apellidos || "";
+        if (infoEmailEdit) infoEmailEdit.value = userData.email || "";
+        if (infoFechaNacimientoEdit) infoFechaNacimientoEdit.value = userData.fecha_nacimiento || "";
+        if (infoTelefonoEdit) infoTelefonoEdit.value = userData.numero_telefono || "";
+        if (infoDniEdit) infoDniEdit.value = userData.dni || "";
+        if (infoDireccionEdit) infoDireccionEdit.value = userData.direccion || "";
+        if (infoCodigoPostalEdit) infoCodigoPostalEdit.value = userData.codigo_postal || "";
+
+        if (infoMayorEdadConfirmadoEdit) infoMayorEdadConfirmadoEdit.checked = !!userData.mayor_edad_confirmado;
+        if (infoAceptaPublicidadEdit) infoAceptaPublicidadEdit.checked = !!userData.acepta_publicidad;
+
+        if (infoCiudadEdit && userData.ciudad_id) {
+            infoCiudadEdit.value = userData.ciudad_id;
+        }
+    }
+
+    async function loadAndPopulateUserData(forceCompleteMode = false) {
+        if(profileUpdateSuccessMessage) profileUpdateSuccessMessage.style.display = "none";
+        clearAllClientErrors();
+        try {
+            const response = await fetch("/perfil/datos", {
+                method: "GET",
+                headers: {
+                    Accept: "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                },
+            });
+            if (!response.ok) {
+                
+                const errorData = await response.json().catch(() => ({ message: "Error desconocido al cargar datos." }));
+                console.error('Error al cargar datos del usuario:', response.status, response.statusText, errorData.message);
+                alert(errorData.message || "No se pudieron cargar los datos de tu cuenta. Intenta de nuevo.");
+                closeCuentaModal();
+                return;
+            }
+            currentUserData = await response.json(); // PUNTO 1 DE FALLO POTENCIAL
+    console.log('Datos JSON recibidos de /perfil/datos:', currentUserData);
+
+    if (!currentUserData || typeof currentUserData !== 'object') { // PUNTO 2
+        console.error("No se recibieron datos válidos del usuario o no es un objeto:", currentUserData);
+        throw new Error("Formato de datos de usuario inesperado."); // Esto activaría el catch
+    }
+
+    populateFormFields(currentUserData); // PUNTO 3
+    await populateCitiesSelect(infoCiudadEdit, currentUserData.ciudad_id); // PUNTO 4
+            
+            const ID_TIPO_CLIENTE = 3; // Asegúrate que este sea el ID correcto para "cliente"
+            const dniFieldContainer = formRowDni; 
+            if (dniFieldContainer) {
+                if (currentUserData.tipo_usuario_id == ID_TIPO_CLIENTE) {
+                    dniFieldContainer.style.display = 'none';
+                    if(infoDniEdit) infoDniEdit.disabled = true;
+                } else {
+                    dniFieldContainer.style.display = 'flex'; // O 'block' según tu CSS para .form-row
+                    // La lógica de habilitar/deshabilitar en switchToEditMode se encargará de si el input DNI es editable o no
+                }
+            }
+
+
+            if (forceCompleteMode || (currentUserData && !currentUserData.is_profile_complete)) {
+                switchToEditMode(true);
+            } else {
+                switchToDisplayMode();
+            }
+            modalCuenta.classList.remove("hidden");
+            modalCuenta.classList.add("flex");
+        } catch (error) {
+            console.error("Error al cargar y popular datos del usuario:", error);
+            alert("Ocurrió un error al cargar tus datos. Intenta de nuevo más tarde.");
+            closeCuentaModal();
         }
     }
 
     if (mostrarCuentaModalBtn) {
-        mostrarCuentaModalBtn.addEventListener("click", async function (event) {
+        mostrarCuentaModalBtn.addEventListener("click", function (event) {
             event.preventDefault();
-
-            clearFieldErrors();
-            clearServerErrors();
-
-            try {
-                const response = await fetch('/perfil/datos', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    }
-                });
-
-                if (!response.ok) {
-                    console.error('Error al obtener datos del usuario:', response.status, response.statusText);
-                    alert('No se pudieron cargar los datos del perfil. Por favor, intenta iniciar sesión de nuevo.');
-                    closeCuentaModal();
-                    return;
-                }
-
-                const userData = await response.json();
-                console.log('Datos del usuario recibidos para visualización/edición:', userData);
-
-                if (infoNombreDisplay) infoNombreDisplay.textContent = userData.nombre || '';
-                if (infoApellidosDisplay) infoApellidosDisplay.textContent = userData.apellidos || '';
-                if (infoEmailDisplay) infoEmailDisplay.textContent = userData.email || '';
-                if (infoFechaNacimientoDisplay) infoFechaNacimientoDisplay.textContent = userData.fecha_nacimiento || '';
-                if (infoTelefonoDisplay) infoTelefonoDisplay.textContent = userData.numero_telefono || '';
-                if (infoDniDisplay) infoDniDisplay.textContent = userData.dni || '';
-                if (infoDireccionDisplay) infoDireccionDisplay.textContent = userData.direccion || '';
-                if (infoCiudadDisplay) infoCiudadDisplay.textContent = userData.ciudad || '';
-                if (infoCodigoPostalDisplay) infoCodigoPostalDisplay.textContent = userData.codigo_postal || '';
-                if (infoIdDescuentoDisplay) infoIdDescuentoDisplay.textContent = userData.id_descuento || 'Ninguno';
-
-                currentUserCityId = userData.ciudad_id;
-
-
-                openCuentaModal();
-
-            } catch (error) {
-                console.error('Error en la petición fetch para obtener datos del usuario:', error);
-                alert('Ocurrió un error al cargar tus datos. Intenta de nuevo más tarde.');
-                closeCuentaModal();
-            }
+            openCuentaModal(false);
         });
-    } else {
-        console.warn("ADVERTENCIA: Botón '#miCuenta' no encontrado.");
     }
 
     if (editarPerfilBtn) {
-        editarPerfilBtn.addEventListener('click', enterEditMode);
+        editarPerfilBtn.addEventListener("click", () => switchToEditMode(false));
     }
 
     if (cancelarEdicionBtn) {
-        cancelarEdicionBtn.addEventListener('click', exitEditMode);
+        cancelarEdicionBtn.addEventListener("click", () => {
+            if (isCompletingProfileGlobal && !currentUserData?.is_profile_complete) {
+                closeCuentaModal();
+            } else {
+                if(currentUserData) populateFormFields(currentUserData);
+                switchToDisplayMode();
+            }
+        });
+    }
+
+    function calculateDniLetter(dniNumber) {
+        const letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+        const numberStr = String(dniNumber).trim();
+        const number = parseInt(numberStr, 10);
+        if (isNaN(number) || numberStr.length !== 8) {
+            return null;
+        }
+        return letras[number % 23];
+    }
+
+    function isValidDniFormatAndLetter(dniValue) {
+        if (!dniValue || dniValue.trim() === '') return { valid: true, message: "" };
+        const dniRegex = /^\d{8}[A-Za-z]$/;
+        if (!dniRegex.test(dniValue)) {
+            return { valid: false, message: "Formato: 8 números y 1 letra." };
+        }
+        const numberPart = dniValue.substring(0, 8);
+        const letterPart = dniValue.substring(8).toUpperCase();
+        const calculatedLetter = calculateDniLetter(numberPart);
+        if (calculatedLetter !== null && calculatedLetter === letterPart) {
+            return { valid: true, message: "" };
+        } else {
+            return { valid: false, message: "La letra del DNI no es correcta." };
+        }
+    }
+
+    async function checkDniIsUniqueProfile(dniInput) {
+        if (!dniInput || !dniInput.value.trim() || dniInput.disabled) {
+            clearFieldError(infoDniError, formRowDni);
+            return true;
+        }
+        const dni = dniInput.value.trim().toUpperCase();
+        try {
+            const response = await fetch(`/check-dni-profile?dni=${encodeURIComponent(dni)}`);
+            if (!response.ok) {
+                displayFieldError(infoDniError, formRowDni, "Error al verificar DNI.");
+                return false;
+            }
+            const data = await response.json();
+            if (data.exists) {
+                displayFieldError(infoDniError, formRowDni, "Este DNI ya está registrado.");
+                return false;
+            }
+            clearFieldError(infoDniError, formRowDni);
+            return true;
+        } catch (error) {
+            displayFieldError(infoDniError, formRowDni, "Error de conexión al verificar DNI.");
+            return false;
+        }
+    }
+
+    function isValidBirthDateAndAge(dateInput) {
+        if (!dateInput || dateInput.disabled) {
+            clearFieldError(infoFechaNacimientoError, formRowFechaNacimiento);
+            return true;
+        }
+        if (!dateInput.value.trim()){
+            if (isCompletingProfileGlobal || !currentUserData?.fecha_nacimiento) {
+                displayFieldError(infoFechaNacimientoError, formRowFechaNacimiento, "La fecha de nacimiento es obligatoria.");
+                return false;
+            }
+            clearFieldError(infoFechaNacimientoError, formRowFechaNacimiento);
+            return true;
+        }
+        const birthDateStr = dateInput.value;
+        const birthDate = new Date(birthDateStr);
+        if (isNaN(birthDate.getTime())) {
+            displayFieldError(infoFechaNacimientoError, formRowFechaNacimiento, "Fecha de nacimiento inválida.");
+            return false;
+        }
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        if (age < 14) {
+            displayFieldError(infoFechaNacimientoError, formRowFechaNacimiento, "Debes tener al menos 14 años.");
+            return false;
+        }
+        clearFieldError(infoFechaNacimientoError, formRowFechaNacimiento);
+        return true;
     }
 
     if (guardarCambiosBtn) {
-        guardarCambiosBtn.addEventListener('click', async function (event) {
+        guardarCambiosBtn.addEventListener("click", async function (event) {
             event.preventDefault();
-
-            clearFieldErrors();
-            clearServerErrors();
+            clearAllClientErrors();
+            if(profileUpdateSuccessMessage) profileUpdateSuccessMessage.style.display = "none";
 
             let isClientValid = true;
 
-            if (infoNombreEdit && formRowNombre) {
-                if (!validateNoNumbers(infoNombreEdit.value, infoNombreError, formRowNombre, 'El nombre solo debe contener letras.')) {
+            if (infoNombreEdit && infoNombreEdit.value.trim() !== '' && !validateNoNumbers(infoNombreEdit.value, infoNombreError, formRowNombre, "El nombre solo debe contener letras y espacios.")) isClientValid = false;
+            else if (infoNombreEdit) clearFieldError(infoNombreError, formRowNombre);
+
+            if (infoApellidosEdit && infoApellidosEdit.value.trim() !== '' && !validateNoNumbers(infoApellidosEdit.value, infoApellidosError, formRowApellidos, "Los apellidos solo deben contener letras y espacios.")) isClientValid = false;
+            else if (infoApellidosEdit) clearFieldError(infoApellidosError, formRowApellidos);
+
+            if (infoTelefonoEdit && infoTelefonoEdit.value.trim() !== '' && !validateNineDigitsNumeric(infoTelefonoEdit.value, infoTelefonoError, formRowTelefono, "El teléfono debe tener 9 números.")) isClientValid = false;
+            else if (infoTelefonoEdit && infoTelefonoEdit.value.trim() === '' && infoTelefonoEdit.hasAttribute('required')) {
+                displayFieldError(infoTelefonoError, formRowTelefono, "El teléfono es obligatorio."); isClientValid = false;
+            } else if (infoTelefonoEdit) clearFieldError(infoTelefonoError, formRowTelefono);
+
+            if (infoCodigoPostalEdit && infoCodigoPostalEdit.value.trim() !== '' && !validateFiveDigitsNumeric(infoCodigoPostalEdit.value, infoCodigoPostalError, formRowCodigoPostal, "El código postal debe tener 5 números.")) isClientValid = false;
+            else if (infoCodigoPostalEdit && infoCodigoPostalEdit.value.trim() === '' && infoCodigoPostalEdit.hasAttribute('required')) {
+                displayFieldError(infoCodigoPostalError, formRowCodigoPostal, "El código postal es obligatorio."); isClientValid = false;
+            } else if (infoCodigoPostalEdit) clearFieldError(infoCodigoPostalError, formRowCodigoPostal);
+
+            if (infoDireccionEdit && infoDireccionEdit.value.trim() === '' && infoDireccionEdit.hasAttribute('required')) {
+                displayFieldError(infoDireccionError, formRowDireccion, "La dirección es obligatoria."); isClientValid = false;
+            } else if (infoDireccionEdit) clearFieldError(infoDireccionError, formRowDireccion);
+
+            if (infoFechaNacimientoEdit && !infoFechaNacimientoEdit.disabled) {
+                if (!isValidBirthDateAndAge(infoFechaNacimientoEdit)) {
                     isClientValid = false;
                 }
             }
 
-            if (infoApellidosEdit && formRowApellidos) {
-                if (!validateNoNumbers(infoApellidosEdit.value, infoApellidosError, formRowApellidos, 'Los apellidos solo deben contener letras.')) {
+            /* const dniFieldContainer = formRowDni;
+            if (infoDniEdit && !infoDniEdit.disabled && dniFieldContainer && dniFieldContainer.style.display !== 'none') {
+                const dniValue = infoDniEdit.value.trim().toUpperCase();
+                if (dniValue !== '') {
+                    const dniFormatValidation = isValidDniFormatAndLetter(dniValue);
+                    if (!dniFormatValidation.valid) {
+                        displayFieldError(infoDniError, formRowDni, dniFormatValidation.message);
+                        isClientValid = false;
+                    } else {
+                        clearFieldError(infoDniError, formRowDni);
+                        const dniIsUnique = await checkDniIsUniqueProfile(infoDniEdit);
+                        if (!dniIsUnique) isClientValid = false;
+                    }
+                } else if (isCompletingProfileGlobal || !currentUserData?.dni) { // Solo obligatorio si se está completando y no tiene DNI
+                    displayFieldError(infoDniError, formRowDni, "El DNI es obligatorio.");
                     isClientValid = false;
+                } else {
+                    clearFieldError(infoDniError, formRowDni);
                 }
-            }
+            } else if (infoDniEdit) { // Si el campo DNI está oculto o deshabilitado
+                clearFieldError(infoDniError, formRowDni);
+            } */
 
-            if (infoTelefonoEdit && formRowTelefono) {
-                if (!validateNineDigitsNumeric(infoTelefonoEdit.value, infoTelefonoError, formRowTelefono, 'El teléfono debe tener exactamente 9 números.')) {
-                    isClientValid = false;
-                }
-            }
 
-            if (infoCodigoPostalEdit && formRowCodigoPostal) {
-                if (!validateFiveDigitsNumeric(infoCodigoPostalEdit.value, infoCodigoPostalError, formRowCodigoPostal, 'El código postal debe tener exactamente 5 números.')) {
-                    isClientValid = false;
-                }
-            }
-
-            if (infoCiudadEdit && formRowCiudad) {
-                if (infoCiudadEdit.value === "") {
-                    displayFieldError(infoCiudadError, formRowCiudad, 'Debes seleccionar una ciudad.');
+            if (infoCiudadEdit) {
+                if (infoCiudadEdit.value === '' && (isCompletingProfileGlobal || !currentUserData?.ciudad_id)) {
+                    displayFieldError(infoCiudadError, formRowCiudad, "Debes seleccionar una ciudad.");
                     isClientValid = false;
                 } else {
                     clearFieldError(infoCiudadError, formRowCiudad);
                 }
             }
 
-
-            if (!isClientValid) {
-                console.log('>>> Validación cliente fallida.');
-                return;
+            if (infoMayorEdadConfirmadoEdit && !infoMayorEdadConfirmadoEdit.disabled) {
+                if (!infoMayorEdadConfirmadoEdit.checked && (isCompletingProfileGlobal || !currentUserData?.mayor_edad_confirmado)) {
+                    displayFieldError(infoMayorEdadConfirmadoError, formRowMayorEdadConfirmado, "Debes confirmar que eres mayor de 14 años.");
+                    isClientValid = false;
+                } else {
+                    clearFieldError(infoMayorEdadConfirmadoError, formRowMayorEdadConfirmado);
+                }
             }
 
-            console.log('>>> Validación cliente pasada. Enviando datos al servidor...');
+            if (!isClientValid) return;
 
-            const updatedData = {
-                nombre: infoNombreEdit?.value.trim() || '',
-                apellidos: infoApellidosEdit?.value.trim() || '',
-                numero_telefono: infoTelefonoEdit?.value.trim().replace(/\s/g, '') || '',
-                direccion: infoDireccionEdit?.value.trim() || '',
-                ciudad_id: infoCiudadEdit?.value || '',
-                codigo_postal: infoCodigoPostalEdit?.value.trim().replace(/\s/g, '') || '',
+            const payload = {
+                nombre: infoNombreEdit?.value.trim() || null,
+                apellidos: infoApellidosEdit?.value.trim() || null,
+                numero_telefono: infoTelefonoEdit?.value.trim() || null,
+                direccion: infoDireccionEdit?.value.trim() || null,
+                ciudad_id: infoCiudadEdit?.value || null,
+                codigo_postal: infoCodigoPostalEdit?.value.trim() || null,
+                fecha_nacimiento: (infoFechaNacimientoEdit && !infoFechaNacimientoEdit.disabled && infoFechaNacimientoEdit.value) ? infoFechaNacimientoEdit.value : undefined,
+                dni: (infoDniEdit && !infoDniEdit.disabled && infoDniEdit.value && dniFieldContainer && dniFieldContainer.style.display !== 'none') ? infoDniEdit.value.trim().toUpperCase() : undefined,
+                mayor_edad_confirmado: infoMayorEdadConfirmadoEdit?.checked ?? false,
+                acepta_publicidad: infoAceptaPublicidadEdit?.checked ?? false,
             };
-
-            console.log('Datos a enviar al backend PATCH /perfil/update:', updatedData);
+            const filteredPayload = Object.fromEntries(Object.entries(payload).filter(([_, v]) => v !== undefined));
 
             try {
-                const response = await fetch('/perfil/modificar', {
-                    method: 'PATCH',
+                const response = await fetch("/perfil/modificar", {
+                    method: "PATCH",
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
                     },
-                    body: JSON.stringify(updatedData)
+                    body: JSON.stringify(filteredPayload),
                 });
-
                 const responseData = await response.json();
-
                 if (response.ok) {
-                    console.log('>>> Petición PATCH exitosa:', responseData);
-                    if (profileUpdateSuccessMessage) {
-                        profileUpdateSuccessMessage.textContent = responseData.message || 'Perfil actualizado correctamente.';
-                        profileUpdateSuccessMessage.classList.add('is-visible');
-                        
-                        setTimeout(() => {
-                            profileUpdateSuccessMessage.classList.remove('is-visible');
-                            setTimeout(() => {
-                                profileUpdateSuccessMessage.textContent = '';
-                            }, 500);
-                        }, 3000);
+                    currentUserData = responseData.user;
+                    populateFormFields(currentUserData);
+                    if (infoCiudadEdit && currentUserData.ciudad_id) {
+                        infoCiudadEdit.value = currentUserData.ciudad_id;
                     }
-                    if (responseData.user) {
-                        const updatedUser = responseData.user;
-                        console.log('Datos de usuario actualizados recibidos del backend:', updatedUser);
-
-                        if (infoNombreDisplay) infoNombreDisplay.textContent = updatedUser.nombre || '';
-                        if (infoApellidosDisplay) infoApellidosDisplay.textContent = updatedUser.apellidos || '';
-                        if (infoTelefonoDisplay) infoTelefonoDisplay.textContent = updatedUser.numero_telefono || '';
-                        if (infoDireccionDisplay) infoDireccionDisplay.textContent = updatedUser.direccion || '';
-                        if (infoCiudadDisplay) infoCiudadDisplay.textContent = updatedUser.ciudad || '';
-                        if (infoCodigoPostalDisplay) infoCodigoPostalDisplay.textContent = updatedUser.codigo_postal || '';
-
-                        if (updatedUser.ciudad_id !== undefined) currentUserCityId = updatedUser.ciudad_id;
-                    } else {
-                        console.warn("Backend no devolvió datos de usuario actualizados en la respuesta.");
+                    if(profileUpdateSuccessMessage) {
+                        profileUpdateSuccessMessage.textContent = responseData.message || "Perfil actualizado.";
+                        profileUpdateSuccessMessage.style.display = "block";
                     }
-
-                    exitEditMode();
-
+                    setTimeout(() => {
+                        if(profileUpdateSuccessMessage) profileUpdateSuccessMessage.style.display = "none";
+                        closeCuentaModal();
+                        window.location.href = "/";
+                    }, 1500);
                 } else if (response.status === 422) {
-                    console.error('>>> Error de validación del servidor:', responseData);
                     if (responseData.errors) {
+                        clearAllClientErrors();
                         for (const field in responseData.errors) {
                             const errorMessages = responseData.errors[field];
+                            let errorElement = null; let formRow = null;
+                            if (field === "nombre") { errorElement = infoNombreError; formRow = formRowNombre; }
+                            else if (field === "apellidos") { errorElement = infoApellidosError; formRow = formRowApellidos; }
+                            else if (field === "numero_telefono") { errorElement = infoTelefonoError; formRow = formRowTelefono; }
+                            else if (field === "direccion") { errorElement = infoDireccionError; formRow = formRowDireccion; }
+                            else if (field === "ciudad_id") { errorElement = infoCiudadError; formRow = formRowCiudad; }
+                            else if (field === "codigo_postal") { errorElement = infoCodigoPostalError; formRow = formRowCodigoPostal; }
+                            else if (field === "fecha_nacimiento") { errorElement = infoFechaNacimientoError; formRow = formRowFechaNacimiento; }
+                            else if (field === "dni") { errorElement = infoDniError; formRow = formRowDni; }
+                            else if (field === "mayor_edad_confirmado") { errorElement = infoMayorEdadConfirmadoError; formRow = formRowMayorEdadConfirmado; }
 
-                            let errorElementId = null;
-                            if (field === 'nombre') errorElementId = 'infoNombreError';
-                            else if (field === 'apellidos') errorElementId = 'infoApellidosError';
-                            else if (field === 'numero_telefono') errorElementId = 'infoTelefonoError';
-                            else if (field === 'direccion') errorElementId = 'infoDireccionError';
-                            else if (field === 'ciudad_id') errorElementId = 'infoCiudadError';
-                            else if (field === 'codigo_postal') errorElementId = 'infoCodigoPostalError';
-
-                            const errorElement = modalCuenta?.querySelector(`#${errorElementId}`);
-                            const formRowElement = errorElement?.closest('.form-row');
-
-
-                            if (errorElement && Array.isArray(errorMessages) && errorMessages.length > 0) {
-                                displayFieldError(errorElement, formRowElement, errorMessages.join(' '));
+                            if (errorElement) {
+                                displayFieldError(errorElement, formRow, errorMessages.join(" "));
                             } else {
-                                console.warn(`Elemento de error para el campo '${field}' no encontrado.`);
-                                displayServerErrors([`Error en el campo ${field}: ${errorMessages.join(' ')}`]);
+                                if (serverSideErrorsArea && serverSideErrorsContainer) {
+                                    const li = document.createElement("li");
+                                    li.textContent = `${field}: ${errorMessages.join(" ")}`;
+                                    serverSideErrorsArea.appendChild(li);
+                                    serverSideErrorsContainer.style.display = "block";
+                                }
                             }
                         }
-                    } else {
-                        console.error('Error 422 con formato de respuesta inesperado:', responseData);
-                        displayServerErrors([responseData.message || 'Error de validación. Por favor, revisa tus datos.']);
                     }
-
                 } else {
-                    console.error('>>> Error del servidor:', response.status, response.statusText, responseData);
-                    displayServerErrors([responseData.message || `Ocurrió un error al guardar los cambios (Código: ${response.status}).`]);
+                    if (serverSideErrorsArea && serverSideErrorsContainer) {
+                        serverSideErrorsArea.innerHTML = `<li>${responseData.message || "Error al guardar."}</li>`;
+                        serverSideErrorsContainer.style.display = "block";
+                    }
                 }
-
             } catch (error) {
-                console.error('>>> Error en la petición fetch para guardar cambios:', error);
-                displayServerErrors(['Ocurrió un error de conexión o el servidor no responde. Por favor, intenta de nuevo.']);
-
-            } finally {
+                if (serverSideErrorsArea && serverSideErrorsContainer) {
+                    serverSideErrorsArea.innerHTML = "<li>Error de conexión. Inténtalo de nuevo.</li>";
+                    serverSideErrorsContainer.style.display = "block";
+                }
             }
         });
-    }
-
-    function capitalizeFirstLetter(string) {
-        if (!string) return '';
-        return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
     if (cerrarCuentaModalBtn) {
         cerrarCuentaModalBtn.addEventListener("click", closeCuentaModal);
     }
-    modalCuenta?.addEventListener('click', function (event) {
-        if (event.target === modalCuenta) {
-            closeCuentaModal();
+
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("complete_profile") === "true" && mostrarCuentaModalBtn) {
+        openCuentaModal(true);
+    }
+    if (typeof showProfileModalCompletaPerfil !== "undefined" && showProfileModalCompletaPerfil && mostrarCuentaModalBtn) {
+       openCuentaModal(true);
+    }
+
+    function validateNoNumbers(value, errorElement, formRowElement, errorMessage) {
+        const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s\.\-]*$/;
+        if (!value || value.trim() === '') {
+            if (formRowElement?.querySelector("input, select")?.hasAttribute('required') ||
+                (isCompletingProfileGlobal && (formRowElement === formRowNombre || formRowElement === formRowApellidos) && !currentUserData?.nombre) ) {
+                displayFieldError(errorElement, formRowElement, "Este campo es obligatorio."); return false;
+            }
+            clearFieldError(errorElement, formRowElement); return true;
         }
-    });
+        if (!regex.test(value)) {
+            displayFieldError(errorElement, formRowElement, errorMessage); return false;
+        }
+        clearFieldError(errorElement, formRowElement); return true;
+    }
+
+    function validateFiveDigitsNumeric(value, errorElement, formRowElement, errorMessage) {
+        const regex = /^\d{5}$/;
+        const cleanedValue = value ? value.replace(/\s/g, '') : '';
+        if (!cleanedValue) {
+             if (formRowElement?.querySelector("input, select")?.hasAttribute('required') ||
+                (isCompletingProfileGlobal && formRowElement === formRowCodigoPostal && !currentUserData?.codigo_postal) ) {
+                displayFieldError(errorElement, formRowElement, "Este campo es obligatorio."); return false;
+            }
+            clearFieldError(errorElement, formRowElement); return true;
+        }
+        if (!regex.test(cleanedValue)) {
+            displayFieldError(errorElement, formRowElement, errorMessage); return false;
+        }
+        clearFieldError(errorElement, formRowElement); return true;
+    }
+
+    function validateNineDigitsNumeric(value, errorElement, formRowElement, errorMessage) {
+        const regex = /^\d{9}$/;
+        const cleanedValue = value ? value.replace(/\s/g, '') : '';
+         if (!cleanedValue) {
+             if (formRowElement?.querySelector("input, select")?.hasAttribute('required') ||
+                (isCompletingProfileGlobal && formRowElement === formRowTelefono && !currentUserData?.numero_telefono) ) {
+                displayFieldError(errorElement, formRowElement, "Este campo es obligatorio."); return false;
+            }
+            clearFieldError(errorElement, formRowElement); return true;
+        }
+        if (!regex.test(cleanedValue)) {
+            displayFieldError(errorElement, formRowElement, errorMessage); return false;
+        }
+        clearFieldError(errorElement, formRowElement); return true;
+    }
+
+    function displayFieldError(errorElement, formRowElement, message) {
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.style.display = "block";
+            const inputElement = formRowElement?.querySelector("input, select");
+            if (inputElement) inputElement.classList.add("invalid");
+        }
+    }
+
+    function clearFieldError(errorElement, formRowElement) {
+        if (errorElement) {
+            errorElement.textContent = "";
+            errorElement.style.display = "none";
+            const inputElement = formRowElement?.querySelector("input, select");
+            if (inputElement) inputElement.classList.remove("invalid");
+        }
+    }
 });

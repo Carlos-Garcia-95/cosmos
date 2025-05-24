@@ -4,65 +4,95 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+// use App\Rules\LetraDNI; // Descomenta si la usas y ajusta el namespace
 
 class ModificarUserRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        //Solo si esta autentificado, permitira la petición de patch
         return Auth::check();
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
-    //Reglas de validación
     {
+        $user = Auth::user();
+        if (!$user) {
+            return [];
+        }
+        $userId = $user->id;
+
+        // DNI es opcional. Fecha Nacimiento, Ciudad y Mayor de 14 son obligatorios al completar.
+        $isCompletingProfile = is_null($user->fecha_nacimiento) ||
+                            is_null($user->ciudad_id) ||
+                            !$user->mayor_edad_confirmado;
+
         return [
-            'nombre' => ['required', 'string', 'max:50', 'regex:/^[a-zA-ZÀ-ÖØ-öø-ÿ\s]*$/u'],
-            'apellidos' => ['required', 'string', 'max:50', 'regex:/^[a-zA-ZÀ-ÖØ-öø-ÿ\s]*$/u'],
-            'numero_telefono' => ['required', 'string', 'digits:9', 'numeric'],
+            'nombre' => ['nullable', 'string', 'max:50', 'regex:/^[a-zA-ZÀ-ÖØ-öø-ÿ\s\.\-]*$/u'],
+            'apellidos' => ['nullable', 'string', 'max:50', 'regex:/^[a-zA-ZÀ-ÖØ-öø-ÿ\s\.\-]*$/u'],
+            'numero_telefono' => ['nullable', 'string', 'digits:9', 'numeric'],
             'direccion' => ['nullable', 'string', 'max:150'],
-            'ciudad_id' => ['required', 'integer', 'exists:ciudades,id'],
-            'codigo_postal' => ['required', 'string', 'digits:5', 'numeric'],
+            'codigo_postal' => ['nullable', 'string', 'digits:5', 'numeric'],
+            'acepta_publicidad' => ['nullable', 'boolean'],
+
+            'fecha_nacimiento' => [
+                Rule::requiredIf($isCompletingProfile),
+                'nullable',
+                'date',
+                'before_or_equal:' . now()->subYears(14)->format('Y-m-d')
+            ],
+            'dni' => [ // DNI ahora es siempre opcional
+                'nullable',
+                'string',
+                Rule::unique('users', 'dni')->ignore($userId),
+                Rule::when($this->filled('dni'), [
+                    'regex:/^\d{8}[A-Za-z]$/',
+                    // new LetraDNI,
+                ]),
+            ],
+            'ciudad_id' => [
+                Rule::requiredIf($isCompletingProfile),
+                'nullable',
+                'integer',
+                'exists:ciudades,id'
+            ],
+            'mayor_edad_confirmado' => [
+                Rule::requiredIf($isCompletingProfile),
+                'boolean',
+                Rule::when($isCompletingProfile, ['accepted'])
+            ],
         ];
     }
 
-    public function messages(): array{
-
+    public function messages(): array
+    {
         return [
-            'nombre.required' => 'El nombre es obligatorio.',
-            'nombre.string' => 'El nombre debe ser una cadena de texto.',
-            'nombre.max' => 'El nombre no debe exceder los :max caracteres.',
-            'nombre.regex' => 'El nombre solo debe contener letras, espacios.',
-
-            'apellidos.required' => 'Los apellidos son obligatorios.',
-            'apellidos.string' => 'Los apellidos deben ser una cadena de texto.',
-            'apellidos.max' => 'Los apellidos no deben exceder los :max caracteres.',
-            'apellidos.regex' => 'Los apellidos solo deben contener letras, espacios.',
-
-            'numero_telefono.required' => 'El número de teléfono es obligatorio.',
-            'numero_telefono.string' => 'El número de teléfono debe ser una cadena de texto.',
-            'numero_telefono.digits' => 'El número de teléfono debe tener exactamente :digits dígitos.',
-            'numero_telefono.numeric' => 'El número de teléfono solo debe contener números.',
-
-            'direccion.string' => 'La dirección debe ser una cadena de texto.',
-            'direccion.max' => 'La dirección no debe exceder los :max caracteres.',
-
-            'ciudad_id.required' => 'Debes seleccionar una ciudad.',
-            'ciudad_id.integer' => 'El valor de la ciudad no es válido.',
-            'ciudad_id.exists' => 'La ciudad seleccionada no es válida.', // Importante para validar que el ID existe
-
-            'codigo_postal.required' => 'El código postal es obligatorio.',
-            'codigo_postal.string' => 'El código postal debe ser una cadena de texto.',
-            'codigo_postal.digits' => 'El código postal debe tener exactamente :digits dígitos.',
+            'nombre.regex' => 'El nombre solo puede contener letras y espacios.',
+            'apellidos.regex' => 'Los apellidos solo pueden contener letras y espacios.',
+            'numero_telefono.digits' => 'El teléfono debe tener :digits dígitos.',
+            'numero_telefono.numeric' => 'El teléfono solo debe contener números.',
+            'ciudad_id.required' => 'Debes seleccionar una ciudad para completar tu perfil.',
+            'ciudad_id.exists' => 'La ciudad seleccionada no es válida.',
+            'codigo_postal.digits' => 'El código postal debe tener :digits dígitos.',
             'codigo_postal.numeric' => 'El código postal solo debe contener números.',
+            'fecha_nacimiento.required' => 'La fecha de nacimiento es obligatoria para completar tu perfil.',
+            'fecha_nacimiento.date' => 'La fecha de nacimiento no es una fecha válida.',
+            'fecha_nacimiento.before_or_equal' => 'Debes tener al menos 14 años.',
+            'dni.string' => 'El DNI debe ser texto.',
+            'dni.regex' => 'El formato del DNI debe ser 8 números y 1 letra (si se proporciona).',
+            'dni.unique' => 'Este DNI ya está en uso por otro usuario.',
+            // 'dni.letra_dni' => 'La letra del DNI no es correcta (si se proporciona).',
+            'mayor_edad_confirmado.required' => 'Debes confirmar que eres mayor de 14 años para completar tu perfil.',
+            'mayor_edad_confirmado.accepted' => 'Debes confirmar que eres mayor de 14 años.',
         ];
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'acepta_publicidad' => $this->boolean('acepta_publicidad'),
+            'mayor_edad_confirmado' => $this->input('mayor_edad_confirmado') ? true : false,
+            'dni' => $this->input('dni') ? strtoupper(trim($this->input('dni'))) : null,
+        ]);
     }
 }
