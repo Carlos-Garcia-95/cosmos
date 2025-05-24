@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EmailEntradas;
 use App\Models\Asiento;
 use App\Models\AsientoEstado;
 use App\Models\Entrada;
 use App\Models\Factura;
+use App\Models\Fecha;
+use App\Models\Hora;
 use App\Models\Pelicula;
 use App\Models\Sala;
 use App\Models\SesionPelicula;
@@ -13,6 +16,7 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Mail;
 use Storage;
 use Str;
 
@@ -50,7 +54,7 @@ class GenerarEntrada
                 DB::rollBack();
                 return false;
             }
-
+            
             if (isset($datos_validados["usuario_id"])) {
                 if (!$this->recuperar_usuario()) {
                     DB::rollBack();
@@ -171,6 +175,7 @@ class GenerarEntrada
 
     private function recuperar_usuario(): bool {
 
+        
         // Comprobar si el usuario es invitado. Si es invitado usuario será null
         if (!isset($this->datos_validados['usuario_id']) || is_null($this->datos_validados['usuario_id'])) {
             $this->usuario = null;
@@ -286,6 +291,7 @@ class GenerarEntrada
                     'precio_final' => $precio_final,
                     'sala' => $sala->id_sala,
                     'sala_id' => $this->sesion->id_sala,
+                    'poster_ruta' => $pelicula->poster_ruta,
                     'pelicula_titulo' => $pelicula->titulo,
                     'pelicula_id' => $this->sesion->id_pelicula,
                     'hora' => $this->sesion->hora,
@@ -356,7 +362,7 @@ class GenerarEntrada
             return true;
         } catch (\Exception $e) {
             Log::error("Error generando las entradas: " . $e->getMessage());
-            $this->ultimoError = "Error al generar las entradas. Por favor, inténtalo más tarde.";
+            $this->ultimoError = "Error al actualizar los asientos. Por favor, inténtalo más tarde.";
             return false;
         }
     }
@@ -377,8 +383,9 @@ class GenerarEntrada
 
                 $this->rutas_pdf[] = $pdf_ruta;
 
-                Entrada::where('id_entrada', $entrada->id)
+                Entrada::where('id_entrada', $entrada->id_entrada)
                             ->update(['ruta_pdf' => $pdf_ruta]);
+
             }
 
             // Comprobar que se han generado tantos pdf como entradas entradas
@@ -392,7 +399,7 @@ class GenerarEntrada
 
         } catch (\Exception $e) {
             Log::error("Error generando los pdf de las entradas: " . $e->getMessage());
-            $this->ultimoError = "Error al generar las entradas. Por favor, inténtalo más tarde." . $e->getMessage();
+            $this->ultimoError = "Error al generar los pdf. Por favor, inténtalo más tarde.";
             return false;
         }
     }
@@ -400,11 +407,64 @@ class GenerarEntrada
 
     
 
-
+    
     private function enviar_correo(): bool {
-        $this->ultimoError = "BIEN LLEGAMOS A ENVIAR CORREO";
-        return false;
+        
+        $email_destino = null;
+        $email_usuario = null;
 
+        // Si es usuario registrado
+        // TODO -> Email invitado
+        if ($this->usuario) {
+            $email_destino = $this->usuario->email;
+            $email_usuario = $this->usuario;
+        } elseif (!empty($this->datos_validados['email_invitado'])) { // Si es invitado
+            $email_destino = $this->datos_validados['email_invitado'];
+            // Crear un objeto de "mentira" User o pasar los datos del invitado al Mailable
+            $email_usuario = new User(['name' => $this->datos_validados['cardName'] ?? 'Cliente']);
+        }
+
+        // Si no hay email de destino se lanza un error
+        if (is_null($email_destino)) {
+            Log::info([
+                "mensaje" => "No se envía correo: no hay destinatario (usuario no registrado o sin email de contacto).",
+                "email" => $email_destino,
+                "usuario" => $this->usuario
+            ]);
+            $this->ultimoError = "Error al enviar el correo. Por favor, inténtalo más tarde.";
+            return false;
+        }
+
+        // Si no hay pdf generado/s, se lanza un error
+        if (empty($this->rutas_pdf)) {
+            Log::warning("No se envía correo: no hay PDFs de entradas para adjuntar.", ['email_destino' => $email_destino]);
+             $this->ultimoError = "Error al enviar el correo. Por favor, inténtalo más tarde.";
+            return false; // Por ahora, si no hay PDFs, no lo consideramos un error de envío de correo.
+        }
+
+        try {  
+            // Guardar las rutas de los pdf generados
+            $rutas_pdf = [];
+            foreach ($this->rutas_pdf as $ruta_pdf) {
+                $rutas_pdf[] = Storage::disk('public')->path($ruta_pdf);
+            }
+
+            // Crear instancia de Mailable (EmailEntradas)
+            $correo_confirmacion = new EmailEntradas($email_usuario, $this->factura, $rutas_pdf);
+
+            // Enviar el correo con Mail. También lo ponemos en cola
+            // Al ponerlo en cola, la aplicación seguirá funcionando (para el usuario) mientras por detrás se manda el email
+            Mail::to($email_destino)->queue($correo_confirmacion);
+
+            Log::info("Correo de confirmación de compra enviado a: " . $email_destino . " con " . count($rutas_pdf) . " entradas adjuntas.");
+            return true;
+        } catch (\Exception $e) {
+            Log::error("Error enviado los pdf al correo del usuario: " . $e->getMessage());
+            $this->ultimoError = "Error al enviar el correo. Por favor, inténtalo más tarde.";
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -428,23 +488,38 @@ class GenerarEntrada
                 'cif' => config('company.cif', 'B99999999'),
             ];
 
+            // Recuperar fecha
+            $fecha_entrada = Fecha::find($entrada->fecha);
+            if (!$fecha_entrada) {
+                Log::error("No se pudo guardar recuperar la fecha de la entrada: " . $entrada->fecha);
+                return null;
+            }
+
+            // Recuperar hora
+            $hora_entrada = Hora::find($entrada->hora);
+            if (!$hora_entrada) {
+                Log::error("No se pudo guardar recuperar la hora de la entrada: " . $entrada->hora);
+                return null;
+            }
+
             // Cargar la vista Blade para la entrada
-            $pdf = Pdf::loadView('pdf.entrada_cine', compact('entrada', 'empresa')); // ej. resources/views/pdfs/entrada_individual.blade.php
+            $pdf = PDF::loadView('pdf.entrada_cine', compact('entrada', 'empresa', 'fecha_entrada', 'hora_entrada'));
 
             // Se crea un nombre de archivo único
-            $nombreArchivo = 'entrada-' . $entrada->id_entrada . '-' . Str::random(10) . '.pdf';
-            
-            // Se crea la ruta del directorio
-            $rutaDirectorio = 'public/entradas_pdf';
+            $nombre_archivo = 'entrada-' . $entrada->id_entrada . '-' . Str::random(10) . '.pdf';
+
+            // Se crea la ruta relativa
+            $ruta_relativa = 'entradas_pdf/' . $nombre_archivo;
 
             // Se guarda el pdf
-            Storage::put($rutaDirectorio . '/' . $nombreArchivo, $pdf->output());
-            
-            // Crea la ruta entera y devolverla
-            $rutaAlmacenada = $rutaDirectorio . '/' . $nombreArchivo;
-            Log::info("PDF de entrada generado y guardado: " . $rutaAlmacenada);
+            $exito_guardado = Storage::disk('public')->put($ruta_relativa, $pdf->output());
 
-            return Storage::path($rutaAlmacenada); // Devuelve la ruta completa del sistema de archivos
+            if (!$exito_guardado) {
+                Log::error("No se pudo guardar el PDF en el disco 'public': " . $ruta_relativa);
+                return null;
+            }
+
+            return $ruta_relativa;
 
         } catch (\Exception $e) {
             Log::error("Error generando PDF para entrada ID {$entrada->id_entrada}: " . $e->getMessage(), ['exception' => $e]);

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Entrada;
+use App\Models\Fecha;
+use App\Models\Hora;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -13,7 +15,7 @@ class EntradaController extends Controller
     {
         // Cargar la entrada con sus relaciones necesarias
         $entrada = Entrada::with(['pelicula', 'salaEntrada', 'asiento', 'usuario', 'tipoEntrada'])
-                        ->findOrFail($id_entrada);
+            ->findOrFail($id_entrada);
 
         // Datos de la empresa (puedes obtenerlos de config o de una tabla)
         $empresa = (object) [
@@ -21,9 +23,14 @@ class EntradaController extends Controller
             'cif' => config('company.cif', 'B12345678'),
         ];
 
-        $pdf = Pdf::loadView('pdf.entrada_cine', compact('entrada', 'empresa'));
-        // Configurar tamaño de página si es necesario (aunque ya está en @page CSS)
-        // $pdf->setPaper([0, 0, 283.46, 566.93], 'portrait'); // 100mm x 200mm en puntos
+        // Recuperar fecha
+        $fecha_entrada = Fecha::find($entrada->fecha);
+
+        // Recuperar hora
+        $hora_entrada = Hora::find($entrada->hora);
+
+        // Cargar la vista Blade para la entrada
+        $pdf = Pdf::loadView('pdf.entrada_cine', compact('entrada', 'empresa', 'fecha_entrada', 'hora_entrada'));
 
         // Nombre del archivo para descarga
         $nombreArchivo = 'entrada_cosmos_cinema_' . $entrada->id_entrada . '_' . str_replace(' ', '_', $entrada->pelicula_titulo) . '.pdf';
@@ -37,7 +44,7 @@ class EntradaController extends Controller
         // Cargar la entrada con sus relaciones necesarias
         // Es importante cargar todas las relaciones que usas en la vista del PDF
         $entrada = Entrada::with(['pelicula', 'salaEntrada', 'asiento', 'usuario', 'tipoEntrada'])
-                        ->findOrFail($id_entrada);
+            ->findOrFail($id_entrada);
 
         // Datos de la empresa (puedes obtenerlos de config o de una tabla)
         $empresa = (object) [
@@ -46,11 +53,17 @@ class EntradaController extends Controller
             // Añade más datos de empresa si tu PDF los usa
         ];
 
-        // O, para ver el PDF directamente en el navegador (como stream):
-        $pdf = Pdf::loadView('pdf.entrada_cine', compact('entrada', 'empresa'));
-        // $pdf->setPaper([0, 0, 283.46, 566.93], 'portrait'); // 100mm x 200mm
 
-        return $pdf->stream('vista_previa_entrada_'.$entrada->id_entrada.'.pdf');
+        // Recuperar fecha
+        $fecha_entrada = Fecha::find($entrada->fecha);
+
+        // Recuperar hora
+        $hora_entrada = Hora::find($entrada->hora);
+
+        // Cargar la vista Blade para la entrada
+        $pdf = Pdf::loadView('pdf.entrada_cine', compact('entrada', 'empresa', 'fecha_entrada', 'hora_entrada'));
+
+        return $pdf->stream('vista_previa_entrada_' . $entrada->id_entrada . '.pdf');
     }
 
 
@@ -60,7 +73,7 @@ class EntradaController extends Controller
         // Cargar la entrada con sus relaciones necesarias
         // Es importante cargar todas las relaciones que usas en la vista del PDF
         $entrada = Entrada::with(['pelicula', 'salaEntrada', 'asiento', 'usuario', 'tipoEntrada'])
-                        ->findOrFail($id_entrada);
+            ->findOrFail($id_entrada);
 
         // Datos de la empresa (puedes obtenerlos de config o de una tabla)
         $empresa = (object) [
@@ -73,6 +86,6 @@ class EntradaController extends Controller
         $pdf = Pdf::loadView('pdf.entrada_cine', compact('entrada', 'empresa'));
         // $pdf->setPaper([0, 0, 283.46, 566.93], 'portrait'); // 100mm x 200mm
 
-        return $pdf->stream('vista_previa_entrada_'.$entrada->id_entrada.'.pdf');
+        return $pdf->stream('vista_previa_entrada_' . $entrada->id_entrada . '.pdf');
     }
 }

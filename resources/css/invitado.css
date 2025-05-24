@@ -21,9 +21,9 @@
     flex-direction: column;
     width: 65%;
     max-width: 40%;
-    height: 70vh;       /* Altura fija del modal */
+    height: fit-content;
     max-height: 95vh;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: stretch;
     box-sizing: border-box;
 }
@@ -36,47 +36,84 @@
 /* Centrar el título principal del modal */
 .invitado_titulo {
     text-align: center;
-    font-size: 2em; /* Tamaño más grande, ajustable según tus preferencias */
-    font-weight: bold; /* Resaltado con bold */
-    margin-top: 20px; /* Ajusta el margen superior si es necesario */
-    margin-bottom: 15px; /* Espacio antes del separador */
+    font-size: 2em;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 15px;
 }
 
 /* Estilos para el cuerpo del modal */
 .invitado_body {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centra los elementos hijos horizontalmente */
-    text-align: center; /* Centra el texto dentro de los elementos hijos */
-    overflow-y: auto; /* Permite scroll si el contenido excede la altura */
-    padding-left: 20px; /* Añade un poco de padding lateral */
-    padding-right: 20px; /* Añade un poco de padding lateral */
-    flex-grow: 1; /* Permite que el body ocupe el espacio disponible */
-    margin-bottom: 15px; /* Espacio antes del separador */
+    align-items: center;
+    text-align: center;
+    overflow-y: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    flex-grow: 1;
 }
 
 /* Estilos para los subtítulos dentro del cuerpo */
 .invitado_texto_titulo {
-    font-size: 1.4em; /* Más grande que el texto normal, más pequeño que el título principal */
-    font-weight: bold; /* Para resaltarlo */
-    margin-top: 20px; /* Espacio arriba de cada subtítulo */
-    margin-bottom: 8px; /* Espacio entre el subtítulo y el texto que le sigue */
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 8px;
     color:#6feaf6;
 }
 
 /* Estilos para el texto normal dentro del cuerpo */
 .invitado_texto_texto {
-    font-size: 1em; /* Tamaño base del texto */
-    margin-bottom: 20px; /* Espacio debajo de cada bloque de texto */
-    line-height: 1.6; /* Mejora la legibilidad */
+    font-size: 1em;
+    margin-bottom: 20px;
+    line-height: 1.6;
 }
 
 /* Centrar los botones */
 .invitado_botones {
     display: flex;
-    justify-content: center; /* Centra los botones horizontalmente */
-    align-items: center; /* Centra los botones verticalmente si tienen alturas diferentes */
-    gap: 15px; /* Espacio entre los botones */
-    padding: 20px 0; /* Espacio arriba y abajo de la sección de botones */
-    margin-top: auto; /* Empuja los botones hacia abajo si hay espacio extra en el container_invitado */
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 0;
+    margin-top: auto;
+}
+
+.invitado_correo {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    overflow-y: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    flex-grow: 1;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.invitado_correo_label {
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: white;
+    width: 80%;
+    display: block;
+    user-select: none;
+    margin-top: 5%;
+}
+
+.invitado_correo_input {
+    width: 80%;
+    height: 50px;
+    border-radius: 5px;
+    box-shadow: none;
+    border: 1px solid #333;
+    transition: all 0.3s ease-in-out;
+    font-size: 18px;
+    padding: 5px 15px;
+    background-color: #333;
+    color: #fff;
+    margin: 0.5%;
 }

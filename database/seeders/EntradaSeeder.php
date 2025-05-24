@@ -61,8 +61,8 @@ class EntradaSeeder extends Seeder
             $asientoId = $asiento ? $asiento->id_asiento : 1; // Fallback si no hay asiento
 
             Entrada::create([
-                'codigo_qr' => strtoupper(Str::random(8)) . '-' . rand(1000, 9999), // Código QR simple
-                /* 'ruta_pdf' => "", */
+                'codigo_qr' => 'ENTRADA-' . Str::uuid()->toString(),
+                'ruta_pdf' => "",
                 'precio_total' => $precioTotal,
                 'descuento' => $descuentoPorcentaje,
                 'precio_final' => $precioFinal,
@@ -70,6 +70,7 @@ class EntradaSeeder extends Seeder
                 'sala' => $sala->numero_sala ?? $sala->id_sala, 
                 'sala_id' => $sala->id_sala,
                 // Sesión
+                'poster_ruta' => $pelicula->poster_ruta,
                 'pelicula_titulo' => $pelicula->titulo,
                 'pelicula_id' => $pelicula->id,
                 'hora' => $horaSesion,

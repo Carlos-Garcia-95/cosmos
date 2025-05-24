@@ -156,7 +156,6 @@
                         <div id='asientos_div'></div>
                         <div id='datos_sesion_div'></div>
                         <div id='precio_div'></div>
-                        <div id='usuario_div'></div>
 
                         @if ($errors->getBag('procesar_pago')->any())
                             <div class='errores_pago' id='errores_pago'>

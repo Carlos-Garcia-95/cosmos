@@ -75,6 +75,5 @@ class FacturaSeeder extends Seeder
 
 
         DB::table('factura')->insert($facturas);
-        $this->command->info(count($facturas) . ' facturas de ejemplo creadas.');
     }
 }

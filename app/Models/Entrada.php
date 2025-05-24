@@ -21,6 +21,7 @@ class Entrada extends Model
         'precio_final',
         'sala',
         'sala_id',
+        'poster_ruta',
         'pelicula_titulo',
         'pelicula_id',
         'hora',

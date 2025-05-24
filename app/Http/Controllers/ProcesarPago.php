@@ -27,10 +27,13 @@ class ProcesarPago extends Controller
 
         // Si el usuario está logueado, se recuperan su id, y se añaden sus reglas y mensajes
         if (Auth::check()) {
-            $request->merge(['usuario_id_autenticado' => Auth::id()]);
+            $request->merge(['usuario_id' => Auth::id()]);
 
             $todas_las_reglas = array_merge($todas_las_reglas, $this->obtener_reglas_usuario());
-            $todos_los_mensajes = array_merge($todos_los_mensajes, $this->obtener_mensajes_usuario());
+            $todos_los_mensajes = array_merge($todos_los_mensajes, $this->obtener_mensajes_usuario($request));
+        } else {    // Si es invitado
+            $todas_las_reglas = array_merge($todas_las_reglas, $this->obtener_reglas_invitado());
+            $todos_los_mensajes = array_merge($todos_los_mensajes, $this->obtener_mensajes_invitado());
         }
 
         // Se usa Validator para comprobar mediante reglas establecidas si los valores son correctos
@@ -46,6 +49,13 @@ class ProcesarPago extends Controller
         
         // Si la validación es correcta, se cambia el estado de la validación
         $datos_validados = $validator->validated();
+
+        // Guardamos usuario_id en $datos_validados (o null si es invitado)
+        if (Auth::check()) {
+            $datos_validados['usuario_id'] = Auth::id();
+        } else {
+            $datos_validados['usuario_id'] = null;
+        }
 
         // Comprobar que el precio total es correcto
         // Recuperar los datos del precio
@@ -127,8 +137,13 @@ class ProcesarPago extends Controller
 
     private function obtener_reglas_usuario(): array {
         return [
-            'usuario_id'             => 'sometimes|integer|exists:users,id|same:usuario_id_autenticado',
-            'usuario_id_autenticado' => 'required|integer|exists:users,id',
+            'usuario_id' => 'required|integer|exists:users,id',
+        ];
+    }
+
+    private function obtener_reglas_invitado(): array {
+        return [
+            'email_invitado' => 'required|email|max:255',
         ];
     }
 
@@ -185,14 +200,20 @@ class ProcesarPago extends Controller
         ];
     }
 
-    private function obtener_mensajes_usuario(): array
+    private function obtener_mensajes_usuario($request): array
     {
         return [
-            'usuario_id.integer'    => 'La información del usuario no es válida.',
-            'usuario_id.exists'     => 'El usuario especificado no existe.',
-            'usuario_id.same'       => 'La información del usuario no coincide con el usuario autenticado.',
-            'usuario_id_autenticado.required' => 'Error interno: Falta el ID de usuario autenticado.',
-            'usuario_id_autenticado.exists' => 'Error interno: El usuario autenticado no es válido.',
+            'usuario_id.required'   => 'Error interno: La información del usuario autenticado es necesaria.',
+            'usuario_id.integer'    => 'Error interno: La información del usuario autenticado no es válida.',
+            'usuario_id.exists'     => 'Error interno: El usuario autenticado no existe en el sistema.',
+        ];
+    }
+
+    private function obtener_mensajes_invitado(): array {
+        return [
+            'email_invitado.required' => 'Por favor, introduce tu dirección de correo electrónico para continuar como invitado.',
+            'email_invitado.email'    => 'La dirección de correo electrónico introducida no es válida.',
+            'email_invitado.max'      => 'La dirección de correo electrónico es demasiado larga.',
         ];
     }
 }

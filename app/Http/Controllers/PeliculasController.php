@@ -3,13 +3,44 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pelicula;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PeliculasController extends Controller
 {
     // Recuperar películas y sus generos asociados
     public static function recuperar_peliculas_activas() {
-        $peliculas_objeto = Pelicula::with('generos')->where('activa', true)->get();
+        $fecha_actual = Carbon::now()->toDateString();
+        $hora_actual = Carbon::now()->toTimeString();
+
+        $peliculas_objeto = Pelicula::with('generos')
+                                        ->where('activa', true)
+                                        ->whereHas('sesiones', function ($querySesion) use ($fecha_actual, $hora_actual) {
+                                    // Filtrar sesiones que están activas
+                                            $querySesion->where('activa', true)
+                                    // Filtrar sesiones cuya fecha.fecha sea hoy o en el futuro
+                                            ->whereHas('fechaRelacion', function ($queryFecha) use ($fecha_actual) {
+                                                $queryFecha->where('fecha', '>=', $fecha_actual);
+                                            })
+                                    // Y para las sesiones de hoy, filtrar aquellas cuya hora.hora sea en el futuro
+                                    // O para cualquier sesión en una fecha futura (donde la hora no importa tanto para este filtro inicial)
+                                            ->where(function ($queryHoraCondicion) use ($fecha_actual, $hora_actual) {
+                                    // Caso 1: La sesión es para una fecha futura (entonces cualquier hora es válida para "posterior")
+                                                $queryHoraCondicion->whereHas('fechaRelacion', function ($queryFechaFutura) use ($fecha_actual) {
+                                                    $queryFechaFutura->where('fecha', '>', $fecha_actual);
+                                                })
+                                    // Caso 2: O la sesión es para hoy Y la hora es posterior a la actual
+                                                ->orWhere(function ($queryHoyConHoraFutura) use ($fecha_actual, $hora_actual) {
+                                                    $queryHoyConHoraFutura->whereHas('fechaRelacion', function ($queryFechaHoy) use ($fecha_actual) {
+                                                        $queryFechaHoy->where('fecha', '=', $fecha_actual);
+                                                    })
+                                                    ->whereHas('horaRelacion', function ($queryHora) use ($hora_actual) {
+                                                        $queryHora->where('hora', '>', $hora_actual);
+                                                    });
+                                                });
+                                            });
+                                        })
+                                        ->get();
 
         foreach ($peliculas_objeto as $pelicula) {
             $peliculas[$pelicula->id] = [
