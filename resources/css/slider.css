@@ -12,7 +12,7 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    font-family: "PP Neue Corp", Impact, sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 /* Estilos del encabezado */
@@ -312,6 +312,79 @@ body {
 
 .g_id_signin{
     margin-bottom: 5%;
+}
+
+/* styles.css o tu archivo CSS principal */
+
+.btn-google {
+    display: inline-flex; /* Para alinear el ícono y el texto */
+    align-items: center; /* Centrar verticalmente el contenido */
+    justify-content: center; /* Centrar horizontalmente el contenido */
+    padding: 10px 20px; /* Ajusta el padding a tu gusto */
+    border-radius: 5px; /* Bordes redondeados */
+    text-decoration: none; /* Quitar subrayado de enlaces */
+    font-family: 'Roboto', sans-serif; /* Fuente similar a la de Google (asegúrate de importarla) */
+    font-weight: 500;
+    font-size: 14px; /* Tamaño de fuente */
+    line-height: 1.5;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 1px solid transparent; /* Para un borde sutil opcional */
+
+    /* Colores estándar de Google (azul) */
+    background-color: black;
+    border: white solid 1px;
+    color: white;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.25);
+}
+
+.btn-google:hover {
+    background-color: black; /* Un azul un poco más oscuro al pasar el mouse */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.25);
+}
+
+.btn-google:active {
+    background-color: black; /* Un azul aún más oscuro al hacer clic */
+}
+
+.btn-google .google-icon {
+    display: inline-block;
+    width: 18px; /* Tamaño del ícono */
+    height: 18px;
+    margin-right: 12px; /* Espacio entre el ícono y el texto */
+    background-color: white; /* Fondo blanco para el logo de Google */
+    border-radius: 2px; /* Ligeramente redondeado si quieres */
+    padding: 2px; /* Pequeño padding si el SVG no lo tiene */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Si usas un SVG directamente, puedes omitir el background-color del .google-icon
+   y simplemente darle el margin-right */
+.btn-google svg {
+    width: 18px;
+    height: 18px;
+    margin-right: 12px;
+}
+
+/* Estilos para el modo "outline" (opcional, si quieres una alternativa) */
+.btn-google.outline {
+    background-color: white;
+    color: #4285F4; /* Color del texto Google */
+    border: 1px solid #dadce0; /* Borde sutil gris */
+    box-shadow: none;
+}
+
+.btn-google.outline:hover {
+    background-color: #f8f9fa; /* Un gris muy claro al pasar el mouse */
+    border-color: #c6c9cc;
+    box-shadow: none;
+}
+
+.btn-google.outline .google-icon {
+    /* No necesita fondo blanco si el botón ya es blanco */
+    background-color: transparent;
 }
 
 /* Estilos del modal */

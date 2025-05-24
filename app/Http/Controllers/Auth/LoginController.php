@@ -47,9 +47,9 @@ class LoginController extends Controller
         $recaptchaResult = $response->json();
 
         if (!isset($recaptchaResult['success']) || !$recaptchaResult['success']) {
-             return back()->withErrors([
-                 'recaptcha' => 'La verificación reCAPTCHA falló. Inténtalo de nuevo.',
-             ])->onlyInput('login_email');
+            return back()->withErrors([
+                'recaptcha' => 'La verificación reCAPTCHA falló. Inténtalo de nuevo.',
+            ])->onlyInput('login_email');
         }
 
         $authCredentials = [
@@ -65,16 +65,13 @@ class LoginController extends Controller
             if ($user->tipo_usuario === self::ID_TIPO_USUARIO_CLIENTE) {
                 $request->session()->regenerate();
                 return redirect()->intended('/')->with('success', "¡Bienvenido Cliente {$user->nombre} {$user->apellidos}!");
-
-            } else if($user->tipo_usuario === self::ID_TIPO_USUARIO_EMPLEADO){
+            } else if ($user->tipo_usuario === self::ID_TIPO_USUARIO_EMPLEADO) {
                 $request->session()->regenerate();
                 return redirect()->intended('/')->with('success', "¡Bienvenido Empleado {$user->nombre} {$user->apellidos}!");
-
-            } else if($user->tipo_usuario === self::ID_TIPO_USUARIO_ADMINISTRADOR){
+            } else if ($user->tipo_usuario === self::ID_TIPO_USUARIO_ADMINISTRADOR) {
                 $request->session()->regenerate();
                 return redirect()->intended('/')->with('success', "¡Bienvenido Administrador {$user->nombre} {$user->apellidos}!");
             }
-
         } else {
             return back()->withErrors([
                 'login_email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.'
@@ -87,16 +84,15 @@ class LoginController extends Controller
         return view('components.login');
     }
 
-     //Método para cerrar sesión
+    //Método para cerrar sesión
     public function logout(Request $request)
     {
         Auth::logout();
 
-         // Invalida la sesión actual y regenera el token CSRF
+        // Invalida la sesión actual y regenera el token CSRF
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return redirect('/')->with('success', '¡Sesión cerrada correctamente!');
     }
-
 }

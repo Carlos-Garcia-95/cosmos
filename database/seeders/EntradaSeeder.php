@@ -27,6 +27,7 @@ class EntradaSeeder extends Seeder
         $pelicula = Pelicula::where('activa', true)->inRandomOrder()->first();
         $sala = Sala::inRandomOrder()->first();
         $asiento = Asiento::inRandomOrder()->first();
+        $facturas = Factura::all();
         $tipoEntrada = TipoEntrada::inRandomOrder()->first(); // Asume que tienes un seeder para tipos de entrada
 
         // Verificar si se encontraron todos los datos necesarios
@@ -43,6 +44,7 @@ class EntradaSeeder extends Seeder
             $precioTotal = rand(700, 1200) / 100; // Precio entre 7.00 y 12.00
             $descuentoPorcentaje = rand(0, 2) * 10; // 0%, 10%, o 20% de descuento
             $precioFinal = $precioTotal * (1 - ($descuentoPorcentaje / 100));
+            $factura = $facturas->random();
 
             // Simular datos de sesión
             $fechaSesion = Carbon::now()->addDays(rand(1, 7))->format('Y-m-d'); // Fecha en los próximos 7 días
@@ -60,7 +62,7 @@ class EntradaSeeder extends Seeder
 
             Entrada::create([
                 'codigo_qr' => strtoupper(Str::random(8)) . '-' . rand(1000, 9999), // Código QR simple
-                'ruta_pdf' => "",
+                /* 'ruta_pdf' => "", */
                 'precio_total' => $precioTotal,
                 'descuento' => $descuentoPorcentaje,
                 'precio_final' => $precioFinal,
@@ -79,7 +81,7 @@ class EntradaSeeder extends Seeder
                 // Usuario
                 'usuario_id' => $usuario->id,
                 // Tipo Entrada
-                'factura_id' => 1,
+                'factura_id' => $factura->id_factura,
                 'tipo_entrada' => $tipoEntrada->id_tipo_entrada,
                 // Timestamps se manejan automáticamente
             ]);

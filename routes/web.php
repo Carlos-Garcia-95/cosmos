@@ -126,6 +126,8 @@ Route::get('administrador/check-email', [CheckController::class, 'checkEmail']);
 // Ruta para comprobar si el DNI existe
 Route::get('administrador/check-dni', [CheckController::class, 'checkDni']);
 
+Route::get('/check-dni-profile', [CheckController::class, 'checkDni']);
+
 //Gestionar nominas
 Route::get('administrador/nomina/gestion', [AdminController::class, 'gestionarNominasIndex'])->name('nominas.gestion.index');
 
@@ -155,7 +157,12 @@ Route::get('/recuperar_sesion/id_sesion={id_sesion}', [RecuperarSesionPelicula::
 
 // Rutas para autenticación con Google
 
-Route::post('/auth/google', [SocialAuthController::class, 'verifyGoogleToken']);
+Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])->name('login.google');
+
+Route::get('/auth/google/callback', [SocialAuthController::class, 'handleGoogleCallback']);
+
+/* Route::get('/perfil/completar', [UserProfileController::class, 'showOrRequireCompleteProfile'])
+        ->name('perfil.completar'); */
 
 //Gestionar nominas del empleado, obtener nominas y descargarlas.
 
