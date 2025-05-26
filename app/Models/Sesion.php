@@ -33,12 +33,12 @@ class Sesion extends Model
     }
 
     // Relación con la fecha
-    public function fecha()
+    public function fechaRelacion()
     {
         return $this->belongsTo(Fecha::class, 'fecha', 'id');
     }
 
-    public function horaSession()
+    public function horaRelacion()
     {
         return $this->belongsTo(Hora::class, 'hora', 'id');
     }

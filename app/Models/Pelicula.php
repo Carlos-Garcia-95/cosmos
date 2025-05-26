@@ -49,7 +49,7 @@ class Pelicula extends Model
         );
     }
 
-    public function sessions()
+    public function sesiones()
 {
     return $this->hasMany(Sesion::class, 'id_pelicula');
 }

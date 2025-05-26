@@ -61,7 +61,7 @@ class SessionController extends Controller
         $fechaSeleccionadaStr = $fechaObj->fecha; // Fecha en formato YYYY-MM-DD.
 
         // Obtener sesiones existentes para la fecha y sala especificadas con relaciones cargadas
-        $sesionesExistentes = Sesion::with(['horaSession', 'pelicula'])
+        $sesionesExistentes = Sesion::with(['horaRelacion', 'pelicula'])
                                     ->where('fecha', $fechaId)
                                     ->where('id_sala', $salaId)
                                     ->orderBy('hora')
@@ -70,8 +70,8 @@ class SessionController extends Controller
         // Pre-calcular los rangos de tiempo de las sesiones ya ocupadas
         $rangosSesionesOcupadas = [];
         foreach ($sesionesExistentes as $sesion) {
-            if ($sesion->horaSession && $sesion->pelicula) {
-                $inicioSesionExistente = Carbon::parse($fechaSeleccionadaStr . ' ' . $sesion->horaSession->hora);
+            if ($sesion->horaRelacion && $sesion->pelicula) {
+                $inicioSesionExistente = Carbon::parse($fechaSeleccionadaStr . ' ' . $sesion->horaRelacion->hora);
 
                 // Calcula la hora de fin de la sesión existente, incluyendo duración y margen.
                 $finSesionExistente = (clone $inicioSesionExistente)->addMinutes($sesion->pelicula->duracion + $margenSeguridad);
@@ -236,14 +236,14 @@ class SessionController extends Controller
 
         // Cargar las sesiones filtrando por la fecha_id con relaciones
         $sessions = Sesion::where('fecha', $fecha_id)
-                            ->with(['pelicula', 'sala', 'fecha', 'horaSession']) // Asegúrate de 'horaSession'
+                            ->with(['pelicula', 'sala', 'fechaRelacion', 'horaRelacion']) // Asegúrate de 'horaSession'
                             ->get();
 
         $margenSeguridad = 10; // Minutos de limpieza o transición.
 
         // Formatear los datos para el frontend
         $formattedSessions = $sessions->map(function ($session) use ($margenSeguridad) {
-            $hora_inicio_str = $session->horaSession->hora ?? null;
+            $hora_inicio_str = $session->horaRelacion->hora ?? null;
             $duracion_pelicula = $session->pelicula->duracion ?? 0;
 
             $hora_final_str = 'N/A';
@@ -268,7 +268,7 @@ class SessionController extends Controller
                 'sala_nombre' => $session->sala->nombre ?? ($session->sala->id_sala ?? 'N/A'), // Usar 'nombre' si existe, sino 'id_sala'
                 'hora_inicio' => substr($hora_inicio_str, 0, 5) ?? 'N/A',
                 'hora_final' => $hora_final_str,
-                'fecha_sesion' => $session->fecha->fecha ?? 'N/A',
+                'fecha_sesion' => $session->fechaRelacion->fecha ?? 'N/A',
                 'is_active' => $session->activa, // Asumo que la columna es 'activa'
             ];
         });
