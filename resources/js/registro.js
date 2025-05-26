@@ -247,4 +247,26 @@ document.addEventListener("DOMContentLoaded", function () {
             // Esto es más para el estado inicial antes de cualquier interacción.
         }
     }
+
+
+    // Para que el modal registro se cierre al presionar Escape (también se limpia de datos)
+    if (modalRegistro) {
+        document.addEventListener('keydown', function (event) {
+            if ((event.key === 'Escape' || event.keyCode === 27) && modalRegistro.classList.contains('flex')) {
+                closeModal();
+            }
+        });
+    }
+
+
+    // Para que el modal registro se cierre al clicar fuera del modal (también se limpia de datos)
+    if (modalRegistro) {
+        modalRegistro.addEventListener('click', function (event) {
+            if (event.target === modalRegistro && modalRegistro.classList.contains('flex')) {
+                closeModal();
+            }
+        });
+    }
+
+
 });

@@ -15,6 +15,11 @@ body {
     font-family: 'Roboto', sans-serif;
 }
 
+/* Se aplica cuando se abre un modal */
+.modal_abierto {
+    overflow: hidden;
+}
+
 /* Estilos del encabezado */
 .header-section {
     display: flex;

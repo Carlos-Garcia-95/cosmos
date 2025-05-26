@@ -12,6 +12,7 @@ html {
     &::-webkit-scrollbar {
     display: none;
     }
+    
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
@@ -22,6 +23,15 @@ html {
 
 .centrar{
     margin-left: 63%;
+}
+
+.container_menu {
+    perspective: 100px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 /* Estilos para el contenedor de la cuadrícula de menús */
@@ -37,18 +47,10 @@ html {
     grid-template-columns: repeat(3, 1fr);
 }
 
-/* Media Queries para responsividad de la cuadrícula */
-/* @media (max-width: 992px) {
-    .menus-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
 
-@media (max-width: 576px) {
-    .menus-grid {
-        grid-template-columns: repeat(1, 1fr);
-    }
-} */
+
+
+
 
 /* Estilos para cada item individual del menú (La Tarjeta Volteable) */
 .menu-item {
@@ -186,4 +188,19 @@ html {
 
 .hidden {
     display: none;
+}
+
+
+
+/* Media Queries para responsividad de la cuadrícula */
+@media only screen and (max-width: 768px) {
+    .menus-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .menus-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
 }
