@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (modalLogin) {
             modalLogin.classList.remove('hidden');
             modalLogin.classList.add('flex');
+            document.body.classList.add('modal_abierto');
 
             modalLogin.querySelectorAll('.error-text').forEach(el => el.style.display = 'block');
 
@@ -42,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (modalLogin) {
             modalLogin.classList.remove('flex');
             modalLogin.classList.add('hidden');
+            document.body.classList.remove('modal_abierto');
 
             const loginForm = modalLogin.querySelector('form');
             if (loginForm) loginForm.reset();
@@ -176,9 +178,32 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Para que el modal login se cierre al presionar Escape (también se limpia de datos)
+    if (modalLogin) {
+        document.addEventListener('keydown', function (event) {
+            if ((event.key === 'Escape' || event.keyCode === 27) && modalLogin.classList.contains('flex')) {
+                closeLoginModal();
+            }
+        });
+    }
+
+
+    // Para que el modal login se cierre al clicar fuera del modal (también se limpia de datos)
+    if (modalLogin) {
+        modalLogin.addEventListener('click', function (event) {
+            if (event.target === modalLogin && modalLogin.classList.contains('flex')) {
+                closeLoginModal();
+            }
+        });
+    }
+    
+
     // Asegúrate de que la función handleCredentialResponse esté globalmente accesible
     // o accesible en el scope donde Google la buscará.
     // Si usas un módulo, podrías necesitar asignarla a window.
     // window.handleCredentialResponse = handleCredentialResponse;
 
 });
+
+
+

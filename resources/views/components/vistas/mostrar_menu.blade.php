@@ -1,8 +1,4 @@
-<div class="centrar">
-    <button id="cerrarMenus" class="cerrar-btn"><a href="#general">Cerrar</a></button>
-</div>
-
-<div class="container">
+<div class="container_menu">
     <div class='cartelera-titulo'>
         <h3>Nuestra Carta Estelar</h3>
     </div>
