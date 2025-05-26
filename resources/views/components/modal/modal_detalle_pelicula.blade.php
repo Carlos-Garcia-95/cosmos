@@ -17,7 +17,7 @@
             <div class='sinopsis' id='sinopsis'></div>
         </div>
         <div class="detalle_comprar" id='detalle_comprar'>
-            <button id='detalle_comprar_btn'>COMPRAR ENTRADAS</button>
+            <button id='detalle_comprar_btn'>Comprar Entradas</button>
         </div>
     </div>
 </div>

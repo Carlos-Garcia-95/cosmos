@@ -13,56 +13,53 @@
 
     &::-webkit-scrollbar {
         display: none;
-    } /* Chrome, Edge, Safari */
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE y Edge Legacy */
+    }
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 #modalCuenta .edit-field-container .checkbox-label {
-    display: flex; /* Para alinear el checkbox y el texto */
+    display: flex;
     align-items: center;
-    color: #f5f5f5; /* Color del texto del label */
-    font-size: 0.95em; /* Ajusta según tu diseño */
+    color: #f5f5f5;
+    font-size: 0.95em;
     cursor: pointer;
-    width: 100%; /* Para que ocupe el ancho y el error aparezca debajo */
+    width: 100%;
 }
 
 #modalCuenta .edit-field-container input[type="checkbox"].edit-field {
-    width: auto; /* Para que el checkbox no intente ocupar el 100% del ancho */
+    width: auto;
     margin-right: 10px;
-    vertical-align: middle; /* O usa flex align-items en el label */
+    vertical-align: middle;
 }
 
-/* Ajustar el mensaje de error para checkboxes si es necesario */
 #modalCuenta .edit-field-container .client-side-field-error {
-    width: 100%; /* Para que el mensaje de error use el ancho completo debajo del label */
-    margin-left: 0; /* Si antes tenía margen por estar al lado de un input */
+    width: 100%;
+    margin-left: 0;
     font-size: 0.85em;
     margin-top: 5px;
 }
 
-#modalCuenta { /* Estilos para el contenedor del modal en sí */
-    display: none; /* Oculto por defecto */
-    position: fixed; /* Se queda fijo en la pantalla */
-    z-index: 1050; /* Asegura que esté por encima de otros contenidos */
+#modalCuenta {
+    display: none;
+    position: fixed;
+    z-index: 1050;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow-y: auto; /* Permite scroll si el contenido del modal es muy largo */
-    background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semitransparente */
-
-    /* Para centrar el .modal-content dentro de #modalCuenta */
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.7);
     justify-content: center;
     align-items: center;
 }
 
 #modalCuenta.hidden {
-    display: none !important; /* Usar !important si hay conflictos, pero idealmente no es necesario */
+    display: none !important;
 }
 
-#modalCuenta.flex { /* O la clase que uses para mostrarlo, ej: .is-visible, .active */
-    display: flex !important; /* Usar !important temporalmente para pruebas si es necesario */
+#modalCuenta.flex {
+    display: flex !important;
 }
 
 #modalCuenta .modal-header {
@@ -162,22 +159,22 @@
     display: inline-block;
 }
 
-#modalCuenta .edit-field-container { /* Usa el contenedor que te sugerí */
+#modalCuenta .edit-field-container {
     display: none;
 }
-#modalCuenta .edit-field { /* Si algunos edit-field no están en un container */
+#modalCuenta .edit-field {
     display: none;
 }
 
 /* Cuando el modal está en modo edición */
 #modalCuenta.is-editing .display-field {
-    display: none; /* Ocultar los campos de visualización */
+    display: none;
 }
 #modalCuenta.is-editing .edit-field-container {
-    display: block; /* Mostrar los contenedores de campos de edición (o flex si es necesario) */
+    display: block;
 }
-#modalCuenta.is-editing .edit-field { /* Para inputs que no estén en un container */
-    display: block; /* o inline-block, según necesites */
+#modalCuenta.is-editing .edit-field {
+    display: block;
     width: 100%;
     margin-bottom: 5px;
 }
@@ -188,9 +185,8 @@
 }
 
 /* Estilo para los campos de edición cuando son inválidos Y el modal está en edición */
-#modalCuenta.is-editing .edit-field.invalid { /* Asumiendo que tu JS añade la clase 'invalid' al input */
-    border-color: #d12d10 !important; /* O tu color de error */
-    /* box-shadow: 0 0 0 0.2rem rgba(229, 9, 20, 0.25); */ /* Esto es un estilo Bootstrap, ajústalo */
+#modalCuenta.is-editing .edit-field.invalid {
+    border-color: #d12d10 !important;
 }
 
 /* Muestra el mensaje de error */

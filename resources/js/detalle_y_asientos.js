@@ -50,6 +50,7 @@ window.mostrar_detalle = function (peliculaId) {
     if (modal_detalle.classList.contains('hidden')) {
         modal_detalle.classList.remove('hidden');
         modal_detalle.classList.add('visible');
+        document.body.classList.add('modal_abierto');
     }
 
     // Funcionalidad de botón COMPRAR ENTRADA
@@ -82,11 +83,14 @@ function elegir_pelicula() {
     // Oculta el Modal
     modal_detalle.classList.remove('visible');
     modal_detalle.classList.add('hidden');
+    document.body.classList.remove('modal_abierto');
+
 
     // Hace visible el div de elegir sesión
     if (seccionCompra.classList.contains('hidden')) {
         seccionCompra.classList.remove('hidden');
         seccionCompra.classList.add('visible');
+        document.body.classList.remove('modal_abierto');
     }
 
     // Lleva la vista al nuevo div creado
@@ -109,7 +113,7 @@ if (modal_detalle) {
             // Hide the modal by reversing the class logic from mostrar_detalle
             modal_detalle.classList.remove('visible');
             modal_detalle.classList.add('hidden');
-
+            document.body.classList.remove('modal_abierto');
         }
     });
 }
@@ -121,7 +125,7 @@ if (modal_detalle) {
         if (event.target === modal_detalle && modal_detalle.classList.contains('visible')) {
             modal_detalle.classList.remove('visible');
             modal_detalle.classList.add('hidden');
-
+            document.body.classList.remove('modal_abierto');
         }
     });
 }
@@ -269,7 +273,7 @@ function generar_asientos(id_sesion) {
     const sesion_asientos = `/recuperar_asientos/id_sesion=${id_sesion}`; // Example using peliculaId in the path
     const seccion_asientos = document.getElementById('seccion_asientos');
     const superior_izquierda = document.getElementById('superior_izquierda');
-    
+
     // Mensaje de carga (por si tarda en cargar la petición)
     limpiar_datos_asientos();
     superior_izquierda.innerHTML = "<p>Cargando asientos...</p>";
@@ -715,15 +719,15 @@ function anadir_asiento_selec(datos_sesion, id_asiento) {
         boton_confirmar_seleccion = document.createElement('button');
         boton_confirmar_seleccion.classList.add('confirmar_seleccion');
         boton_confirmar_seleccion.id = 'boton_confirmar_seleccion';
-        boton_confirmar_seleccion.innerHTML = "CONFIRMAR SELECCIÓN";
+        boton_confirmar_seleccion.innerHTML = "Confirmar Selección";
 
         boton_confirmar_seleccion.addEventListener('click', function () {
             // Se limpia el correo de invitado guardado anteriormente en sessionStorage
-            const email_invitado = sessionStorage.getItem('email_invitado');
+            /* const email_invitado = sessionStorage.getItem('email_invitado');
             if (email_invitado) {
                 sessionStorage.removeItem('email_invitado');
-            }
-            
+            } */
+
             // Si el usuario esta logueado se muestra el modal de Confirmar Selección
             if (datos_sesion.usuario) {
                 confirmar_seleccion();
@@ -749,10 +753,6 @@ function anadir_asiento_selec(datos_sesion, id_asiento) {
     } else {
         precio_total_div.innerHTML = precio_total + " €";
     }
-
-    // Añadir el div al contenedor
-    columna_izquierda_lista.appendChild(asientoDiv);
-    columna_derecha_lista.appendChild(precioDiv);
 
     // Si no hay borde, se añade
     const container_asientos_selec = document.getElementById('container_asientos_selec');
@@ -895,6 +895,7 @@ function mostrar_modal_confirmar(asientos, datos_sesion) {
     if (modal_confirmar_seleccion.classList.contains('hidden')) {
         modal_confirmar_seleccion.classList.remove('hidden');
         modal_confirmar_seleccion.classList.add('visible');
+        document.body.classList.add('modal_abierto');
     }
 
     if (modal_confirmar_seleccion) {
@@ -1016,7 +1017,7 @@ function generar_confirmar_body(datos_sesion) {
     let sesion_titulos_hora = document.createElement('div');
     sesion_titulos_hora.classList.add('sesion_titulos');
     sesion_titulos_hora.id = 'sesion_titulos_hora';
-    sesion_titulos_hora.innerHTML = "Hora";
+    sesion_titulos_hora.innerHTML = "Hora: ";
 
     // Etiqueta sala
     let sesion_titulos_sala = document.createElement('div');
@@ -1228,7 +1229,7 @@ function generar_confirmar_entradas(datos_sesion, asientos) {
     let div_precio_preciototal = document.createElement('div');
     div_precio_preciototal.classList.add('asiento_columna_texto');
     div_precio_preciototal.id = 'div_precio_preciototal';
-    div_precio_preciototal.innerHTML = precio_asientos + " € (PENDIENTE)";
+    div_precio_preciototal.innerHTML = precio_asientos + " €";
 
     // Recuperar descuento de usuario
     let descuento_aplicado_cantidad;
@@ -1341,6 +1342,7 @@ function generar_confirmar_botones(datos_sesion, asientos) {
         if (modal_confirmar_seleccion && modal_confirmar_seleccion.classList.contains('visible')) {
             modal_confirmar_seleccion.classList.remove('visible');
             modal_confirmar_seleccion.classList.add('hidden');
+            document.body.classList.remove('modal_abierto');
             modal_confirmar_seleccion.innerHTML = "";
         }
     });
@@ -1363,6 +1365,7 @@ function generar_confirmar_botones(datos_sesion, asientos) {
         if (modal_confirmar_seleccion && modal_confirmar_seleccion.classList.contains('visible')) {
             modal_confirmar_seleccion.classList.remove('visible');
             modal_confirmar_seleccion.classList.add('hidden');
+            document.body.classList.remove('modal_abierto');
             modal_confirmar_seleccion.innerHTML = "";
         }
 
@@ -1375,18 +1378,18 @@ function generar_confirmar_botones(datos_sesion, asientos) {
         const asientos_array = [];
         asientos.forEach(asiento => {
             const asiento_datos = {
-                fila : asiento.dataset.fila,
-                columna : asiento.dataset.columna,
-                sesion : asiento.dataset.sesion,
-                id : asiento.dataset.id,
-                estado : asiento.estado,
+                fila: asiento.dataset.fila,
+                columna: asiento.dataset.columna,
+                sesion: asiento.dataset.sesion,
+                id: asiento.dataset.id,
+                estado: asiento.estado,
             };
             asientos_array.push(asiento_datos);
         });
 
         // Se guardan los asientos
         localStorage.setItem('asientos', JSON.stringify(asientos_array));
-        
+
 
         mostrar_modal_pago(datos_sesion, asientos);
     });
@@ -1420,6 +1423,7 @@ if (modal_confirmar_seleccion) {
             // Hide the modal by reversing the class logic from mostrar_detalle
             modal_confirmar_seleccion.classList.remove('visible');
             modal_confirmar_seleccion.classList.add('hidden');
+            document.body.classList.remove('modal_abierto');
             modal_confirmar_seleccion.innerHTML = "";
         }
     });
@@ -1432,6 +1436,7 @@ if (modal_confirmar_seleccion) {
         if (event.target === modal_confirmar_seleccion && modal_confirmar_seleccion.classList.contains('visible')) {
             modal_confirmar_seleccion.classList.remove('visible');
             modal_confirmar_seleccion.classList.add('hidden');
+            document.body.classList.remove('modal_abierto');
             modal_confirmar_seleccion.innerHTML = "";
         }
     });
@@ -1461,6 +1466,7 @@ window.compra_como_invitado = function () {
     if (modal_invitado.classList.contains('hidden')) {
         modal_invitado.classList.remove('hidden');
         modal_invitado.classList.add('visible');
+        document.body.classList.add('modal_abierto');
     }
 }
 
@@ -1474,11 +1480,13 @@ if (modal_invitado) {
     const input_email_invitado = document.getElementById('email_invitado');
 
     // Añadir evento al botón Volver
-    boton_invitado_volver.addEventListener('click', function () {
+    boton_invitado_volver.addEventListener('click', function (event) {
+        event.preventDefault();
 
         if (modal_invitado && modal_invitado.classList.contains('visible')) {
             modal_invitado.classList.remove('visible');
             modal_invitado.classList.add('hidden');
+            document.body.classList.remove('modal_abierto');
         }
     });
 
@@ -1509,11 +1517,12 @@ if (modal_invitado) {
         if (modal_invitado && modal_invitado.classList.contains('visible')) {
             modal_invitado.classList.remove('visible');
             modal_invitado.classList.add('hidden');
+            document.body.classList.remove('modal_abierto');
         }
 
         // Guardar el email de invitado
         sessionStorage.setItem('email_invitado', email_invitado);
-        
+
         confirmar_seleccion();
     });
 }
@@ -1577,6 +1586,7 @@ if (modal_invitado) {
             // Ocultar el modal y limpiar los errores de email
             modal_invitado.classList.remove('visible');
             modal_invitado.classList.add('hidden');
+            document.body.classList.remove('modal_abierto');
             quitar_error_email();
         }
     });
@@ -1589,6 +1599,7 @@ if (modal_invitado) {
         if (event.target === modal_invitado && modal_invitado.classList.contains('visible')) {
             modal_invitado.classList.remove('visible');
             modal_invitado.classList.add('hidden');
+            document.body.classList.remove('modal_abierto');
         }
     });
 }
@@ -1622,6 +1633,7 @@ if (modal_invitado) {
 // Modal de Pago con tarjeta
 function mostrar_modal_pago(datos_sesion, asientos) {
     const modal_pago = document.getElementById('modal_pago');
+    const boton_volver_pago = document.getElementById('boton_volver_pago');
 
     if (!modal_pago) {
         return;
@@ -1630,6 +1642,7 @@ function mostrar_modal_pago(datos_sesion, asientos) {
     if (modal_pago.classList.contains('hidden')) {
         modal_pago.classList.remove('hidden');
         modal_pago.classList.add('visible');
+        document.body.classList.add('modal_abierto');
     }
 
     // Guardar la sesión y asientos para el formulario
@@ -1653,10 +1666,10 @@ function mostrar_modal_pago(datos_sesion, asientos) {
     datos_sesion_input.setAttribute('name', 'sesion_id');
     datos_sesion_input.setAttribute('value', datos_sesion.id);
     datos_sesion_div.appendChild(datos_sesion_input);
-    
+
     // Email de invitado (si existe)
     const email_invitado = sessionStorage.getItem('email_invitado');
-    
+
     if (email_invitado) {
         const email_invitado_input = document.createElement('input');
         email_invitado_input.setAttribute('type', 'hidden');
@@ -1664,7 +1677,7 @@ function mostrar_modal_pago(datos_sesion, asientos) {
         email_invitado_input.setAttribute('value', email_invitado);
         datos_sesion_div.appendChild(email_invitado_input);
     }
-  
+
     // Precio
     const precio_div = document.getElementById('precio_div');
     precio_div.innerHTML = "";
@@ -1684,14 +1697,11 @@ function mostrar_modal_pago(datos_sesion, asientos) {
     precio_final_input.setAttribute('type', 'hidden');
     precio_final_input.setAttribute('name', 'precio_final');
     precio_final_input.setAttribute('value', datos_sesion.precio_final);
-    
-    
+
+
     precio_div.appendChild(precio_total_input);
     precio_div.appendChild(precio_descuento_input);
     precio_div.appendChild(precio_final_input);
-    if (email_invitado) {
-        
-    }
 
     // Verifica si la instancia existe y su elemento aún está en el DOM
     if (!vueAppInstance || !document.body.contains(vueAppInstance.$el)) {
@@ -1735,7 +1745,7 @@ function mostrar_modal_pago(datos_sesion, asientos) {
                 getCardType() {
                     let number = this.cardNumber;
                     if (!number) return "visa"; // Por defecto si no hay número
-                    
+
                     let re = new RegExp("^4");
                     if (number.match(re) != null) return "visa";
 
@@ -1793,10 +1803,21 @@ function mostrar_modal_pago(datos_sesion, asientos) {
                         }
                     }, 300);
                     vm.isInputFocused = false;
+                },
+                cancelarPago() {    // Oculta el modal y limpia los datos al clicar en 'Cancelar Pago'
+                    const modal_pago_el_vue = document.getElementById('modal_pago');
+
+                    if (modal_pago_el_vue && modal_pago_el_vue.classList.contains('visible')) {
+                        modal_pago_el_vue.classList.remove('visible');
+                        modal_pago_el_vue.classList.add('hidden');
+                        document.body.classList.remove('modal_abierto');
+                        
+                        limpiar_datos_pago();
+                    }
                 }
             }
         });
-    } else {    
+    } else {
         const cardNumberInput = document.getElementById("cardNumber");
         if (cardNumberInput) {
             cardNumberInput.focus();
@@ -1810,43 +1831,23 @@ window.mostrar_modal_pago = mostrar_modal_pago;
 
 
 
-// TODO -> Eliminar datos introducidos en el modal
+document.addEventListener('DOMContentLoaded', () => {
+    const modal_pago = document.getElementById('modal_pago');
 
-// Para que el modal pago se cierre al presionar Escape (también se limpia de datos)
-if (modal_pago) {
-    document.addEventListener('keydown', function (event) {
-        if ((event.key === 'Escape' || event.keyCode === 27) && modal_pago.classList.contains('visible')) {
-
-            event.preventDefault();
-
-            // Ocultar modal
-            modal_pago.classList.remove('visible');
-            modal_pago.classList.add('hidden');
-
-            // Limpiar datos
-            limpiar_datos_pago();
-
-        }
-    });
-}
-
-
-// Para que el modal pago se cierre al clicar fuera del modal (también se limpia de datos)
-if (modal_pago) {
-    modal_pago.addEventListener('click', function (event) {
-        if (event.target === modal_pago && modal_pago.classList.contains('visible')) {
-            // Ocultar modal
-            modal_pago.classList.remove('visible');
-            modal_pago.classList.add('hidden');
-
-            // Limpiar datos
-            limpiar_datos_pago();
-        }
-    });
-}
-
-
-
+    // Listener para cuando se pulse el botón 'Escape'
+    if (modal_pago) {
+        document.addEventListener('keydown', function (event) {
+            if ((event.key === 'Escape' || event.keyCode === 27) && modal_pago.classList.contains('visible')) {
+                event.preventDefault();
+                modal_pago.classList.remove('visible');
+                modal_pago.classList.add('hidden');
+                document.body.classList.remove('modal_abierto');
+                
+                limpiar_datos_pago();
+            }
+        });
+    }
+});
 
 
 
@@ -1868,7 +1869,7 @@ function limpiar_datos_pago() {
 
     const cardYearSelect = document.getElementById('cardYear');
     if (cardYearSelect) {
-        cardYearSelect.value = ""; 
+        cardYearSelect.value = "";
     }
 
     const cardCvvInput = document.getElementById('cardCvv');

@@ -1,25 +1,16 @@
-<div class="header-buttons" style="display: flex; align-items: center;">
+{{-- Menú Hamburguesa --}}
+<button class="hamburger-button" id="hamburgerButton" aria-label="Open menu" aria-expanded="false" aria-controls="headerNavLinks">
+    <span class="hamburger-button__line"></span>
+    <span class="hamburger-button__line"></span>
+    <span class="hamburger-button__line"></span>
+</button>
+
+{{-- Menú normal --}}
+<div class="header-buttons" id="headerNavLinks" style="display: flex; align-items: center;">
     @if (session('success'))
     <div id="flash-message" class="success-message">
         {{ session('success') }}
     </div>
-    @push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const flashMessage = document.getElementById('flash-message');
-            if (flashMessage && flashMessage.textContent.trim() !== '') {
-                flashMessage.classList.add('show');
-                setTimeout(function() {
-                    flashMessage.classList.remove('show');
-                    setTimeout(() => {
-                        flashMessage.textContent = '';
-                    }, 500);
-                }, 3000);
-            }
-        });
-
-    </script>
-    @endpush
     @endif
     <button id="mostrarMenus"> <a class="botones" href="#seccionMenus">CARTA COSMOS</a></button>
     @if(Auth::check())
@@ -34,8 +25,9 @@
     <button id="mostrarRegistro"><a class="botones">ÚNETE A COSMOS</a></button>
     <button id="mostrarLogin"><a class="botones">INICIAR SESIÓN</a></button>
     @endif
-
 </div>
+
 <div class="logo-container">
     <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Cosmos Cinema Logo" class="cinema-logo">
 </div>
+

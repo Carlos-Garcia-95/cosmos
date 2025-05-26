@@ -32,6 +32,8 @@
         'resources/css/pago.css',
         'resources/css/swiper-custom.css',
         'resources/js/slider-init.js'
+        'resources/js/menu_hamburguesa.js',
+        'resources/js/flash_mensaje.js',
     ])
     <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
 
