@@ -72,13 +72,13 @@
 
 .detalle_estreno_box {
      grid-column: 1 / 2;
-     font-size: 1.3em;
+     font-size: 1.1em;
      text-align: left;
 }
 
 .detalle_duracion_box {
     grid-column: 3 / 4;
-    font-size: 1.3em;
+    font-size: 1.1em;
     text-align: right;
 }
 
@@ -95,7 +95,7 @@
 
 .sinopsis {
     margin: 0;
-    font-size: 1.1em;
+    font-size: 1em;
 }
 
 /* Botón Comprar Entradas */

@@ -1,15 +1,15 @@
 /* Estilos para el Login de Administrador (actualizados según tus peticiones) */
 
 body {
-    font-family: 'Lato', sans-serif; /* Usar la fuente de tu cine (asegúrate de importarla) */
-    background-color: black; /* ****** Background de la página: negro ****** */
-    color: #f5f5f5; /* Color de texto general */
+    font-family: 'Lato', sans-serif;
+    background-color: black;
+    color: #f5f5f5;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Asegura que ocupa al menos el alto de la ventana */
-    margin: 0; /* Elimina margen por defecto del body */
-    padding: 0; /* Elimina padding por defecto del body */
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
 #admin-code-container {
@@ -116,7 +116,7 @@ input[type="password"]::-ms-clear {
 
 input[type="password"]::-webkit-search-cancel-button,
 input[type="password"]::-webkit-clear-button {
-    -webkit-appearance: none; /* Para Chrome, Safari */
+    -webkit-appearance: none;
     appearance: none;
 }
 
@@ -135,25 +135,25 @@ input[type="password"]::-webkit-clear-button {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    max-width: 800px; /* Ancho máximo */
-    margin: 20px auto; /* Centrar bloque */
+    max-width: 800px;
+    margin: 20px auto;
 }
 h1 {
-    color: #6feaf6; /* Color de acento */
+    color: #6feaf6;
 }
 a {
-    color: #e50914; /* Color de enlace */
+    color: #e50914;
     text-decoration: none;
 }
 a:hover {
     text-decoration: underline;
 }
 .logout-form {
-    margin-top: 20px; /* Espacio encima del formulario de logout */
+    margin-top: 20px;
 }
 .logout-form button {
-    background-color: #e50914; /* Fondo rojo */
-    color: white; /* Texto blanco */
+    background-color: #e50914;
+    color: white;
     border: none;
     padding: 10px 15px;
     border-radius: 5px;
@@ -161,5 +161,5 @@ a:hover {
     transition: background-color 0.3s ease;
 }
 .logout-form button:hover {
-    background-color: #d32f2f; /* Rojo más oscuro al hover */
+    background-color: #d32f2f;
 }

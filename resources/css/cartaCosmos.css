@@ -57,7 +57,7 @@ html {
     background-color: transparent;
     width: 100%;
     height: auto;
-    aspect-ratio: 125 / 150; /* Proporción ajustada */
+    aspect-ratio: 125 / 150;
     perspective: 1000px;
     cursor: pointer;
     border-radius: 10px;
@@ -157,7 +157,6 @@ html {
     border-radius: 50%;
     transition: background-color 0.3s ease;
     font-size: x-large;
-    /* Remover posicionamiento absoluto si .cerrar-btn se usa en secciones normales */
 }
 
 .cerrar-btn:hover {
@@ -174,10 +173,10 @@ html {
 /* Posicionamiento específico para el botón de cerrar de la sección de MENÚS (como sección normal) */
 /* Si quieres que esté al final y centrado */
 #seccionMenus .cerrar-btn {
-    position: static; /* Asegura que no es absoluto */
+    position: static;
     margin-top: 20px;
     margin-bottom: 20px;
-    align-self: center; /* Centra si #seccionMenus es display: flex y flex-direction: column */
+    align-self: center;
 }
 
 .visible {

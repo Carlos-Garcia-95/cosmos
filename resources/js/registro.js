@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function openModal() {
         modalRegistro.classList.remove("hidden");
         modalRegistro.classList.add("flex");
+        document.body.classList.add('modal_abierto');
         const firstInput = activeStep?.querySelector('input:not([type="hidden"]), select, textarea');
         if (firstInput) {
             setTimeout(() => firstInput.focus(), 50);
@@ -38,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function closeModal() {
         modalRegistro.classList.remove("flex");
         modalRegistro.classList.add("hidden");
+        document.body.classList.remove('modal_abierto');
         resetForm();
         modalRegistro.querySelectorAll(".error-message.backend-error").forEach(el => {
             if (el.textContent.trim() !== '') {

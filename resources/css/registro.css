@@ -4,11 +4,11 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #000; /* Fondo negro como en la imagen */
-    color: #fff; /* Texto blanco */
+    background-color: #000;
+    color: #fff;
     display: flex;
-    justify-content: center; /* Centra horizontalmente */
-    align-items: center;    /* Centra verticalmente */
+    justify-content: center;
+    align-items: center;
     min-height: 100vh; 
 }
 
@@ -24,29 +24,27 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    /* Puedes agregar una imagen de fondo sutil si lo deseas */
-    /* background-image: url('tu-imagen-de-fondo.jpg'); */
     background-size: cover;
     background-position: center;
-    opacity: 0.9; /* Ligeramente transparente si es una imagen */
+    opacity: 0.9;
     z-index: -1;
 }
 
 .form-container {
-    background-color: rgba(26, 26, 26, 0.9); /* Fondo del formulario oscuro y ligeramente transparente */
+    background-color: rgba(26, 26, 26, 0.9);
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
     text-align: center;
     width: 90%;
-    max-width: 500px; /* Ancho máximo del formulario */
-    justify-content: center; /* Centra horizontalmente */
-    align-items: center;    /* Centra verticalmente */
+    max-width: 500px;
+    justify-content: center;
+    align-items: center;
 
 }
 
 .logo {
-    max-width: 200px; /* Ajusta el tamaño del logo según la imagen */
+    max-width: 200px;
     height: auto;
     margin-bottom: 30px;
 }
@@ -123,7 +121,7 @@ body {
 
 .next-step,
 .btn[type="submit"] {
-    background-color: #e50914; /* Rojo característico */
+    background-color: #e50914;
 }
 
 .next-step:hover,

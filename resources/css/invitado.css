@@ -117,3 +117,25 @@
     color: #fff;
     margin: 0.5%;
 }
+
+
+
+@media only screen and (max-width: 1200px) {
+    .container_invitado {
+        width: 75%;
+        max-width: 75%;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+}
+
+
+@media only screen and (max-width: 480px) {
+    .container_invitado {
+        width: 80%;
+        max-width: 80%;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    
+}

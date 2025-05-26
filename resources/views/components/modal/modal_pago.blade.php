@@ -69,14 +69,14 @@
                                     </label>
                                     <div class="card-item__content">
                                         <label for="cardName" class="card-item__info" ref="cardName">
-                                            <div class="card-item__holder">Titular</div>
+                                            <div class="card-item__holder">TITULAR</div>
                                             <transition name="slide-fade-up">
                                                 <div class="card-item__name" v-if="cardName.length" key="1">
                                                     <transition-group name="slide-fade-right">
                                                         <span class="card-item__nameItem" v-for="(n, $index) in cardName.replace(/\s\s+/g, ' ')" v-if="$index === $index" v-bind:key="$index + 1">@{{n}}</span>
                                                     </transition-group>
                                                 </div>
-                                                <div class="card-item__name" v-else key="2">NOMBRE COMPLETO</div>
+                                                <div class="card-item__name" v-else key="2">Titular</div>
                                             </transition>
                                         </label>
                                         <div class="card-item__date" ref="cardDate">
@@ -125,7 +125,7 @@
                         </div>
                         <div class="card-input">
                             <label for="cardName" class="card-input__label">Titular de la Tarjeta</label>
-                            <input type="text" name="cardName" id="cardName" class="card-input__input" v-model="cardName" v-on:focus="focusInput" v-on:blur="blurInput" data-ref="cardName" placeholder='NOMBRE COMPLETO' autocomplete="off" required>
+                            <input type="text" name="cardName" id="cardName" class="card-input__input" v-model="cardName" v-on:focus="focusInput" v-on:blur="blurInput" data-ref="cardName" placeholder='Titular' autocomplete="off" required>
                         </div>
                         <div class="card-form__row">
                             <div class="card-form__col">
@@ -167,7 +167,10 @@
                         
 
                         <button type='submit' class="card-form__button">
-                            CONFIRMAR PAGO
+                            Confirmar Pago
+                        </button>
+                        <button type="button" class="boton_volver_pago" id='boton_volver_pago' @click="cancelarPago">
+                            Cancelar Compra
                         </button>
                     </div>
                 </div>
