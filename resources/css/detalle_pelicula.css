@@ -62,14 +62,6 @@
     width: 100%;
 }
 
-.detalle_titulo_box,
-.detalle_estreno_box,
-.detalle_duracion_box {
-    color: #f0f0f0;
-    font-size: 1.2em;
-}
-
-
 .detalle_titulo_box {
     grid-column: 2 / 3;
     text-align: center;
@@ -80,11 +72,13 @@
 
 .detalle_estreno_box {
      grid-column: 1 / 2;
+     font-size: 1.3em;
      text-align: left;
 }
 
 .detalle_duracion_box {
     grid-column: 3 / 4;
+    font-size: 1.3em;
     text-align: right;
 }
 
@@ -97,16 +91,11 @@
     width: 100%;
     overflow-y: auto;
     &::-webkit-scrollbar { display: none; }
-    scrollbar-width: none;
-    line-height: 1.6;
-    min-height: 50px;
-    font-size: 1.1em;
 }
 
 .sinopsis {
     margin: 0;
-    color: #dcdcdc;
-    font-size: 0.95em;
+    font-size: 1.1em;
 }
 
 /* Botón Comprar Entradas */
@@ -120,15 +109,143 @@
 
 #detalle_comprar button {
     padding: 12px 25px;
-    color: white;
     background-color: #d12d10;
     border: none;
     border-radius: 5px;
-    font-size: 1em;
+    font-size: 1.1em;
+    font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 80%;
 }
 
 #detalle_comprar button:hover {
     background-color: #831d0b;
+}
+
+
+
+
+
+
+
+
+
+
+/* //////////// MEDIAS QUERIES //////////// */
+
+/* TABLETS */
+@media only screen and (max-width: 768px) {
+
+    .detalle-container {
+        width: 90%;
+        max-width: 90%;
+        min-height: 90vh;
+        max-height: 90vh;
+        padding: 15px;
+    }
+
+    .detalle_header {
+        padding: 10px 5%;
+    }
+
+    .detalle_titulo_box,
+    .detalle_estreno_box,
+    .detalle_duracion_box {
+        grid-column: auto;
+        text-align: center;
+        margin-bottom: 8px;
+    }
+
+    .detalle_titulo_box {
+        font-size: 2em;
+    }
+    
+    .detalle_estreno_box,
+    .detalle_duracion_box {
+        font-size: 1.3em;
+    }
+
+    .detalle_body {
+        flex-basis: auto;
+        padding: 10px 5%;
+        line-height: 1.5;
+    }
+
+    .sinopsis {
+        font-size: 1.2em;
+    }
+
+    #detalle_comprar button {
+        font-size: 1.1em;
+        padding: 15px 20px;
+    }
+}
+
+
+/* MÓVILES */
+@media only screen and (max-width: 480px) {
+
+    .detalle-container {
+        width: 90%;
+        max-width: 90%;
+        min-height: 85vh;
+        max-height: 85vh;
+        padding: 15px;
+    }
+
+    .detalle_imagen_box {
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: auto;
+    }
+
+    /* Header en columna */
+    .detalle_header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 5%;
+    }
+
+    .detalle_titulo_box,
+    .detalle_estreno_box,
+    .detalle_duracion_box {
+        grid-column: auto;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .detalle_titulo_box {
+        font-size: 1.8em;
+        order: 1;
+        font-weight: bold;
+    }
+
+    .detalle_estreno_box {
+        font-size: 1.1em;
+        order: 2;
+    }
+    
+    .detalle_duracion_box {
+        font-size: 1.1em;
+        order: 3;
+    }
+
+    .sinopsis {
+        font-size: 1.1em;
+        line-height: 1.4;
+    }
+
+    .detalle_body {
+        min-height: 80px;
+        padding: 8px 3%;
+    }
+
+    /* Botón de compra */
+    #detalle_comprar button {
+        font-size: 1em;
+        padding: 8px 5px;
+    }
 }

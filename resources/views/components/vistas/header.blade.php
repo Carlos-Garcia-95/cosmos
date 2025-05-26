@@ -22,7 +22,6 @@
     @endpush
     @endif
     <button id="mostrarMenus"> <a class="botones" href="#seccionMenus">CARTA COSMOS</a></button>
-    <button id="mostrarCompra"> <a class="botones" href="#seccionCompra">COMPRAR ENTRADAS</a></button>
     @if(Auth::check())
     <button id="miCuenta"><a class="botones">MI CUENTA</a></button>
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">

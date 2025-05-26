@@ -21,16 +21,31 @@ window.mostrar_detalle = function (peliculaId) {
     const sinopsis_element = document.getElementById('sinopsis');
     const comprar_btn = document.getElementById('detalle_comprar_btn');
 
+    // Texto de carga de imagen
+    imagen_box.innerHTML = '<p>Cargando imagen...</p>';
 
-    imagen_box.innerHTML = `
-        ${pelicula.poster_url ? `<img class='detalle_imagen' src="${pelicula.backdrop_url}" loading="lazy" alt="${pelicula.titulo}">` : `<p>Póster no disponible</p>`}
-    `;
+    // Si el aspect ratio es menor de 1.5, la imagen del detalle pasa de backdrop a poster
+    // Recuperar aspect ratio
+    const viewport_width = window.innerWidth;
+    const viewport_height = window.innerHeight;
+    const aspect_ratio = viewport_width / viewport_height;
 
+    const aspect_ratio_limite = 1.3;
+    let imagen_url;
+    if (aspect_ratio < aspect_ratio_limite) {
+        imagen_url = pelicula.poster_url;
+    } else {
+        imagen_url = pelicula.backdrop_url;
+    }
+
+    // Imagen
+    imagen_box.innerHTML = `<img class='detalle_imagen' src="${imagen_url}" loading="lazy" alt="${pelicula.titulo}">`;
+
+    // Textos
     titulo_element.textContent = pelicula.titulo;
     estreno_element.textContent = `Fecha de Estreno: ${pelicula.fecha_estreno}`;
     duracion_element.textContent = `Duración: ${pelicula.duracion} min`;
     sinopsis_element.textContent = pelicula.sinopsis;
-
 
     if (modal_detalle.classList.contains('hidden')) {
         modal_detalle.classList.remove('hidden');
@@ -254,8 +269,9 @@ function generar_asientos(id_sesion) {
     const sesion_asientos = `/recuperar_asientos/id_sesion=${id_sesion}`; // Example using peliculaId in the path
     const seccion_asientos = document.getElementById('seccion_asientos');
     const superior_izquierda = document.getElementById('superior_izquierda');
-
+    
     // Mensaje de carga (por si tarda en cargar la petición)
+    limpiar_datos_asientos();
     superior_izquierda.innerHTML = "<p>Cargando asientos...</p>";
 
     fetch(sesion_asientos)
@@ -407,6 +423,42 @@ function generar_asientos(id_sesion) {
                 seccion_asientos.innerHTML = `<p>Error al cargar los asientos. Por favor, inténtelo de nuevo</p>`;
             }
         });
+}
+
+
+
+// Limpia el div de asientos cada vez que se cambia de sesión
+function limpiar_datos_asientos() {
+    const inferior_izquierda = document.getElementById('inferior_izquierda');
+    const columna_derecha = document.getElementById('columna_derecha');
+    const inferior = document.getElementById('inferior');
+    const container = document.getElementById('container');
+    const container_asientos_selec = document.getElementById('container_asientos_selec');
+    const listado_asientos_abajo = document.getElementById('listado_asientos_abajo');
+
+    if (inferior_izquierda) {
+        inferior_izquierda.innerHTML = "";
+    }
+
+    if (columna_derecha) {
+        columna_derecha.innerHTML = "";
+    }
+
+    if (inferior) {
+        inferior.innerHTML = "";
+    }
+
+    if (container) {
+        container.innerHTML = "";
+    }
+
+    if (container_asientos_selec) {
+        container_asientos_selec.innerHTML = "";
+    }
+
+    if (listado_asientos_abajo) {
+        listado_asientos_abajo.innerHTML = "";
+    }
 }
 
 
@@ -610,23 +662,28 @@ function anadir_asiento_selec(datos_sesion, id_asiento) {
     // Crear un ID único para el div del asiento seleccionado
     const asientoSelecId = `asiento_selec_${id_asiento}`;
 
-    // Crear el div con la información del asiento seleccionado
-    const asientoDiv = document.createElement('div');
-    asientoDiv.classList.add('row');
-    asientoDiv.classList.add('asiento_seleccionado');
-    asientoDiv.id = asientoSelecId;
-    asientoDiv.innerHTML = `
+    // Crear el div para la información del asiento seleccionado
+    const fila_asiento_seleccionado_con_precio = document.createElement('div');
+    fila_asiento_seleccionado_con_precio.classList.add('fila_asiento_seleccionado_con_precio');
+    fila_asiento_seleccionado_con_precio.id = asientoSelecId;
+
+    // Información del asiento
+    const info_asiento_seleccionado = document.createElement('div');
+    info_asiento_seleccionado.classList.add('info_asiento_seleccionado');
+    info_asiento_seleccionado.id = 'asiento_selec_info_${id_asiento}';
+    info_asiento_seleccionado.innerHTML = `
             Fila: ${fila}, &nbsp; Columna: ${columna}
     `;
 
-    // Crear un ID único para el div de precio del asiento seleccionado
-    const asientoSelecPrecioId = `precio_selec_${id_asiento}`;
+    // Precio del asiento
+    const precio_asiento_individual_lista = document.createElement('div');
+    precio_asiento_individual_lista.classList.add('precio_asiento_individual_lista');
+    precio_asiento_individual_lista.id = 'asiento_selec_precio_${id_asiento}';
+    precio_asiento_individual_lista.innerHTML = `${precio} €`;
 
-    // Crear el div con el precio del asiento seleccionado
-    const precioDiv = document.createElement('div');
-    precioDiv.classList.add('row');
-    precioDiv.id = asientoSelecPrecioId;
-    precioDiv.innerHTML = `${precio} €`;
+    // Añadir info y precio a div
+    fila_asiento_seleccionado_con_precio.appendChild(info_asiento_seleccionado);
+    fila_asiento_seleccionado_con_precio.appendChild(precio_asiento_individual_lista);
 
     // Si no hay título de Asientos Seleccionados, se añade
     let columna_izquierda_titulo = document.getElementById('columna_izquierda_titulo');
@@ -638,14 +695,17 @@ function anadir_asiento_selec(datos_sesion, id_asiento) {
         columna_izquierda_lista.appendChild(columna_izquierda_titulo);
     }
 
+    // Se añade la fila del asiento seleccionado
+    columna_izquierda_lista.appendChild(fila_asiento_seleccionado_con_precio);
+
     // Si no hay título de Precio Total, se añade
     let columna_derecha_titulo = document.getElementById('columna_derecha_titulo');
     if (!columna_derecha_titulo) {
         columna_derecha_titulo = document.createElement('div');
         columna_derecha_titulo.classList.add('columna_derecha_titulo');
         columna_derecha_titulo.id = 'columna_derecha_titulo';
-        columna_derecha_titulo.innerHTML = "Total";
-        columna_derecha_lista.appendChild(columna_derecha_titulo);
+        columna_derecha_titulo.innerHTML = "Precio Total";
+        columna_derecha_abajo.appendChild(columna_derecha_titulo);
     }
 
     // Si no hay botón de CONFIRMAR SELECCIÓN, se añade
