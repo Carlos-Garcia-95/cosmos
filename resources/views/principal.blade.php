@@ -29,6 +29,7 @@
         'resources/css/invitado.css',
         'resources/css/pago.css',
         'resources/js/menu_hamburguesa.js',
+        'resources/css/menu_hamburguesa.css',
         'resources/js/flash_mensaje.js',
     ])
     <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
