@@ -33,6 +33,8 @@ export default defineConfig({
                 "resources/js/detalle_y_asientos.js",
                 'resources/css/swiper-custom.css',
                 'resources/js/slider-init.js',
+                'resources/js/menu_hamburguesa.js',
+                'resources/js/flash_mensaje.js',
             ],
             refresh: true,
         }),

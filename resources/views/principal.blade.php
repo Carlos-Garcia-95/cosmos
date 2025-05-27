@@ -31,7 +31,7 @@
         'resources/css/invitado.css',
         'resources/css/pago.css',
         'resources/css/swiper-custom.css',
-        'resources/js/slider-init.js'
+        'resources/js/slider-init.js',
         'resources/js/menu_hamburguesa.js',
         'resources/js/flash_mensaje.js',
     ])

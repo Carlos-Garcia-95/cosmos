@@ -287,4 +287,26 @@
     .poster-carousel-container-component .poster-slide-title { font-size: 0.75rem; }
     .poster-carousel-container-component .swiper-button-prev,
     .poster-carousel-container-component .swiper-button-next { display: none; } /* Ocultar flechas en pantallas muy pequeñas */
+    
+    .hero-slider-container .hero-movie-swiper .hero-swiper-pagination {
+        position: absolute;
+        /* bottom: 20px !important; */
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: auto !important;
+        z-index: 20;
+    }
+
+    .hero-slider-container .hero-slide-title {
+        font-size: clamp(2.2rem, 5vw, 3.5rem);
+        font-weight: 700;
+        margin-bottom: 15px;
+        line-height: 1.15;
+        text-shadow: 0 1px 5px rgba(0, 0, 0, 0.8);
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        /* overflow: hidden; */
+        /* width: 100%; */
+    }
 }
