@@ -9,6 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 flashMessage.textContent = '';
             }, 500);
-        }, 3000);
+        }, 5000);
     }
 });

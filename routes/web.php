@@ -18,12 +18,20 @@ use App\Http\Controllers\ProcesarPago;
 use App\Http\Controllers\EntradaController;
 use App\Http\Controllers\FacturacionController;
 use App\Http\Controllers\RecuperarSesionPelicula;
+use App\Http\Controllers\VerificationController;
 
 //Ruta por get, al poner / en el buscador, nos saldra la pantalla de principal, que es devuelta por la clase HomeController y llama a la función index.
 Route::get('/', [HomeController::class, 'index'])->name('principal');
 
 //Registro
 Route::post('/register', [RegisterController::class, 'registrar'])->name('registro');
+
+//Verificar Email
+Route::get('/verify-email/{token}', [VerificationController::class, 'verify'])->name('verification.verify');
+
+Route::get('/verify-email/notice', function () {
+    return view('verification.notice');
+})->name('verification.notice');
 
 // Ruta para comprobar si el email existe
 Route::get('/check-email', [CheckController::class, 'checkEmail']);

@@ -1,26 +1,26 @@
-/* resources/css/swiper-custom.css */
+/* ==========================================================================
+   CSS para Sliders (swiper-custom.css)
+   Descripción: Estilos para controlar la visualización de sliders
+                en diferentes dispositivos y para dar formato a los
+                sliders de héroe (Mobile First).
+   ========================================================================== */
 
-/* === ESTILOS PARA MOSTRAR/OCULTAR SLIDERS === */
-.slider-escritorio {
-    display: none; /* Oculto en móvil por defecto, se mostrará en desktop */
-}
+/* --- 1. Control de Visualización de Sliders (Móvil/Tablet por defecto) --- */
+
+/* Mostrar slider de móvil/tablet en dispositivos móviles (por defecto) */
 .slider-movil-tablet {
-    display: block; /* Visible en móvil por defecto */
+    display: block;
 }
 
-@media (min-width: 1024px) { /* Breakpoint para cambiar a escritorio */
-    .slider-escritorio {
-        display: block;
-    }
-    .slider-movil-tablet {
-        display: none;
-    }
+/* Ocultar slider de escritorio en dispositivos móviles (por defecto) */
+.slider-escritorio {
+    display: none;
 }
 
+/* --- 2. Estilos para el Slider de Héroe (Móvil/Tablet por defecto) --- */
 
-/* === ESTILOS PARA SLIDER HERO (Escritorio) === */
-/* Estos son tus estilos existentes para el slider de escritorio */
-.hero-slider-container { /* Renombrado el contenedor del componente para evitar colisiones */
+/* Contenedor principal del slider de héroe */
+.hero-slider-container {
     width: 100%;
     margin: 0 auto;
     position: relative;
@@ -28,7 +28,8 @@
     overflow: hidden;
 }
 
-.hero-slider-container .hero-movie-swiper { /* Selector más específico */
+/* Contenedor del swiper para el slider de héroe */
+.hero-slider-container .hero-movie-swiper {
     width: 100%;
     height: 70vh;
     min-height: 480px;
@@ -36,10 +37,12 @@
     position: relative;
 }
 
+/* Ajuste para estirar los slides dentro del swiper */
 .hero-slider-container .hero-movie-swiper .swiper-wrapper {
     align-items: stretch;
 }
 
+/* Estilo individual para cada slide del héroe */
 .hero-slider-container .hero-movie-swiper .swiper-slide.hero-slide {
     position: relative;
     overflow: hidden;
@@ -50,49 +53,55 @@
     background-color: #000000;
 }
 
+/* Imagen de fondo del slide de héroe (Mobile First: cover) */
 .hero-slider-container .hero-slide-background-image {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover; /* Por defecto para móvil/tablet */
     object-position: center center;
     z-index: 1;
 }
 
+/* Overlay degradado sobre la imagen de fondo */
 .hero-slider-container .hero-slide-overlay-gradient {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to right, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.3) 35%, rgba(0,0,0,0) 60%);
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 35%, rgba(0, 0, 0, 0) 60%);
     z-index: 2;
     pointer-events: none;
 }
 
+/* Contenido (título, sinopsis, botón) del slide de héroe */
 .hero-slider-container .hero-slide-content {
     position: relative;
     z-index: 3;
     color: #fff;
     padding: 3vw 4vw;
-    max-width: 55%;
     box-sizing: border-box;
+    max-width: 55%; /* Por defecto, para que no ocupe todo el ancho en móvil */
 }
 
+/* Título del slide de héroe */
 .hero-slider-container .hero-slide-title {
     font-size: clamp(2.2rem, 5vw, 3.5rem);
     font-weight: 700;
-    margin-bottom: 15px;
+    margin-bottom: 35px;
+    width: fit-content;
     line-height: 1.15;
-    text-shadow: 0 1px 5px rgba(0,0,0,0.8);
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.8);
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
+/* Sinopsis del slide de héroe */
 .hero-slider-container .hero-slide-synopsis {
     font-size: clamp(0.9rem, 1.2vw, 1rem);
     line-height: 1.6;
@@ -102,9 +111,10 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
 }
 
+/* Botón del slide de héroe */
 .hero-slider-container .hero-slide-button {
     display: inline-block;
     background-color: #e50914;
@@ -120,13 +130,16 @@
     border: none;
     cursor: pointer;
 }
+
 .hero-slider-container .hero-slide-button:hover {
     background-color: #f40612;
     transform: scale(1.03);
 }
 
+/* Flechas de navegación del slider de héroe (Ocultas en móvil) */
 .hero-slider-container .hero-movie-swiper .hero-swiper-button-prev,
 .hero-slider-container .hero-movie-swiper .hero-swiper-button-next {
+    display: none; /* Ocultar por defecto en móvil */
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -135,7 +148,6 @@
     height: 44px;
     background-color: rgba(20, 20, 20, 0.4);
     border-radius: 50%;
-    display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
@@ -143,170 +155,323 @@
     color: white;
     opacity: 0.7;
 }
+
 .hero-slider-container .hero-movie-swiper .hero-swiper-button-prev:hover,
-.hero-slider-container .hero-movie-swiper .hero-swiper-button-next:hover {
+.hero-slider-container .hero-swiper-button-next:hover {
     background-color: rgba(20, 20, 20, 0.7);
     opacity: 1;
 }
-.hero-slider-container .hero-movie-swiper .hero-swiper-button-prev { left: 20px; }
-.hero-slider-container .hero-movie-swiper .hero-swiper-button-next { right: 20px; }
 
+.hero-slider-container .hero-movie-swiper .hero-swiper-button-prev {
+    left: 20px;
+}
+
+.hero-slider-container .hero-movie-swiper .hero-swiper-button-next {
+    right: 20px;
+}
+
+/* Estilo de los iconos de las flechas */
 .hero-slider-container .hero-movie-swiper .hero-swiper-button-prev svg,
 .hero-slider-container .hero-movie-swiper .hero-swiper-button-next svg {
-    width: 20px; height: 20px; fill: currentColor;
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
 }
+
+/* Ocultar el texto por defecto de las flechas de Swiper */
 .hero-slider-container .hero-movie-swiper .swiper-button-prev::after,
 .hero-slider-container .hero-movie-swiper .swiper-button-next::after {
     display: none;
 }
+
+/* Estilo para las flechas deshabilitadas */
 .hero-slider-container .hero-movie-swiper .swiper-button-disabled {
-    opacity: 0.2 !important;
+    opacity: 0.2 !important; /* Mantener !important solo si es absolutamente necesario */
     cursor: default !important;
     pointer-events: none !important;
 }
 
+/* Paginación del slider de héroe */
 .hero-slider-container .hero-movie-swiper .hero-swiper-pagination {
     position: absolute;
-    bottom: 20px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: auto !important;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
     z-index: 20;
 }
+
+/* Estilo de los puntos de la paginación */
 .hero-slider-container .hero-movie-swiper .swiper-pagination-bullet {
     width: 9px;
     height: 9px;
     background-color: rgba(255, 255, 255, 0.5);
     opacity: 1;
     border-radius: 50%;
-    margin: 0 5px !important;
+    margin: 0 5px;
     transition: background-color 0.3s ease, transform 0.2s ease;
     cursor: pointer;
 }
+
+/* Estilo del punto activo de la paginación */
 .hero-slider-container .hero-movie-swiper .swiper-pagination-bullet-active {
     background-color: #fff;
     transform: scale(1.2);
 }
 
-/* === ESTILOS PARA CARRUSEL DE PÓSTERS (Móvil/Tablet) === */
-/* Estos son los estilos que te pasé en la respuesta anterior para el carrusel de pósters */
-.poster-carousel-container-component {
+.hero-slide-poster-image {
+    display: none; /* Ocultar por defecto */
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 1200px;
-    margin: 30px auto;
-    padding: 0 10px; /* Ajustado para que las flechas no se peguen tanto */
-    box-sizing: border-box;
-}
-.poster-carousel-container-component .poster-carousel-title {
-    font-size: 1.6rem;
-    color: #e0e0e0;
-    text-align: center;
-    margin-bottom: 20px;
-    font-weight: 500;
-}
-.poster-carousel-container-component .poster-movie-carousel {
-    width: 100%;
-    padding-bottom: 40px; /* Espacio para paginación */
-    position: relative; /* Para los botones de navegación */
-    overflow: hidden; /* Para que los botones no se salgan del todo */
-}
-.poster-carousel-container-component .poster-slide {
-    background: #181818;
-    border-radius: 6px;
-    overflow: hidden;
-    aspect-ratio: 2 / 3; /* Proporción para pósters */
-    position: relative;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-    cursor: grab;
-}
-.poster-carousel-container-component .poster-slide:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-.poster-carousel-container-component .poster-slide-link {
-    display: block; width: 100%; height: 100%; text-decoration: none;
-}
-.poster-carousel-container-component .poster-slide-image {
-    display: block; width: 100%; height: 100%; object-fit: cover;
-}
-.poster-carousel-container-component .poster-slide-title-overlay {
-    position: absolute; bottom: 0; left: 0; right: 0; padding: 8px;
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0) 100%);
-    text-align: center;
-}
-.poster-carousel-container-component .poster-slide-title {
-    color: #fff; font-size: 0.9rem; font-weight: 500; margin: 0; line-height: 1.2;
-    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+    height: 100%;
+    object-fit: contain; /* O cover, dependiendo de cómo quieras que se vea */
+    z-index: 1; /* Asegúrate de que esté debajo del content y overlay si es necesario */
 }
 
-/* Botones y Paginación para el Carrusel de Pósters */
-.poster-carousel-container-component .swiper-button-prev,
-.poster-carousel-container-component .swiper-button-next {
-    color: #e0e0e0;
-    width: 38px; /* Más pequeños para este carrusel */
-    height: 38px;
-    background-color: rgba(10,10,10,0.4);
-    border-radius: 50%;
-    top: 50%;
-    transform: translateY(-calc(50% + 15px)); /* Para que no tapen la paginación */
-    transition: background-color 0.2s ease, color 0.2s ease;
-    opacity: 0.8;
-}
-.poster-carousel-container-component .swiper-button-prev:hover,
-.poster-carousel-container-component .swiper-button-next:hover {
-    background-color: rgba(10,10,10,0.6);
-    color: #fff;
-    opacity: 1;
-}
-.poster-carousel-container-component .swiper-button-prev::after,
-.poster-carousel-container-component .swiper-button-next::after {
-    font-size: 16px; /* Flechas más pequeñas */
-}
-.poster-carousel-container-component .swiper-button-prev { left: -5px; } /* Ligeramente fuera o al borde */
-.poster-carousel-container-component .swiper-button-next { right: -5px; }
+/* Estilos para móvil (hasta 767px) */
+@media (max-width: 767px) {
+    .hero-slider-container .hero-slide-background-image {
+        display: none; /* Ocultar la imagen de fondo en móvil */
+    }
 
-.poster-carousel-container-component .swiper-pagination {
-    bottom: 5px !important; /* Más pegada abajo */
-}
-.poster-carousel-container-component .swiper-pagination-bullet {
-    background: #555; width:7px; height:7px; opacity: 0.7;
-}
-.poster-carousel-container-component .swiper-pagination-bullet-active {
-    background: #aeaeae; opacity: 1;
+    .hero-slider-container .hero-slide-poster-image {
+        display: block; /* Mostrar el póster en móvil */
+        z-index: 1; /* Asegúrate de que esté visible */
+    }
+
+    .hero-slider-container .hero-slide-content .hero-slide-title {
+        display: none; /* Ocultar el título en móvil */
+    }
+
+    /* Ajusta otros estilos para móvil si es necesario */
+    .hero-slider-container .hero-slide-content {
+        /* Por ejemplo, centrar el contenido si solo está el botón */
+        align-items: center;
+        text-align: center;
+    }
 }
 
-/* Media queries para el carrusel de pósters (ajustar slidesPerView aquí si es necesario) */
-@media (max-width: 767px) { /* Móvil y tablet pequeña en portrait */
-    .poster-carousel-container-component { padding: 0 5px; }
-    .poster-carousel-container-component .poster-carousel-title { font-size: 1.4rem; margin-bottom: 15px;}
-    /* Los breakpoints de slidesPerView se manejan en JS para el carrusel de pósters */
+/* Estilos para escritorio (desde 1024px en adelante, ajusta si es necesario) */
+@media (min-width: 1024px) {
+    .hero-slider-container .hero-slide-background-image {
+        display: block; /* Mostrar la imagen de fondo en escritorio */
+    }
+
+    .hero-slider-container .hero-slide-poster-image {
+        display: none; /* Ocultar el póster en escritorio */
+    }
+
+    .hero-slider-container .hero-slide-content .hero-slide-title {
+        display: block; /* Mostrar el título en escritorio */
+    }
 }
 
-@media (max-width: 480px) {
-    .poster-carousel-container-component .poster-slide-title { font-size: 0.75rem; }
-    .poster-carousel-container-component .swiper-button-prev,
-    .poster-carousel-container-component .swiper-button-next { display: none; } /* Ocultar flechas en pantallas muy pequeñas */
-    
+
+
+/* --- 4. Media Queries para Ajustes de Escritorio --- */
+
+/* Ajustes para escritorio (1024px y más) */
+@media (min-width: 1024px) {
+
+    /* Mostrar slider de escritorio */
+    .slider-escritorio {
+        display: block;
+    }
+
+    /* Ocultar slider de móvil/tablet */
+    .slider-movil-tablet {
+        display: none;
+    }
+
+    /* Modificar object-fit para el slider de héroe en escritorio */
+    .hero-slider-container .hero-slide-background-image {
+        object-fit: contain; /* Solo para escritorio */
+    }
+
+    /* Mostrar flechas de navegación del slider de héroe en escritorio */
+    .hero-slider-container .hero-movie-swiper .hero-swiper-button-prev,
+    .hero-slider-container .hero-movie-swiper .hero-swiper-button-next {
+        display: flex; /* Mostrar en escritorio */
+    }
+
+    /* Corregir (si es necesario) la paginación en escritorio (evitar !important) */
     .hero-slider-container .hero-movie-swiper .hero-swiper-pagination {
         position: absolute;
-        /* bottom: 20px !important; */
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        width: auto !important;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
         z-index: 20;
     }
 
-    .hero-slider-container .hero-slide-title {
-        font-size: clamp(2.2rem, 5vw, 3.5rem);
-        font-weight: 700;
-        margin-bottom: 15px;
-        line-height: 1.15;
-        text-shadow: 0 1px 5px rgba(0, 0, 0, 0.8);
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        /* overflow: hidden; */
-        /* width: 100%; */
+    /* Ajustar el ancho del contenido en el slider de héroe para escritorio (si es necesario) */
+    .hero-slider-container .hero-slide-content {
+        max-width: 55%; /* Ocupar menos ancho en escritorio */
+    }
+}
+
+/* --- 5. Media Queries para Ajustes Responsivos (Móvil/Tablet) --- */
+
+/* Ajustes para móviles y tablets pequeñas (portrait) */
+@media (max-width: 767px) {
+    .hero-slider-container .hero-slide-content {
+        max-width: 100%;
+    }
+}
+
+/* Ajustes para pantallas más pequeñas (móviles en landscape) */
+@media (min-width: 480px) and (max-width: 767px) {
+    /* Ajuste de la paginación del slider de héroe (evitando !important) */
+    .hero-slider-container .hero-movie-swiper .hero-swiper-pagination {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: auto;
+        z-index: 20;
+    }
+
+    .hero-slider-container .hero-slide-content {
+        position: relative;
+        z-index: 3;
+        color: #fff;
+        padding: 3vw 4vw;
+        box-sizing: border-box;
+    }
+}
+
+/* Ajustes para pantallas por debajo de 1024px (Móvil/Tablet) */
+@media (max-width: 1023px) {
+    .header-section {
+        justify-content: space-between;
+    }
+
+    .hamburger-button {
+        display: block;
+        margin-left: 5%;
+    }
+
+    .header-buttons {
+        display: none !important;
+        gap: 0;
+    }
+
+    .header-buttons.mobile-menu-active {
+        display: flex !important;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 50vw;
+        height: fit-content;
+        background-color: rgba(10, 10, 10, 0.98);
+        padding: 20px;
+        padding-top: 120px;
+        box-sizing: border-box;
+        overflow-y: auto;
+        align-items: center;
+        justify-content: flex-start;
+        z-index: 1000;
+        border: 1px solid white;
+    }
+
+    /* Styling for items inside the mobile menu */
+    .header-buttons.mobile-menu-active > *,
+    .header-buttons.mobile-menu-active > form {
+        width: 80%;
+        max-width: 350px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .header-buttons.mobile-menu-active .success-message {
+        order: -1;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 25px;
+        color: #d12d10;
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 5px;
+    }
+
+    /* Make sure flash message .show works inside mobile menu */
+    .header-buttons.mobile-menu-active .success-message.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .swiper-slide.hero-slide {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-start;
+        text-align: left;
+        background-color: #000000;
+    }
+
+    .cloneable {
+        /* padding: 20px; */
+        justify-content: center;
+        align-items: center;
+        /* min-height: calc(100vh - 60px); */
+        display: flex;
+        position: relative;
+        font-size: 1.1vw;
+    }
+
+    .main {
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+        /* position: absolute; */
+        inset: 0;
+        overflow: hidden;
+    }
+
+    .header-buttons.mobile-menu-active button,
+    .header-buttons.mobile-menu-active form button {
+        width: 100%;
+        padding: 12px 15px;
+        font-size: 1.1em;
+        border-top: 1px solid white;
+    }
+
+    .header-buttons.mobile-menu-active button a,
+    .header-buttons.mobile-menu-active form button a {
+        display: block;
+        color: #f5f5f5;
+        text-decoration: none;
+    }
+
+    .header-buttons.mobile-menu-active form {
+        display: block;
+    }
+}
+
+/* Ajuste específico para la imagen de fondo en pantallas hasta 769px */
+@media (max-width: 769px) {
+    .hero-slider-container .hero-slide-background-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-position: center center;
+        z-index: 1;
+    }
+
+    @media (min-width: 430px) and (max-height: 500px) {
+        .hero-slider-container .hero-movie-swiper {
+            max-height: 80vh; /* 80% de la altura de la ventana */
+        }
+    }
+
+    @media (min-width: 932px) and (max-height: 500px) {
+        .hero-slider-container .hero-movie-swiper {
+            max-height: 80vh; /* 80% de la altura de la ventana */
+        }
     }
 }

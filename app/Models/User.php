@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Ciudad;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+
 
 /**
  * 
@@ -52,7 +54,7 @@ use App\Models\Ciudad;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereUpdatedAt($value)
  * @mixin \Eloquent
  */
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -80,6 +82,7 @@ class User extends Authenticatable
         'acepta_publicidad',
         'id_descuento',      // Corresponde a la clave foránea
         'tipo_usuario_id',   // Corresponde a la clave foránea
+        'email_verification_token',
     ];
 
     protected $casts = [

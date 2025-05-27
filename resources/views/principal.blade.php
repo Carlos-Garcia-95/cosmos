@@ -9,7 +9,7 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-   <!--  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" /> -->
+    <!--  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" /> -->
 
     <!--GSAPLaravel_8 No borrar, para entrar en GSAP. correo diegito866@gmail.com-->
     @vite([
@@ -33,6 +33,7 @@
         'resources/css/swiper-custom.css',
         'resources/js/slider-init.js',
         'resources/js/menu_hamburguesa.js',
+        'resources/css/menu_hamburguesa.css',
         'resources/js/flash_mensaje.js',
     ])
     <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
@@ -41,6 +42,7 @@
 
 <body id="general">
     <div id='top'></div>
+
     <section class="cloneable">
         
         <div class="main">

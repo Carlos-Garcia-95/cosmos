@@ -62,13 +62,23 @@ class LoginController extends Controller
 
             $user = Auth::user();
 
+            if ($user->email_verified_at === null) {
+                Auth::logout();
+                return back()->with('success', 'Tu cuenta aún no ha sido verificada. Por favor, revisa tu correo electrónico.');
+            }
+
+            if (!$user->hasVerifiedEmail()) {
+                Auth::logout();
+                return back()->with('success', 'Tu cuenta aún no ha sido verificada. Por favor, revisa tu correo electrónico.');
+            }
+
             if ($user->tipo_usuario === self::ID_TIPO_USUARIO_CLIENTE) {
                 $request->session()->regenerate();
                 return redirect()->intended('/')->with('success', "¡Bienvenido Cliente {$user->nombre} {$user->apellidos}!");
-            } else if ($user->tipo_usuario === self::ID_TIPO_USUARIO_EMPLEADO) {
+            } elseif ($user->tipo_usuario === self::ID_TIPO_USUARIO_EMPLEADO) {
                 $request->session()->regenerate();
                 return redirect()->intended('/')->with('success', "¡Bienvenido Empleado {$user->nombre} {$user->apellidos}!");
-            } else if ($user->tipo_usuario === self::ID_TIPO_USUARIO_ADMINISTRADOR) {
+            } elseif ($user->tipo_usuario === self::ID_TIPO_USUARIO_ADMINISTRADOR) {
                 $request->session()->regenerate();
                 return redirect()->intended('/')->with('success', "¡Bienvenido Administrador {$user->nombre} {$user->apellidos}!");
             }

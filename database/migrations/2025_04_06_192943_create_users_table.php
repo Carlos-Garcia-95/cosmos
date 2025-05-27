@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('apellidos', 50)->nullable(); // Permite nulo, se llenará después o desde Google (parcialmente)
             $table->string('email', 191)->unique(); // Email de Google. Aumenté un poco la longitud por estándar.
             $table->timestamp('email_verified_at')->nullable(); // Para marcar si el email fue verificado (Google lo hace)
-
+            $table->string('email_verification_token')->nullable()->unique();
             $table->date('fecha_nacimiento')->nullable(); // Permite nulo, se llenará después
             $table->string('numero_telefono', 15)->nullable(); // Permite nulo, se llenará después. Aumentado un poco por si acaso.
             
