@@ -1,12 +1,8 @@
 import Swiper from 'swiper';
-// Módulos básicos para empezar: Navigation y Pagination. Luego podemos añadir Autoplay, EffectFade.
 import { Navigation, Pagination } from 'swiper/modules';
-
-// Importar los estilos base de Swiper y módulos que SÍ estamos usando
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-// import 'swiper/css/effect-fade'; // Solo si vas a usar EffectFade y lo configuras
 
 document.addEventListener('DOMContentLoaded', function () {
     const heroSwiperElement = document.querySelector('.hero-movie-swiper');
@@ -42,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (heroSwiperElement && peliculasData && peliculasData.length > 0) {
         const swiperSlides = Array.from(heroSwiperElement.querySelectorAll('.swiper-slide'));
+        heroSwiperElement.classList.add('swiper-initialized');
 
         swiperSlides.forEach((slide) => {
             const slideIndexAttr = slide.dataset.slideIndex;

@@ -72,7 +72,12 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 35%, rgba(0, 0, 0, 0) 60%);
+    background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0.3) 35%,
+        rgba(0, 0, 0, 0) 60%
+    );
     z-index: 2;
     pointer-events: none;
 }
@@ -230,6 +235,17 @@
     z-index: 1; /* Asegúrate de que esté debajo del content y overlay si es necesario */
 }
 
+.hero-movie-swiper {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.hero-movie-swiper.swiper-initialized {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s, opacity 0.3s linear;
+}
+
 /* Estilos para móvil (hasta 767px) */
 @media (max-width: 767px) {
     .hero-slider-container .hero-slide-background-image {
@@ -268,13 +284,10 @@
     }
 }
 
-
-
 /* --- 4. Media Queries para Ajustes de Escritorio --- */
 
 /* Ajustes para escritorio (1024px y más) */
 @media (min-width: 1024px) {
-
     /* Mostrar slider de escritorio */
     .slider-escritorio {
         display: block;
