@@ -68,12 +68,9 @@ class RegisterController extends Controller
         $user = User::create([
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
-            'email_verification_token' => Str::uuid() // Genera un UUID único
-            // Los campos nombre, apellidos, dni, etc., serán null por defecto
-            // si son nullable en la migración y no se envían aquí.
-            // Asignar id_descuento y tipo_usuario por defecto si es aplicable
-            // 'id_descuento' => 2, // O null si no hay descuento por defecto
-            // 'tipo_usuario_id' => 3, // O el ID correspondiente al tipo de usuario por defecto
+            'email_verification_token' => Str::uuid(), // Genera un UUID único
+            'id_descuento' => 2, // O null si no hay descuento por defecto
+            'tipo_usuario' => 3, // O el ID correspondiente al tipo de usuario por defecto
         ]);
 
         $user->save();

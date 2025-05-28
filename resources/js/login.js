@@ -5,6 +5,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const volverLoginModalBtn = modalLogin?.querySelector("#volverLoginModal");
     const form = modalLogin?.querySelector("form");
     const clientSideErrorArea = modalLogin?.querySelector('.client-side-errors');
+    const loginPasswordContainers = document.querySelectorAll('.password-input-container'); // Ajusta el selector si es necesario
+
+    loginPasswordContainers.forEach((container) => {
+        const passwordInput = container.querySelector('input[type="password"], input[type="text"]');
+        const toggleIcon = container.querySelector(".toggle-password");
+
+        if (passwordInput && toggleIcon) {
+            toggleIcon.addEventListener("click", function () {
+                const currentType = passwordInput.getAttribute("type");
+                const newType = currentType === "password" ? "text" : "password";
+                passwordInput.setAttribute("type", newType);
+                toggleIcon.textContent = newType === "password" ? "👁️" : "🙈";
+            });
+        }
+    });
 
     function showErrorsJS(messages) {
         if (!clientSideErrorArea) return;
