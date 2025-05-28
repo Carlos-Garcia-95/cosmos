@@ -6,41 +6,21 @@ use App\Models\Pelicula;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class PeliculasController extends Controller
+class PeliculasEstrenoController extends Controller
 {
     // Recuperar películas y sus generos asociados
-    public static function recuperar_peliculas_activas()
+    public static function recuperar_peliculas_estreno()
     {
-        $fecha_actual = Carbon::now()->toDateString();
-        $hora_actual = Carbon::now()->toTimeString();
-        $peliculas = array();
+        $peliculas_estreno = array();
 
-        // Query para filtrar películas:
-        // - Activas
-        // - Que tengan sesiones
-        // - Que esas sesiones tengan su fecha después la fecha y hora actual
+        // Query para filtrar películas en estreno
         $peliculas_objeto = Pelicula::with('generos')
             ->where('pelicula.activa', true)
-            ->where('pelicula.estreno', false)
-            ->whereHas('sesiones', function ($querySesion) use ($fecha_actual, $hora_actual) {
-                $querySesion->where('sesion_pelicula.activa', true)
-                    ->join('fecha as tabla_fecha', 'sesion_pelicula.fecha', '=', 'tabla_fecha.id')
-                    ->join('hora as tabla_hora', 'sesion_pelicula.hora', '=', 'tabla_hora.id')
-                    // Condición 1: La fecha de la sesión es en el futuro
-                    ->where(function ($q) use ($fecha_actual, $hora_actual) {
-                        $q->where('tabla_fecha.fecha', '>', $fecha_actual)
-                            // Condición 2: O la fecha de la sesión es hoy Y la hora es en el futuro
-                            ->orWhere(function ($qHoy) use ($fecha_actual, $hora_actual) {
-                                $qHoy->where('tabla_fecha.fecha', '=', $fecha_actual)
-                                    ->where('tabla_hora.hora', '>', $hora_actual);
-                            });
-                    })
-                ;
-            })
+            ->where('pelicula.estreno', true)
             ->get();
 
         foreach ($peliculas_objeto as $pelicula) {
-            $peliculas[$pelicula->id] = [
+            $peliculas_estreno[$pelicula->id] = [
                 'id' => $pelicula->id,
                 'adult' => $pelicula->adult,
                 'backdrop_ruta' => $pelicula->backdrop_ruta,
@@ -61,7 +41,7 @@ class PeliculasController extends Controller
             ];
         }
 
-        return $peliculas;
+        return $peliculas_estreno;
     }
 
     public static function formatear_url($ruta)

@@ -32,6 +32,12 @@ class Factura extends Model
         'monto_total',      // Este es la BASE IMPONIBLE (antes de impuestos)
         'ultimos_digitos',
         'titular',
+        'titular_email',
+        'num_factura',      // Id de pedido
+        'pedido_redsys_id', // Pedido id para Redsys
+        'codigo_autorizacion_redsys',   // Código de respuesta de Redsys
+        'fecha_pago',       // Fecha en la que se realizó el pago
+        'estado',           // Estado de la factura (Pendiente, Pagado, Cancelado)
         'id_user',          // Clave foránea para la tabla users
         'id_impuesto',      // Clave foránea para la tabla impuesto
     ];

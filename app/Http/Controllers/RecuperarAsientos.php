@@ -8,15 +8,14 @@ use App\Models\Fecha;
 use App\Models\Hora;
 use App\Models\Pelicula;
 use Auth;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+
 
 class RecuperarAsientos extends Controller
 {
     function recuperar_asientos_sesion($id_sesion) {
         // Recuperar todos los datos necesarios para generar los asientos de la sesión seleccionada
         $sesion_seleccionada = SesionPelicula::find($id_sesion);                            // Sesión
-        $pelicula_seleccionada = Pelicula::with('generos')->find($sesion_seleccionada->id_pelicula);         // Película
+        $pelicula_seleccionada = Pelicula::with('generos')->find($sesion_seleccionada->id_pelicula);    // Película
         $fecha_seleccionada = Fecha::find($sesion_seleccionada->fecha);                     // Fecha
         $hora_seleccionada = Hora::find($sesion_seleccionada->hora);                        // Hora
         $asientos = Asiento::where('id_sesion_pelicula', $sesion_seleccionada->id)

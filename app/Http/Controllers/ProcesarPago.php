@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 class ProcesarPago extends Controller
 {
+
+    private ?array $datos_validados = null;
+
     public function procesar_pago(Request $request) {
        
         // Unir todas las reglas
@@ -48,30 +51,30 @@ class ProcesarPago extends Controller
         }
         
         // Si la validación es correcta, se cambia el estado de la validación
-        $datos_validados = $validator->validated();
+        $this->datos_validados = $validator->validated();
 
-        // Guardamos usuario_id en $datos_validados (o null si es invitado)
+        // Guardamos usuario_id en $this->datos_validados (o null si es invitado)
         if (Auth::check()) {
-            $datos_validados['usuario_id'] = Auth::id();
+            $this->datos_validados['usuario_id'] = Auth::id();
         } else {
-            $datos_validados['usuario_id'] = null;
+            $this->datos_validados['usuario_id'] = null;
         }
 
         // Comprobar que el precio total es correcto
         // Recuperar los datos del precio
-        $precio_total_calculado = $datos_validados['precio_total'];
-        $porcentaje_descuento = $datos_validados['precio_descuento'];
+        $precio_total_calculado = $this->datos_validados['precio_total'];
+        $porcentaje_descuento = $this->datos_validados['precio_descuento'];
         $precio_final_esperado = $precio_total_calculado * (1 - ($porcentaje_descuento / 100));
 
         // Comparar con una pequeña tolerancia para evitar problemas con puntos flotantes
         $tolerancia = 0.01; // 1 céntimo de tolerancia
 
-        if (abs($precio_final_esperado - $datos_validados['precio_final']) > $tolerancia) {
+        if (abs($precio_final_esperado - $this->datos_validados['precio_final']) > $tolerancia) {
             // Log para indicar un posible fallo en el sistema de precios y descuentos
             Log::warning('Discrepancia en el cálculo del precio final.', [
                 'precio_total' => $precio_total_calculado,
                 'porcentaje_descuento' => $porcentaje_descuento,
-                'precio_final_enviado' => $datos_validados['precio_final'],
+                'precio_final_enviado' => $this->datos_validados['precio_final'],
                 'precio_final_calculado_servidor' => $precio_final_esperado
             ]);
 
@@ -80,10 +83,13 @@ class ProcesarPago extends Controller
                 ->withInput();
         }
 
-        // Se intentan generar Entradas y Factura. Si hay algún error, return con errores
-        $generarEntrada = new GenerarEntrada();
-        if (!$generarEntrada->generar_entrada($datos_validados)) {
-            $mensajeError = $generarEntrada->ultimoError ?: 
+        // Se intentan generar Entradas y Factura, se actualizan los asientos a 'Reservado'
+        // Se devuelve una respuesta y se maneja
+        $generar_entrada_instancia = new GenerarEntrada();
+        $generar_entrada_respuesta = $generar_entrada_instancia->generar_entrada($this->datos_validados);
+
+        if ($generar_entrada_respuesta["status"] === "error") {
+            $mensajeError = $generar_entrada_respuesta["message"] ?: 
                 'Hubo un problema procesando tu pedido. Por favor, inténtalo de nuevo o contacta con soporte.';
             
             return redirect()->back()
@@ -91,18 +97,8 @@ class ProcesarPago extends Controller
                 ->withInput();
         }
 
-        // Mirar si esto hace falta con Redsys o no (quitar espacios al número de tarjeta)
-        $datos_validados['cardNumber'] = str_replace(' ', '', $datos_validados['cardNumber']);
-
-        // Introducir aquí la lógica de pago. Si es exitosa, se vuelve al principal
-        // Quizás se puede hacer otro modal de éxito de pago mostrando una preview del pdf o algo
-
-        // On success, you might redirect to a success page or return a success message
-        return redirect()->route('principal') // Replace with your success route
-            ->with('success', '¡Pago procesado exitosamente!');
-
+        return $generar_entrada_respuesta['data'];
     }
-
 
 
     // --- Métodos para definir reglas por sección ---

@@ -2,43 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\EmailEntradas;
 use App\Models\Asiento;
 use App\Models\AsientoEstado;
 use App\Models\Entrada;
 use App\Models\Factura;
-use App\Models\Fecha;
-use App\Models\Hora;
 use App\Models\Pelicula;
 use App\Models\Sala;
 use App\Models\SesionPelicula;
 use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Mail;
-use Storage;
 use Str;
 
 class GenerarEntrada
 {
     private array $datos_validados;
 
-    private ?\Illuminate\Database\Eloquent\Collection $asientos;
+    private ?\Illuminate\Database\Eloquent\Collection $asientos = null;
     private ?SesionPelicula $sesion = null;
     private ?User $usuario = null;
     private ?Factura $factura = null;
     private ?array $entradas = null;
-    private ?array $rutas_pdf = null;
+    private ?array $respuesta = null;
+    private ?string $redsys_form_html = null;
 
     public ?string $ultimoError = null;
 
-    public function generar_entrada($datos_validados) {
+    public function generar_entrada($datos_validados): array {
         // Recuperar datos
         $this->datos_validados = $datos_validados;
 
         // Se resetea el ultimoError por si hay que devolverlo
         $this->ultimoError = null;
+        $this->respuesta = [
+            'status' => 'error',
+            'data' => '',
+            'message' => 'No se han generado datos'
+        ];
 
         // Se inicia una nueva transacción
         DB::beginTransaction();
@@ -47,63 +47,66 @@ class GenerarEntrada
 
             if (!$this->recuperar_asientos()) {
                 DB::rollBack();
-                return false;
+                $this->respuesta["message"] = $this->ultimoError;
+                return $this->respuesta;
             }
 
             if (!$this->recuperar_sesion()) {
                 DB::rollBack();
-                return false;
+                $this->respuesta["message"] = $this->ultimoError;
+                return $this->respuesta;
             }
             
             if (isset($datos_validados["usuario_id"])) {
                 if (!$this->recuperar_usuario()) {
                     DB::rollBack();
-                    return false;
+                    $this->respuesta["message"] = $this->ultimoError;
+                    return $this->respuesta;
                 }
             }
 
-            if (!$this->generar_factura()) {
+            if (!$this->generar_factura_pendiente()) {
                 DB::rollBack();
-                return false;
+                $this->respuesta["message"] = $this->ultimoError;
+                return $this->respuesta;
             }
 
-            if (!$this->generar_entradas()) {
+            if (!$this->generar_entradas_pendientes()) {
                 DB::rollBack();
-                return false;
+                $this->respuesta["message"] = $this->ultimoError;
+                return $this->respuesta;
             }
 
-            if (!$this->actualizar_asientos()) {
+            if (!$this->actualizar_asientos_reservados()) {
                 DB::rollBack();
-                return false;
+                $this->respuesta["message"] = $this->ultimoError;
+                return $this->respuesta;
             }
 
-            if (!$this->generar_pdf()) {
+            if (!$this->preparar_pago_redsys()) {
                 DB::rollBack();
-                return false;
+                $this->respuesta["message"] = $this->ultimoError;
+                return $this->respuesta;
             }
 
-            if (!$this->enviar_correo()) {
-                DB::rollBack();
-                return false;
-            }
+            // Generar respuesta para procesar luego los datos generados
+            $this->respuesta = [
+                'status' => 'success',
+                'data' => $this->redsys_form_html,
+                'message' => 'Pago exitoso. Generadas entradas y factura. Asientos actualizados'
+            ];
 
             DB::commit();
-            return true;
+            return $this->respuesta;
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('Error crítico al generar entradas: ' . $e->getMessage(), [
                 'datos' => $this->datos_validados,
                 'exception_trace' => $e->getTraceAsString()
             ]);
-            $this->ultimoError = 'Ocurrió un error inesperado durante el proceso. Por favor, contacta con soporte.';
-            return false;
-            
+            $this->respuesta["message"] = 'Ocurrió un error inesperado durante el proceso. Por favor, contacta con soporte.';
+            return $this->respuesta;
         }
-
-        
-
-
-
     }
 
     private function recuperar_asientos(): bool {
@@ -204,11 +207,23 @@ class GenerarEntrada
     }
 
 
-    private function generar_factura(): bool {
+    private function generar_factura_pendiente(): bool {
        
         // Se recupera el nº tarjeta, se quitan los espacios (si hay) y se reduce a los 4 últimos dígitos
         $numeroTarjetaSinEspacios = str_replace(' ', '', $this->datos_validados["cardNumber"]);
         $ultimos_digitos = substr($numeroTarjetaSinEspacios, -4);
+
+        // Se generan el número de factura y el id de pedido a redsys
+        $num_factura = 'ORD-' . time() . '-' . rand(1000, 9999);
+        $pedido_redsys_id = substr(str_replace('-', '', $num_factura), 5, 17);
+
+        // Recuperar el email (invitado o usuario)
+        $titular_email = "";
+        if ($this->usuario) {
+            $titular_email = $this->usuario->email;
+        } else {
+            $titular_email = $this->datos_validados["email_invitado"];
+        }
 
         try {
             // TODO -> Mirar a ver si se puede arreglar el id_impuesto
@@ -216,7 +231,11 @@ class GenerarEntrada
             $this->factura = Factura::create([
                 'monto_total' => $this->datos_validados["precio_final"],             
                 'ultimos_digitos' => $ultimos_digitos,
-                'titular' => $this->datos_validados["cardName"],                       
+                'titular' => $this->datos_validados["cardName"],
+                'titular_email' => $titular_email,
+                'num_factura' => $num_factura,
+                'estado' => 'pendiente',
+                'pedido_redsys_id' => $pedido_redsys_id,
                 'id_user' => $this->usuario ? $this->usuario->id : null, 
                 'id_impuesto' => 1,
             ]);
@@ -237,7 +256,7 @@ class GenerarEntrada
     }
 
 
-    private function generar_entradas(): bool {
+    private function generar_entradas_pendientes(): bool {
         try {
             // Recuperar número de sala
             $sala = Sala::find($this->sesion->id_sala);
@@ -286,6 +305,7 @@ class GenerarEntrada
                 $entrada = Entrada::create([
                     'codigo_qr' => $codigo_qr,
                     'ruta_pdf' => "",
+                    'estado' => 'pendiente_pago',
                     'precio_total' => $precio_total,
                     'descuento' => $porcentaje_descuento,
                     'precio_final' => $precio_final,
@@ -324,7 +344,15 @@ class GenerarEntrada
     }
 
 
-    private function actualizar_asientos(): bool {
+    private function generar_codigo_qr(): string {
+        // Se utiliza una herramienta Str para generar un String de 128 bits único (prácticamente imposible repetir)
+        $codigo_unico = 'ENTRADA-' . Str::uuid()->toString();
+        
+        return $codigo_unico;
+    }
+
+
+    private function actualizar_asientos_reservados(): bool {
         try {
 
             // Comprobar que hay asientos
@@ -338,9 +366,9 @@ class GenerarEntrada
             $asientos_id = $this->asientos->pluck('id_asiento')->toArray();
 
             // Se establece el id de estado 'Ocupado'
-            $ocupado = AsientoEstado::where('estado', 'ocupado')->first();
+            $reservado = AsientoEstado::where('estado', 'reservado')->first();
 
-            if (!$ocupado) {
+            if (!$reservado) {
                 Log::info("Error al recuperar el estado 'ocupado' del asiento.", ['datos_validados' => $this->datos_validados]);
                 $this->ultimoError = "Error al actualizar los asientos. Por favor, inténtalo más tarde.";
                 return false;
@@ -348,7 +376,7 @@ class GenerarEntrada
 
             // Se actualizan todos los id de asientos recogidos al id ocupado
             $filas_afectadas = Asiento::whereIn('id_asiento', $asientos_id)
-                                        ->update(['estado' => $ocupado->id]);
+                                        ->update(['estado' => $reservado->id]);
 
             if ($filas_afectadas !== $this->asientos->count()) {
                 $this->ultimoError = "No se pudieron actualizar todos los asientos. Por favor, inténtalo más tarde.";
@@ -368,164 +396,35 @@ class GenerarEntrada
     }
 
 
-    private function generar_pdf(): bool {
+    // Realizar pago (Se usa entorno de pruebas de Redsys)
+    // Librería ssheduardo/redsys-laravel=~1.4
+    private function preparar_pago_redsys(): bool {
+        // Comprobar que hemos generado una factura correctamente
+        if (!$this->factura || !$this->factura->num_factura) {
+            $this->ultimoError = "No se ha generado una factura o número de pedido para Redsys.";
+            Log::error($this->ultimoError);
+            return false;
+        }
+
+        // Con el num_factura generamos el id_pedido para redsys
+        $pedido_redsys_id = $this->factura->pedido_redsys_id;
+
+        $cantidad = (float) $this->datos_validados["precio_final"];
+
+        // Llamar al método que devolverá el formulario HTML de redsys (o error)
+        $redsys_controller = new RedsysController();
         
-        try {
-            // Se generan los pdf y se guardan todas las ruta de los pdf generados (para luego mandarlos)
-            foreach ($this->entradas as $entrada) {
-                $pdf_ruta = $this->crear_pdf($entrada);
+        $redsys_respuesta = $redsys_controller->redireccionar_redsys($pedido_redsys_id, $cantidad);
 
-                if (!$pdf_ruta) {
-                    Log::error("Error generando los pdf de las entradas: " . $entrada->id);
-                    $this->ultimoError = "Error al generar las entradas. Por favor, inténtalo más tarde.";
-                    return false;
-                }
-
-                $this->rutas_pdf[] = $pdf_ruta;
-
-                Entrada::where('id_entrada', $entrada->id_entrada)
-                            ->update(['ruta_pdf' => $pdf_ruta]);
-
-            }
-
-            // Comprobar que se han generado tantos pdf como entradas entradas
-            if (count($this->rutas_pdf) !== count($this->entradas)) {
-                    Log::error("Error generando los pdf de las entradas: " . $this->rutas_pdf);
-                    $this->ultimoError = "Error al generar las entradas. Por favor, inténtalo más tarde.";
-                    return false;
-            }
-
+        // Gestionar la respuesta
+        if ($redsys_respuesta) {
+            $this->redsys_form_html = $redsys_respuesta;
             return true;
-
-        } catch (\Exception $e) {
-            Log::error("Error generando los pdf de las entradas: " . $e->getMessage());
-            $this->ultimoError = "Error al generar los pdf. Por favor, inténtalo más tarde.";
+        } else {
+            $this->ultimoError = "No se pudo generar el formulario de pago de Redsys.";
+            Log::error($this->ultimoError, ['pedido_redsys_id' => $pedido_redsys_id]);
+            Log::error($redsys_respuesta);
             return false;
-        }
-    }
-
-
-    
-
-    
-    private function enviar_correo(): bool {
-        
-        $email_destino = null;
-        $email_usuario = null;
-
-        // Si es usuario registrado
-        // TODO -> Email invitado
-        if ($this->usuario) {
-            $email_destino = $this->usuario->email;
-            $email_usuario = $this->usuario;
-        } elseif (!empty($this->datos_validados['email_invitado'])) { // Si es invitado
-            $email_destino = $this->datos_validados['email_invitado'];
-            // Crear un objeto de "mentira" User o pasar los datos del invitado al Mailable
-            $email_usuario = new User(['name' => $this->datos_validados['cardName'] ?? 'Cliente']);
-        }
-
-        // Si no hay email de destino se lanza un error
-        if (is_null($email_destino)) {
-            Log::info([
-                "mensaje" => "No se envía correo: no hay destinatario (usuario no registrado o sin email de contacto).",
-                "email" => $email_destino,
-                "usuario" => $this->usuario
-            ]);
-            $this->ultimoError = "Error al enviar el correo. Por favor, inténtalo más tarde.";
-            return false;
-        }
-
-        // Si no hay pdf generado/s, se lanza un error
-        if (empty($this->rutas_pdf)) {
-            Log::warning("No se envía correo: no hay PDFs de entradas para adjuntar.", ['email_destino' => $email_destino]);
-             $this->ultimoError = "Error al enviar el correo. Por favor, inténtalo más tarde.";
-            return false; // Por ahora, si no hay PDFs, no lo consideramos un error de envío de correo.
-        }
-
-        try {  
-            // Guardar las rutas de los pdf generados
-            $rutas_pdf = [];
-            foreach ($this->rutas_pdf as $ruta_pdf) {
-                $rutas_pdf[] = Storage::disk('public')->path($ruta_pdf);
-            }
-
-            // Crear instancia de Mailable (EmailEntradas)
-            $correo_confirmacion = new EmailEntradas($email_usuario, $this->factura, $rutas_pdf);
-
-            // Enviar el correo con Mail. También lo ponemos en cola
-            // Al ponerlo en cola, la aplicación seguirá funcionando (para el usuario) mientras por detrás se manda el email
-            Mail::to($email_destino)->queue($correo_confirmacion);
-
-            Log::info("Correo de confirmación de compra enviado a: " . $email_destino . " con " . count($rutas_pdf) . " entradas adjuntas.");
-            return true;
-        } catch (\Exception $e) {
-            Log::error("Error enviado los pdf al correo del usuario: " . $e->getMessage());
-            $this->ultimoError = "Error al enviar el correo. Por favor, inténtalo más tarde.";
-            return false;
-        }
-
-        return true;
-    }
-
-
-    private function generar_codigo_qr(): string {
-        // Se utiliza una herramienta Str para generar un String de 128 bits único (prácticamente imposible repetir)
-        $codigo_unico = 'ENTRADA-' . Str::uuid()->toString();
-        
-        return $codigo_unico;
-    }
-
-
-    private function crear_pdf(Entrada $entrada): ?string {
-        try {
-            if (!$entrada) {
-                return null;
-            }
-
-            // Crear objeto con datos de empresa
-            $empresa = (object) [
-                'nombre_legal' => config('company.name', 'Cosmos Cinema (Test)'),
-                'cif' => config('company.cif', 'B99999999'),
-            ];
-
-            // Recuperar fecha
-            $fecha_entrada = Fecha::find($entrada->fecha);
-            if (!$fecha_entrada) {
-                Log::error("No se pudo guardar recuperar la fecha de la entrada: " . $entrada->fecha);
-                return null;
-            }
-
-            // Recuperar hora
-            $hora_entrada = Hora::find($entrada->hora);
-            if (!$hora_entrada) {
-                Log::error("No se pudo guardar recuperar la hora de la entrada: " . $entrada->hora);
-                return null;
-            }
-
-            // Cargar la vista Blade para la entrada
-            $pdf = PDF::loadView('pdf.entrada_cine', compact('entrada', 'empresa', 'fecha_entrada', 'hora_entrada'));
-
-            // Se crea un nombre de archivo único
-            $nombre_archivo = 'entrada-' . $entrada->id_entrada . '-' . Str::random(10) . '.pdf';
-
-            // Se crea la ruta relativa
-            $ruta_relativa = 'entradas_pdf/' . $nombre_archivo;
-
-            // Se guarda el pdf
-            $exito_guardado = Storage::disk('public')->put($ruta_relativa, $pdf->output());
-
-            if (!$exito_guardado) {
-                Log::error("No se pudo guardar el PDF en el disco 'public': " . $ruta_relativa);
-                return null;
-            }
-
-            return $ruta_relativa;
-
-        } catch (\Exception $e) {
-            Log::error("Error generando PDF para entrada ID {$entrada->id_entrada}: " . $e->getMessage(), ['exception' => $e]);
-            // No setear $this->ultimoError aquí directamente, dejar que el método llamador lo haga
-            // si este fallo es crítico para el proceso general.
-            return null;
         }
     }
 }

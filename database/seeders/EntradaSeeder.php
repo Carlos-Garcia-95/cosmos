@@ -63,6 +63,7 @@ class EntradaSeeder extends Seeder
             Entrada::create([
                 'codigo_qr' => 'ENTRADA-' . Str::uuid()->toString(),
                 'ruta_pdf' => "",
+                'estado' => 'pagado',
                 'precio_total' => $precioTotal,
                 'descuento' => $descuentoPorcentaje,
                 'precio_final' => $precioFinal,
