@@ -296,7 +296,7 @@ class AdminController extends Controller
 
             $spokenLanguages = $movieDetails['spoken_languages'] ?? [];
             $spokenLanguageCodes = collect($spokenLanguages)->pluck('iso_639_1')->toArray();
-            $movieToSave->lenguaje_original = json_encode($spokenLanguageCodes);
+            $movieToSave->lenguaje_original = $spokenLanguageCodes[0] ?? null;
 
             $movieToSave->activa = $request->input('activa', false);
             $movieToSave->estreno = $request->input('estreno', true);
