@@ -1,5 +1,5 @@
 <script>
-    var peliculas = @JSON($peliculas)
+    var peliculas = JSON.parse('{!! json_encode($peliculas) !!}');
 </script>
 
 <div class='cartelera-box'>

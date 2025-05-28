@@ -9,7 +9,6 @@ export default defineConfig({
             input: [
                 "resources/css/app.css",
                 "resources/js/app.js",
-                "resources/js/slider.js",
                 "resources/css/slider.css",
                 "resources/js/registro.js",
                 "resources/css/registro.css",
@@ -32,6 +31,10 @@ export default defineConfig({
                 'resources/css/pago.css',
                 'resources/css/detalle_pelicula.css',
                 "resources/js/detalle_y_asientos.js",
+                'resources/css/swiper-custom.css',
+                'resources/js/slider-init.js',
+                'resources/js/menu_hamburguesa.js',
+                'resources/js/flash_mensaje.js',
             ],
             refresh: true,
         }),

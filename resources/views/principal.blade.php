@@ -9,6 +9,8 @@
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
+    <!--  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" /> -->
+
     <!--GSAPLaravel_8 No borrar, para entrar en GSAP. correo diegito866@gmail.com-->
     @vite([
         'resources/css/app.css', 
@@ -28,6 +30,8 @@
         'resources/css/confirmar_seleccion.css',
         'resources/css/invitado.css',
         'resources/css/pago.css',
+        'resources/css/swiper-custom.css',
+        'resources/js/slider-init.js',
         'resources/js/menu_hamburguesa.js',
         'resources/css/menu_hamburguesa.css',
         'resources/js/flash_mensaje.js',
@@ -47,7 +51,11 @@
             </section>
 
             <!-- Slider horizontal de películas -->
-            <x-vistas.mostrar_peliculas_slider :peliculas='$peliculas'/>
+            
+
+            <section id="seccion_cartelera" class="seccion_cartelera">
+                <x-vistas.mostrar_peliculas_slider :peliculas='$peliculas'/>
+            </section>
             
         </div>
     </section>
