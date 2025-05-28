@@ -1,3 +1,5 @@
+@props(['peliculas'])
+
 <script>
     var peliculas = JSON.parse('{!! json_encode($peliculas) !!}');
 </script>
@@ -8,20 +10,27 @@
     </div>
     <div class='separador'></div>
     <div class='cartelera'>
-        
-        @foreach($peliculas as $pelicula_id => $pelicula)
-            <div class='cartel_pelicula' id='{{ $pelicula["id"] }}' onclick="mostrar_detalle('{{ $pelicula["id"] }}')">
-                <div class='imagen_pelicula_cartel'>
-                    @if (isset($pelicula['poster_url']))
-                        <img class='movie_poster' src="{{ $pelicula['poster_url'] }}" loading="lazy" alt="{{ $pelicula['titulo'] }}">
-                    @else
-                        <p>Póster no disponible</p>
-                    @endif
+
+        @if(!empty($peliculas))
+            @foreach($peliculas as $pelicula_id => $pelicula)
+                <div class='cartel_pelicula' id='{{ $pelicula["id"] }}' onclick="mostrar_detalle('{{ $pelicula["id"] }}')">
+                    <div class='imagen_pelicula_cartel'>
+                        @if (isset($pelicula['poster_url']))
+                            <img class='movie_poster' src="{{ $pelicula['poster_url'] }}" loading="lazy" alt="{{ $pelicula['titulo'] }}">
+                        @else
+                            <p>Póster no disponible</p>
+                        @endif
+                    </div>
+                    <div class='titulo_pelicula_cartel'>
+                        <h4>{{ $pelicula["titulo"] }}</h4>
+                    </div>
                 </div>
-                <div class='titulo_pelicula_cartel'>
-                    <h4>{{ $pelicula["titulo"] }}</h4>
-                </div>
+            @endforeach
+        @else
+            <div>
+                 No hay películas disponibles en este momento
             </div>
-        @endforeach
+        @endif
+       
     </div>
 </div>

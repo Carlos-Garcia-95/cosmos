@@ -1769,6 +1769,15 @@ function mostrar_modal_pago(datos_sesion, asientos) {
                 minCardMonth() {
                     if (this.cardYear === this.minCardYear) return new Date().getMonth() + 1;
                     return 1;
+                },
+                availableYears() {
+                    const currentYear = new Date().getFullYear();
+                    const maxYear = 2049; // Límite de años a mostrar en el SELECT (para entorno de pruebas)
+                    const years = [];
+                    for (let year = currentYear; year <= maxYear; year++) {
+                        years.push(year);
+                    }
+                    return years;
                 }
             },
             watch: {

@@ -139,8 +139,8 @@
                                     </select>
                                     <select class="card-input__input -select" name="cardYear" id="cardYear" v-model="cardYear" v-on:focus="focusInput" v-on:blur="blurInput" data-ref="cardDate" required>
                                         <option value="" disabled selected>Año</option>
-                                        <option v-bind:value="$index + minCardYear" v-for="(n, $index) in 12" v-bind:key="n">
-                                            @{{$index + minCardYear}}
+                                        <option v-for="year in availableYears" :key="year" :value="year">
+                                            @{{ year }}
                                         </option>
                                     </select>
                                 </div>

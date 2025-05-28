@@ -42,6 +42,8 @@ class FacturaSeeder extends Seeder
         for ($i = 0; $i < 50; $i++) { // Generar 50 facturas de ejemplo
             $randomDaysAgo = rand(0, 365); // Facturas en el último año
             $createdAt = Carbon::now()->subDays($randomDaysAgo)->subHours(rand(0,23))->subMinutes(rand(0,59));
+            $num_factura = 'ORD-' . time() . '-' . rand(1000, 9999);
+            $pedido_redsys_id = substr(str_replace('-', '', $num_factura), 5, 17);
 
             // monto_total es la base imponible (antes de impuestos)
             $montoBase = rand(1000, 15000) / 100; // Entre 10.00 y 150.00
@@ -50,6 +52,12 @@ class FacturaSeeder extends Seeder
                 'monto_total' => $montoBase,
                 'ultimos_digitos' => $faker->randomNumber(4, true), // 4 últimos dígitos de una tarjeta
                 'titular' => $faker->name,
+                'titular_email' => "prueba@email.com",
+                'num_factura' => $num_factura,
+                'pedido_redsys_id' => $pedido_redsys_id,
+                'estado' => 'pagado',
+                'codigo_autorizacion_redsys' => '123456',
+                'fecha_pago' => $createdAt,
                 'id_user' => $userIds[array_rand($userIds)], // Un ID de usuario aleatorio
                 'id_impuesto' => $impuestoIds[array_rand($impuestoIds)], // Un ID de impuesto aleatorio
                 'created_at' => $createdAt,
@@ -61,11 +69,19 @@ class FacturaSeeder extends Seeder
         for ($i = 0; $i < 5; $i++) {
             $createdAtHoy = Carbon::now()->subHours(rand(0, Carbon::now()->hour))->subMinutes(rand(0,59));
             $montoBaseHoy = rand(500, 5000) / 100;
+            $num_factura = 'ORD-' . time() . '-' . rand(1000, 9999);
+            $pedido_redsys_id = substr(str_replace('-', '', $num_factura), 5, 17);
 
             $facturas[] = [
                 'monto_total' => $montoBaseHoy,
                 'ultimos_digitos' => $faker->randomNumber(4, true),
                 'titular' => $faker->name,
+                'titular_email' => "prueba@email.com",
+                'num_factura' => $num_factura,
+                'pedido_redsys_id' => $pedido_redsys_id,
+                'estado' => 'pagado',
+                'codigo_autorizacion_redsys' => '123456',
+                'fecha_pago' => now(),
                 'id_user' => $userIds[array_rand($userIds)],
                 'id_impuesto' => $impuestoIds[array_rand($impuestoIds)],
                 'created_at' => $createdAtHoy,

@@ -442,10 +442,45 @@
         padding-bottom: 10px;
     }
 
-    /* 2. asiento_div will be a bit bigger, with more height and min height, around 20vh */
     .asiento_div {
-        height: 25vh; /* Increased height */
-        min-height: 25vh; /* Increased min-height */
-        font-size: 0.9em; /* Slightly smaller font to fit more */
+        flex-direction: column;
+        padding: 10px;
+        gap: 15px;
+        font-size: 0.9em;
+    }
+
+    .asiento_div_columna {
+        flex-basis: auto;
+        width: 100%;
+    }
+
+    #asiento_div_asientos {
+        align-items: stretch;
+        gap: 5px;
+    }
+
+    .asiento_columna {
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 3px 0;
+        border-bottom: 1px solid #eee;
+    }
+    #asiento_div_asientos > .asiento_columna:last-child {
+        border-bottom: none;
+    }
+
+    #asiento_div_precio {
+        flex-direction: row;
+        border: none;
+        border-top: 1px solid black;
+    }
+
+    #asiento_columna_preciotitulos,
+    #asiento_columna_preciodatos {
+        flex-direction: column;
+    }
+    
+    .asiento_columna_texto {
+        white-space: normal;
     }
 }

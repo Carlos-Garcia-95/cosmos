@@ -19,6 +19,8 @@ use App\Http\Controllers\EntradaController;
 use App\Http\Controllers\FacturacionController;
 use App\Http\Controllers\RecuperarSesionPelicula;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\RedsysController;
+
 
 //Ruta por get, al poner / en el buscador, nos saldra la pantalla de principal, que es devuelta por la clase HomeController y llama a la función index.
 Route::get('/', [HomeController::class, 'index'])->name('principal');
@@ -205,4 +207,11 @@ Route::get('administrador/facturacion/charts/ingresos-mensuales', [FacturacionCo
 Route::get('administrador/facturacion/resumen-hoy', [FacturacionController::class, 'getResumenHoy'])->name('resumen.hoy');
 
 Route::get('administrador/facturacion/lista-facturas', [FacturacionController::class, 'getListaFacturas'])->name('lista');
+
+    // Rutas de Pago - Redsys
+Route::get('/redsys/payment-ok', [RedsysController::class, 'handle_ok'])->name('redsys_ok');
+
+Route::get('/redsys/payment-ko', [RedsysController::class, 'handle_ko'])->name('redsys_ko');
+
+Route::post('/redsys/webhook-notification', [RedsysController::class, 'handle_notification'])->name('redsys_notification');
 

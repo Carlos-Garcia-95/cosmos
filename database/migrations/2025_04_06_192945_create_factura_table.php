@@ -16,6 +16,12 @@ return new class extends Migration
             $table->double('monto_total');
             $table->bigInteger('ultimos_digitos');
             $table->string('titular');
+            $table->string('titular_email');
+            $table->string('num_factura');
+            $table->string('pedido_redsys_id');
+            $table->string('estado');
+            $table->string('codigo_autorizacion_redsys')->nullable();
+            $table->date('fecha_pago')->nullable();
             $table->unsignedBigInteger('id_user')->nullable();
             $table->unsignedBigInteger('id_impuesto');
             $table->timestamp('created_at')->useCurrent();

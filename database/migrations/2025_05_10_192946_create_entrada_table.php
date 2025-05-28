@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('id_entrada');
             $table->string('codigo_qr', 50);
             $table->string('ruta_pdf', 255);
+            $table->string('estado', 255);
             // Precio
             $table->double('precio_total');
             $table->mediumInteger('descuento');

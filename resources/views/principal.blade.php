@@ -85,6 +85,12 @@
         </div>
     </section>
 
+    <!-- Sección de Estrenos -->
+    <section id="seccion_estreno" class="seccion_estreno">
+        <!-- Estrenos -->
+        <x-vistas.mostrar_peliculas_estreno :peliculas_estreno='$peliculas_estreno'/>
+    </section>
+
     <!-- Section para los menus -->
     <section id="seccionMenus" class="py-5">
         <x-vistas.mostrar_menu :menus='$menus'/>
