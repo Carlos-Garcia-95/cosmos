@@ -296,7 +296,7 @@ class AdminController extends Controller
 
             $spokenLanguages = $movieDetails['spoken_languages'] ?? [];
             $spokenLanguageCodes = collect($spokenLanguages)->pluck('iso_639_1')->toArray();
-            $movieToSave->lenguaje_original = json_encode($spokenLanguageCodes);
+            $movieToSave->lenguaje_original = $spokenLanguageCodes[0] ?? null;
 
             $movieToSave->activa = $request->input('activa', false);
             $movieToSave->estreno = $request->input('estreno', true);
@@ -349,7 +349,7 @@ class AdminController extends Controller
         $nuevoEstadoActiva = !$movie->activa;
 
         if ($nuevoEstadoActiva === true) {
-            if (! $movie->sessions()->exists()) {
+            if (! $movie->sesiones()->exists()) {
                 return response()->json([
                     'message' => 'No se puede activar la película en cartelera porque no tiene ninguna sesión programada.',
                     'error_type' => 'validation',

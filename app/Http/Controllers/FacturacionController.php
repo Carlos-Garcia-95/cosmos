@@ -223,10 +223,10 @@ class FacturacionController extends Controller
         }
         // Aquí podrías añadir más filtros si los necesitas (ej. por titular, por ID de factura)
 
-        $facturas = $query->paginate(10); // Paginamos, 10 por página o lo que prefieras
+        $facturasPaginator = $query->paginate(10)->withPath(url('/administrador/facturacion/lista-facturas')); // Paginamos, 10 por página o lo que prefieras
 
         // Los accessors se aplicarán automáticamente al serializar a JSON
         // Laravel se encarga de esto al devolver $facturas que es una instancia de LengthAwarePaginator
-        return response()->json($facturas);
+        return response()->json($facturasPaginator);
     }
 }

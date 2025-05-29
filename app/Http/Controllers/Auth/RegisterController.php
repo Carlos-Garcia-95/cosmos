@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use App\Mail\VerifyEmail;
+use Illuminate\Support\Facades\Mail;
+// Si tu regla letraDNI está en App\Rules, no necesitas importarla explícitamente
+// a menos que esté en un subdirectorio de App\Rules.
+// use App\Rules\letraDNI;
 
 class RegisterController extends Controller
 {
@@ -62,20 +68,16 @@ class RegisterController extends Controller
         $user = User::create([
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
-            // Los campos nombre, apellidos, dni, etc., serán null por defecto
-            // si son nullable en la migración y no se envían aquí.
-            // Asignar id_descuento y tipo_usuario por defecto si es aplicable
-            // 'id_descuento' => 2, // O null si no hay descuento por defecto
-            // 'tipo_usuario_id' => 3, // O el ID correspondiente al tipo de usuario por defecto
+            'email_verification_token' => Str::uuid(), // Genera un UUID único
+            'id_descuento' => 2, // O null si no hay descuento por defecto
+            'tipo_usuario' => 3, // O el ID correspondiente al tipo de usuario por defecto
         ]);
 
-        Auth::login($user);
+        $user->save();
 
-        if (method_exists($user, 'isProfileIncomplete') && $user->isProfileIncomplete()) {
-            return redirect()->route('principal')
-                            ->with('status', '¡Registro exitoso! Accede a "Mi Cuenta" para completar tu perfil.');
-        }
+        Mail::to($user->email)->send(new VerifyEmail($user));
 
-        return redirect()->route('principal')->with('status', '¡Registro exitoso! Bienvenido/a.');
+        return redirect()->route('principal') // Redirige a una página de aviso
+                    ->with('success', '¡Registro exitoso! Por favor, revisa tu correo electrónico para verificar tu cuenta.');
     }
 }

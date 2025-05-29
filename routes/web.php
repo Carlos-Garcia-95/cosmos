@@ -18,6 +18,7 @@ use App\Http\Controllers\ProcesarPago;
 use App\Http\Controllers\EntradaController;
 use App\Http\Controllers\FacturacionController;
 use App\Http\Controllers\RecuperarSesionPelicula;
+use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\RedsysController;
 
 
@@ -26,6 +27,13 @@ Route::get('/', [HomeController::class, 'index'])->name('principal');
 
 //Registro
 Route::post('/register', [RegisterController::class, 'registrar'])->name('registro');
+
+//Verificar Email
+Route::get('/verify-email/{token}', [VerificationController::class, 'verify'])->name('verification.verify');
+
+Route::get('/verify-email/notice', function () {
+    return view('verification.notice');
+})->name('verification.notice');
 
 // Ruta para comprobar si el email existe
 Route::get('/check-email', [CheckController::class, 'checkEmail']);

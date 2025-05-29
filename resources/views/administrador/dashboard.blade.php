@@ -436,7 +436,7 @@
 
                         <!-- Fila 1: Resumen del Día/Periodo y Gráfico Principal -->
                         <div class="row mb-4">
-                            <div class="col-md-4">
+                            <div class="col-md-4" id="tamaño">
                                 <div class="card">
                                     <div class="card-header">
                                         Resumen Hoy ({{ now()->format('d/m/Y') }})

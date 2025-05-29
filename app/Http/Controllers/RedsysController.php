@@ -164,7 +164,7 @@ class RedsysController extends Controller
                     return response('OK', 200)->header('Content-Type', 'text/plain');
                 }
                 
-                // 5. Enviar correo de confirmación
+                // 5. Enviar correo de confirmación --Aqui enviar correo Real--
                 if (!$this->enviar_correo()) {
                     DB::rollBack();
                     Log::info("Error al enviar el correo de confiramción: " . $this->factura->id_factura);
@@ -179,8 +179,8 @@ class RedsysController extends Controller
 
                 // 1. Actualizar entradas a 'cancelada'
                 Entrada::where('factura_id', $this->factura->id_factura)
-                       ->where('estado', 'pendiente_pago')
-                       ->update(['estado' => 'cancelada']);
+                    ->where('estado', 'pendiente_pago')
+                    ->update(['estado' => 'cancelada']);
 
                 // 2. Volver asientos de 'reservado' a 'disponible'
                 $this->entradas = Entrada::where('factura_id', $this->factura->id_factura)->get();
@@ -195,8 +195,8 @@ class RedsysController extends Controller
                     // Cambiar estado a todos los asientos de 'reservado' a 'disponible'
                     if ($estado_disponible && $estado_reservado) {
                         Asiento::whereIn('id_asiento', $this->asientos_ids)
-                               ->where('estado', $estado_reservado->id) // Solo los que esta factura reservó
-                               ->update(['estado' => $estado_disponible->id]);
+                            ->where('estado', $estado_reservado->id) // Solo los que esta factura reservó
+                            ->update(['estado' => $estado_disponible->id]);
                         Log::info("Asientos liberados para factura fallida {$this->factura->id_factura}.");
                     } else {
                         Log::error("No se encontraron estados 'disponible' o 'reservado' para liberar asientos. Factura: {$this->factura->id_factura}");
@@ -358,6 +358,7 @@ class RedsysController extends Controller
         
         // Recuperar email
         $email_destino = $this->factura["titular_email"];
+        log::info("Correo que tendra que recibir las entradas: " . $email_destino);
         $email_usuario = null;
         
         // Recuperar usuario
@@ -389,7 +390,7 @@ class RedsysController extends Controller
 
             // Enviar el correo con Mail. También lo ponemos en cola
             // Al ponerlo en cola, la aplicación seguirá funcionando (para el usuario) mientras por detrás se manda el email
-            Mail::to($email_destino)->queue($correo_confirmacion);
+            Mail::to($email_destino)->send($correo_confirmacion);
 
             Log::info("Correo de confirmación de compra enviado a: " . $email_destino . " con " . count($this->rutas_pdf) . " entradas adjuntas.");
         } catch (\Exception $e) {
@@ -399,5 +400,4 @@ class RedsysController extends Controller
 
         return true;
     } 
-     
 }

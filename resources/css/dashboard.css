@@ -288,7 +288,6 @@ body {
 }
 
 
-
 .api-movie-item .movie-details h4,
 .managed-movie-item .movie-details h4,
 .managed-menu-item .menu-item-details h4 {
@@ -1070,9 +1069,6 @@ body {
     font-weight: bold;
 }
 
-.sessions-table tbody tr:nth-child(even) {
-}
-
 .sessions-table button.delete-btn {
     background-color: #dc3545;
     color: white;
@@ -1419,5 +1415,9 @@ body {
     .sessions-table td {
         white-space: nowrap;
         padding: 8px 10px;
+    }
+
+    #tamaño{
+        margin-bottom: 7%;
     }
 }
