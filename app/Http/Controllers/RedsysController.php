@@ -121,7 +121,7 @@ class RedsysController extends Controller
             }
 
             // 3. Verificar importe
-            if ((int) $this->factura->monto_total * 100 !== (int) $dsAmount) {
+            if ((float) $this->factura->monto_total * 100 !== (float) $dsAmount) {
                 Log::error("Redsys Notification: Discrepancia de importe para {$dsOrder}. BD: ".round($this->factura->monto_total * 100).", Redsys: ".$dsAmount);
                 $this->factura->estado = 'Error Importe';
                 $this->factura->save();

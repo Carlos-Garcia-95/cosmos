@@ -1234,7 +1234,8 @@ function generar_confirmar_entradas(datos_sesion, asientos) {
     // Recuperar descuento de usuario
     let descuento_aplicado_cantidad;
     let descuento_aplicado;
-
+    console.log(datos_sesion);
+    console.log(usuario);
     // Se recupera y procesa el tipo de usuario. Si es invitado, se muestra adecuadamente
     if (usuario) {
         descuento_aplicado_cantidad = datos_sesion.descuento.descuento;

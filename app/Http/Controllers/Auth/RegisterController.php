@@ -9,9 +9,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
-// Si tu regla letraDNI está en App\Rules, no necesitas importarla explícitamente
-// a menos que esté en un subdirectorio de App\Rules.
-// use App\Rules\letraDNI;
 
 class RegisterController extends Controller
 {
