@@ -13,7 +13,7 @@ class ProcesarPago extends Controller
     private ?array $datos_validados = null;
 
     public function procesar_pago(Request $request) {
-       
+
         // Unir todas las reglas
         $todas_las_reglas = array_merge(
             $this->obtener_reglas_pago(),

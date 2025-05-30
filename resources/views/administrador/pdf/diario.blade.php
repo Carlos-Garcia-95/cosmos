@@ -31,7 +31,7 @@
         <thead>
             <tr>
                 <th>ID Fact.</th>
-                <th>Hora</th>
+                <th>Num. Factura</th> <th>Hora</th>
                 <th>Titular</th>
                 <th>Impuesto Aplicado</th>
                 <th class="text-right">M. Neto (Base)</th>
@@ -43,8 +43,8 @@
             @forelse ($facturasDelDia as $factura)
                 <tr>
                     <td>{{ $factura->id_factura }}</td>
-                    <td>{{ $factura->created_at->format('H:i:s') }}</td>
-                    <td>{{ $factura->titular }} <small>(Usr: {{ $factura->id_user }})</small></td>
+                    <td>{{ $factura->num_factura }}</td> <td>{{ $factura->created_at->format('H:i:s') }}</td>
+                    <td>{{ $factura->titular }}</td>
                     <td>
                         @if($factura->impuesto)
                             {{ $factura->impuesto->tipo }} ({{ $factura->impuesto->cantidad}}%)
@@ -64,7 +64,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" style="text-align:center;">No hay facturas para este día.</td>
+                    <td colspan="8" style="text-align:center;">No hay facturas para este día.</td>
                 </tr>
             @endforelse
         </tbody>

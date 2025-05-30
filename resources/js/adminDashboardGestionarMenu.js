@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuItemCurrentFotoRutaInput = document.getElementById('menu-item-current-foto-ruta');
     const saveMenuItemButton = document.getElementById('save-menu-item-button');
     const cancelMenuItemButton = document.getElementById('cancel-menu-item-button');
-
+    const gestionarMenuCosmosLink = document.getElementById('gestionar-menu-cosmos-link');
 
     // --- ESTADO ---
     let currentPage = 1;
@@ -36,6 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const defaultImagePath = '/images/menus/imagenEjemplo.jpeg'; // Ruta a tu imagen por defecto en public
     let menuItemsLoaded = false;
+
+    if (gestionarMenuCosmosLink && menuFilterButton) {
+        gestionarMenuCosmosLink.addEventListener('click', (event) => {
+            event.preventDefault(); // Evita la navegación del enlace si es un <a>
+            fetchMenuItems(1); // Llama directamente a la función para cargar los menús
+        });
+    }
 
     // --- FUNCIONES DE UI ---
     const displayMenuMessage = (message) => {

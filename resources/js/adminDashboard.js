@@ -23,6 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
         menuToggle.addEventListener('click', function() {
             mainContainer.classList.toggle('sidebar-open');
         });
+
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 431) {
+                    mainContainer.classList.remove('sidebar-open');
+                }
+            });
+        });
     }
 
     sidebarLinks.forEach(link => {
@@ -44,8 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    listTypeSelect.addEventListener('change', updateSearchInputState);
-    updateSearchInputState();
+    /* listTypeSelect.addEventListener('change', updateSearchInputState);
+    updateSearchInputState(); */
 
     let allFetchedMovies = [];
     let currentPage = 1;

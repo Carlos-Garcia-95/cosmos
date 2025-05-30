@@ -81,7 +81,7 @@ class NominaEmpleadoController extends Controller
             'nombre_legal' => config('company.name', 'Cosmos Cinema S.L.'),
             'cif' => config('company.cif', 'B12345678'),
             'direccion' => config('company.address', 'Calle Principal 1, 28001 Madrid'),
-            'representante_legal' => config('company.legal_representative', 'D. Gerente Ejemplo')
+            'representante_legal' => config('company.legal_representative', 'D. Gerente D.P/C.G')
         ];
 
         $pdf = Pdf::loadView('pdf.nomina', compact('nomina', 'empleado', 'empresa'));
@@ -100,7 +100,7 @@ class NominaEmpleadoController extends Controller
      */
     public function downloadNominaPdf($idNomina) // Cambiado el parámetro para consistencia
     {
-        $nomina = NominaEmpleados::with('empleado.city')->findOrFail($idNomina);
+        $nomina = NominaEmpleados::with('empleado.ciudad')->findOrFail($idNomina);
         $empleado = $nomina->empleado;
 
         // *** AÑADIDO: Verificación de seguridad ***
@@ -114,7 +114,7 @@ class NominaEmpleadoController extends Controller
             'nombre_legal' => config('company.name', 'Cosmos Cinema S.L.'),
             'cif' => config('company.cif', 'B12345678'),
             'direccion' => config('company.address', 'Calle Principal 1, 28001 Madrid'),
-            'representante_legal' => config('company.legal_representative', 'D. Gerente Ejemplo')
+            'representante_legal' => config('company.legal_representative', 'D. Gerente D.P/C.G')
         ];
 
         $pdf = Pdf::loadView('pdf.nomina', compact('nomina', 'empleado', 'empresa'));

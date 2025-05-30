@@ -81,7 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'mayor_edad_confirmado',
         'acepta_publicidad',
         'id_descuento',      // Corresponde a la clave foránea
-        'tipo_usuario_id',   // Corresponde a la clave foránea
+        'tipo_usuario',   // Corresponde a la clave foránea
         'email_verification_token',
     ];
 

@@ -230,7 +230,7 @@
                             @if(isset($entrada->descuento) && $entrada->descuento > 0 && isset($entrada->precio_total))
                             <span>(Precio Original: {{ number_format($entrada->precio_total, 2, ',', '.') }} €, Desc: {{ $entrada->descuento }}%)</span>
                             @elseif(isset($entrada->precio_base) && $entrada->precio_base > ($entrada->precio_final ?? $entrada->precio))
-                                 <span>(Precio Original: {{ number_format($entrada->precio_base, 2, ',', '.') }} €)</span>
+                                <span>(Precio Original: {{ number_format($entrada->precio_base, 2, ',', '.') }} €)</span>
                             @endif
                         </section>
                         <footer class="ticket-info-footer">
@@ -249,7 +249,7 @@
                                 <p>Logo no encontrado en: {{ $ruta_logo }}</p>
                             @endif
                     </div>
-                     <div class="stub-qr-area">
+                    <div class="stub-qr-area">
                         <div class="qr-image-wrapper">
                             @if($qrCodeBase64)
                                 <img src="data:image/png;base64,{{ $qrCodeBase64 }}" alt="Código QR">

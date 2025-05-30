@@ -37,39 +37,50 @@ document.addEventListener("DOMContentLoaded", () => {
             ? "toggle-status-btn deactivate"
             : "toggle-status-btn activate";
 
-        const estrenoButtonText = movie.estreno ? 'Pasar a Cartelera' : 'Pasar a Estreno';
-        const estrenoButtonClass = movie.estreno ? 'toggle-estreno-btn deactivate' : 'toggle-estreno-btn activate';
-        const estrenoStatusText = movie.estreno ? 'Estreno' : 'Cartelera';
-        const estrenoStatusClass = movie.estreno ? 'status-estreno' : 'status-cartelera';
+        const estrenoButtonText = movie.estreno
+            ? "Pasar a Cartelera"
+            : "Pasar a Estreno";
+        const estrenoButtonClass = movie.estreno
+            ? "toggle-estreno-btn deactivate"
+            : "toggle-estreno-btn activate";
+        const estrenoStatusText = movie.estreno ? "Estreno" : "Cartelera";
+        const estrenoStatusClass = movie.estreno
+            ? "status-estreno"
+            : "status-cartelera";
 
         return `
             <div class="managed-movie-item">
                 <img src="${posterUrl}" alt="Poster de ${
-            movie.titulo || "Película sin título"
-        }">
+                    movie.titulo || "Película sin título"
+                }">
                 <div class="movie-details">
                     <h4>${movie.titulo || "Película sin título"} (${
-            movie.fecha_estreno
-                ? movie.fecha_estreno.split("-")[0]
-                : "Año desconocido"
-        })</h4>
+                        movie.fecha_estreno
+                            ? movie.fecha_estreno.split("-")[0]
+                            : "Año desconocido"
+                    })</h4>
                     <p class='sinopsis'>${
                         movie.sinopsis
                             ? movie.sinopsis.substring(0, 150) + "..."
                             : "Sinopsis no disponible."
                     }</p>
                     <p>Estado Activo: <span class="${
-            movie.activa ? "status-active" : "status-inactive"
-        }">${movie.activa ? "Activa" : "Inactiva"}</span></p>
+                        movie.activa ? "status-active" : "status-inactive"
+                    }">${movie.activa ? "Activa" : "Inactiva"}</span></p>
                     <p>Estado: <span class="${estrenoStatusClass}">${estrenoStatusText}</span></p>
                 </div>
                 <div class="movie-actions">
                     <button class="${statusButtonClass}" data-movie-id="${
-            movie.id
-        }">${statusButtonText}</button>
-                    <button class="${estrenoButtonClass}" data-movie-id="${movie.id}">${estrenoButtonText}</button>
+                        movie.id
+                    }">${statusButtonText}</button>
+                    <button class="${estrenoButtonClass}" data-movie-id="${
+                        movie.id
+                    }">${estrenoButtonText}</button>
                 </div>
             </div>
+            <div class="status-error-message" data-movie-id="${
+                        movie.id
+                    }" style="color: red; font-size: 0.9em; margin-top: 5px; margin-bottom: 10px;display: none; text-align: center"></div>
         `;
     };
 
@@ -144,7 +155,19 @@ document.addEventListener("DOMContentLoaded", () => {
                             );
                         }
                     } else {
-                        alert((`No puedes activar una pelicula si no tiene ninguna sesión ACTIVA programada.`));
+                        const errorMessageDiv = manageMoviesArea.querySelector(
+                            `.status-error-message[data-movie-id="${movieId}"]`
+                        );
+                        const errorMessage =
+                            result.message || "Error al cambiar el estado.";
+                        if (errorMessageDiv) {
+                            errorMessageDiv.textContent = errorMessage;
+                            errorMessageDiv.style.display = "block";
+                            setTimeout(() => {
+                                errorMessageDiv.style.display = "none";
+                                errorMessageDiv.textContent = "";
+                            }, 3000);
+                        }
                         console.error("Error response from backend:", result);
                         button.textContent = originalButtonText;
                     }
@@ -153,9 +176,18 @@ document.addEventListener("DOMContentLoaded", () => {
                         "Error al cambiar estado de película:",
                         error
                     );
-                    alert(
-                        "Error al intentar cambiar el estado: " + error.message
+                    const errorMessageDiv = manageMoviesArea.querySelector(
+                        `.status-error-message[data-movie-id="${movieId}"]`
                     );
+                    if (errorMessageDiv) {
+                        errorMessageDiv.textContent =
+                            "Error al intentar cambiar el estado.";
+                        errorMessageDiv.style.display = "block";
+                        setTimeout(() => {
+                            errorMessageDiv.style.display = "none";
+                            errorMessageDiv.textContent = "";
+                        }, 3000);
+                    }
                     button.textContent = originalButtonText;
                 } finally {
                     button.disabled = false;
@@ -163,48 +195,77 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        const toggleEstrenoButtons = manageMoviesArea.querySelectorAll('.toggle-estreno-btn');
-        toggleEstrenoButtons.forEach(button => {
-            button.addEventListener('click', async (event) => {
+        const toggleEstrenoButtons = manageMoviesArea.querySelectorAll(
+            ".toggle-estreno-btn"
+        );
+        toggleEstrenoButtons.forEach((button) => {
+            button.addEventListener("click", async (event) => {
                 const movieId = button.dataset.movieId;
                 const originalButtonText = button.textContent;
 
                 button.disabled = true;
-                button.textContent = 'Cambiando...';
+                button.textContent = "Cambiando...";
 
                 try {
-                    const response = await fetch(`/administrador/movies/${movieId}/estrenoActivo`, {
-                        method: 'PATCH',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                    });
+                    const response = await fetch(
+                        `/administrador/movies/${movieId}/estrenoActivo`,
+                        {
+                            method: "PATCH",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": document
+                                    .querySelector('meta[name="csrf-token"]')
+                                    .getAttribute("content"),
+                            },
+                        }
+                    );
 
                     const result = await response.json();
 
                     if (response.ok) {
                         console.log(result.message);
-                        button.textContent = result.new_status ? 'Pasar a Cartelera' : 'Pasar a Estreno';
-                    button.classList.remove('activate', 'deactivate');
-                    button.classList.add(result.new_status ? 'deactivate' : 'activate');
+                        button.textContent = result.new_status
+                            ? "Pasar a Cartelera"
+                            : "Pasar a Estreno";
+                        button.classList.remove("activate", "deactivate");
+                        button.classList.add(
+                            result.new_status ? "deactivate" : "activate"
+                        );
 
-                    const estrenoStatusSpan = button.closest('.managed-movie-item').querySelector('.status-cartelera, .status-estreno');
-                    if (estrenoStatusSpan) {
-                        estrenoStatusSpan.textContent = result.new_status_text;
-                        estrenoStatusSpan.classList.remove('status-cartelera', 'status-estreno');
-                        estrenoStatusSpan.classList.add(result.new_status ? 'status-estreno' : 'status-cartelera');
-                    }
-
+                        const estrenoStatusSpan = button
+                            .closest(".managed-movie-item")
+                            .querySelector(".status-cartelera, .status-estreno");
+                        if (estrenoStatusSpan) {
+                            estrenoStatusSpan.textContent =
+                                result.new_status_text;
+                            estrenoStatusSpan.classList.remove(
+                                "status-cartelera",
+                                "status-estreno"
+                            );
+                            estrenoStatusSpan.classList.add(
+                                result.new_status
+                                    ? "status-estreno"
+                                    : "status-cartelera"
+                            );
+                        }
                     } else {
-                        alert('Error: ' + (result.error || `Error al cambiar estado de estreno (Estado ${response.status}).`));
-                        console.error('Error response from backend:', result);
+                        alert(
+                            "Error: " +
+                                (result.error ||
+                                    `Error al cambiar estado de estreno (Estado ${response.status}).`)
+                        );
+                        console.error("Error response from backend:", result);
                         button.textContent = originalButtonText;
                     }
-
                 } catch (error) {
-                    console.error('Error al cambiar estado de estreno de película:', error);
-                    alert('Error al intentar cambiar el estado de estreno: ' + error.message);
+                    console.error(
+                        "Error al cambiar estado de estreno de película:",
+                        error
+                    );
+                    alert(
+                        "Error al intentar cambiar el estado de estreno: " +
+                            error.message
+                    );
                     button.textContent = originalButtonText;
                 } finally {
                     button.disabled = false;

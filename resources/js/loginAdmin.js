@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // ... (Tu lógica existente de errores y toggle de password) ...
 
     const emailInput = document.getElementById("email-input");
     const adminCodeContainer = document.getElementById("admin-code-container");

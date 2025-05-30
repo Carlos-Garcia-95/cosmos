@@ -1,5 +1,5 @@
 import Swiper from 'swiper';
-import { Navigation, Pagination } from 'swiper/modules';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (swiperSlides.length > 0) {
             try {
                 const heroSwiper = new Swiper(heroSwiperElement, {
-                    modules: [Navigation, Pagination],
+                    modules: [Navigation, Pagination, Autoplay],
                     slidesPerView: 1,
                     spaceBetween: 0,
                     loop: peliculasData.length > 1,
@@ -67,6 +67,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     navigation: {
                         nextEl: '.hero-swiper-button-next',
                         prevEl: '.hero-swiper-button-prev',
+                    },
+                    autoplay: {
+                        delay: 5000,
+                        disableOnInteraction: false,
                     },
                     watchOverflow: true,
                     observer: true,

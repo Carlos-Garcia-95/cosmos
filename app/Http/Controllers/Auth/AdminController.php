@@ -20,7 +20,9 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\MenuItem;
 use Illuminate\Http\JsonResponse;
 use App\Models\NominaEmpleados;
+use App\Mail\CredencialesEmpleado;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -499,150 +501,171 @@ class AdminController extends Controller
     }
 
     public function crearEmpleado(Request $request)
-    {
-        $mensajes = [
-            'nombre.required' => 'El campo Nombre es obligatorio.',
-            'nombre.string' => 'El campo Nombre debe ser una cadena de texto.',
-            'nombre.max' => 'El campo Nombre no debe exceder los :max caracteres.',
-            'apellidos.required' => 'El campo Apellidos es obligatorio.',
-            'apellidos.string' => 'El campo Apellidos debe ser una cadena de texto.',
-            'apellidos.max' => 'El campo Apellidos no debe exceder los :max caracteres.',
-            'direccion.required' => 'El campo Dirección es obligatorio.',
-            'direccion.string' => 'El campo Dirección debe ser una cadena de texto.',
-            'direccion.max' => 'El campo Dirección no debe exceder los :max caracteres.',
-            'direccion.regex' => 'El campo Dirección contiene caracteres no permitidos.',
-            'ciudad.required' => 'Debes seleccionar una ciudad.',
-            'ciudad.exists' => 'La ciudad seleccionada no es válida.',
-            'codigo_postal.required' => 'El campo Código Postal es obligatorio.',
-            'codigo_postal.string' => 'El campo Código Postal debe ser una cadena de texto.',
-            'codigo_postal.max' => 'El Código Postal debe tener exactamente :max dígitos.',
-            'codigo_postal.min' => 'El Código Postal debe tener exactamente :min dígitos.',
-            'numero_telefono.required' => 'El campo Número de Teléfono es obligatorio.',
-            'numero_telefono.digits' => 'El campo Número de Teléfono debe tener exactamente :digits dígitos.',
-            'dni.required' => 'El campo DNI es obligatorio.',
-            'dni.regex' => 'El formato del DNI debe ser 8 números seguidos de una letra.',
-            'dni.unique' => 'Ya existe un usuario con este DNI registrado.',
-            'fecha_nacimiento.required' => 'El campo Fecha de Nacimiento es obligatorio.',
-            'fecha_nacimiento.date' => 'El campo Fecha de Nacimiento debe ser una fecha válida.',
-            'fecha_nacimiento.before' => 'El campo Fecha de Nacimiento debe ser una fecha anterior a :date.',
-            'tipo_usuario.required' => 'Debes seleccionar el tipo de usuario.',
-            'tipo_usuario.integer' => 'El campo Tipo de Usuario debe ser un número entero.',
-            'tipo_usuario.in' => 'El tipo de usuario seleccionado no es válido.',
-        ];
-        $validator = Validator::make($request->all(), [
-            'nombre' => ['required', 'string', 'max:100'],
-            'apellidos' => ['required', 'string', 'max:100'],
-            'direccion' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\s\/\-#.,]*$/'],
-            'ciudad' => ['required', 'exists:ciudades,id'],
-            'codigo_postal' => ['required', 'string', 'max:5', 'min:5'],
-            'numero_telefono' => ['required', 'digits:9'],
-            'dni' => ['required', 'regex:/^\d{8}[A-Za-z]$/', 'unique:users,dni', new letraDNI],
-            'fecha_nacimiento' => ['required', 'date', 'before:today'],
-            'tipo_usuario' => ['required', 'integer', 'in:1,2'],
-        ], $mensajes);
+{
+    Log::info('Inicio de crearEmpleado');
 
-        if ($validator->fails()) {
-            $ciudades = Ciudad::orderBy('nombre')->get();
-            return back()->withErrors($validator)->withInput()->with(compact('ciudades'));
-        }
+    $mensajes = [
+        'nombre.required' => 'El campo Nombre es obligatorio.',
+        'nombre.string' => 'El campo Nombre debe ser una cadena de texto.',
+        'nombre.max' => 'El campo Nombre no debe exceder los :max caracteres.',
+        'apellidos.required' => 'El campo Apellidos es obligatorio.',
+        'apellidos.string' => 'El campo Apellidos debe ser una cadena de texto.',
+        'apellidos.max' => 'El campo Apellidos no debe exceder los :max caracteres.',
+        'ciudad.required' => 'Debes seleccionar una ciudad.',
+        'ciudad.exists' => 'La ciudad seleccionada no es válida.',
+        'codigo_postal.required' => 'El campo Código Postal es obligatorio.',
+        'codigo_postal.string' => 'El campo Código Postal debe ser una cadena de texto.',
+        'codigo_postal.max' => 'El Código Postal debe tener exactamente :max dígitos.',
+        'codigo_postal.min' => 'El Código Postal debe tener exactamente :min dígitos.',
+        'numero_telefono.required' => 'El campo Número de Teléfono es obligatorio.',
+        'numero_telefono.digits' => 'El campo Número de Teléfono debe tener exactamente :digits dígitos.',
+        'dni.required' => 'El campo DNI es obligatorio.',
+        'dni.regex' => 'El formato del DNI debe ser 8 números seguidos de una letra.',
+        'dni.unique' => 'Ya existe un usuario con este DNI registrado.',
+        'fecha_nacimiento.required' => 'El campo Fecha de Nacimiento es obligatorio.',
+        'fecha_nacimiento.date' => 'El campo Fecha de Nacimiento debe ser una fecha válida.',
+        'fecha_nacimiento.before' => 'El campo Fecha de Nacimiento debe ser una fecha anterior a :date.',
+        'tipo_usuario.required' => 'Debes seleccionar el tipo de usuario.',
+        'tipo_usuario.integer' => 'El campo Tipo de Usuario debe ser un número entero.',
+        'tipo_usuario.in' => 'El tipo de usuario seleccionado no es válido.',
+        'email.required' => 'El campo Correo Electrónico es obligatorio.',
+        'email.email' => 'El formato del Correo Electrónico no es válido.',
+    ];
+    $validator = Validator::make($request->all(), [
+        'nombre' => ['required', 'string', 'max:100'],
+        'apellidos' => ['required', 'string', 'max:100'],
+        'ciudad' => ['required', 'exists:ciudades,id'],
+        'codigo_postal' => ['required', 'string', 'max:5', 'min:5'],
+        'numero_telefono' => ['required', 'digits:9'],
+        'dni' => ['required', 'regex:/^\d{8}[A-Za-z]$/', 'unique:users,dni', new letraDNI],
+        'fecha_nacimiento' => ['required', 'date', 'before:today'],
+        'tipo_usuario' => ['required', 'integer', 'in:1,2'],
+        'email' => ['required', 'email'], // Validamos que el email del input sea correcto
+    ], $mensajes);
 
-        $validatedData = $validator->validated();
+    Log::info('Validación realizada', ['fails' => $validator->fails(), 'errors' => $validator->errors()->all(), 'validated_data' => $request->all()]);
 
-        $normalizeEmailPart = function ($string) {
-            $string = Str::lower($string);
-            $string = str_replace(' ', '', $string);
-            $string = str_replace(['á', 'é', 'í', 'ó', 'ú', 'ñ', 'ü', 'Á', 'É', 'Í', 'Ó', 'Ú', 'Ñ', 'Ü'], ['a', 'e', 'i', 'o', 'u', 'n', 'u', 'A', 'E', 'I', 'O', 'U', 'N', 'U'], $string);
-            $string = preg_replace('/[^a-z0-9]/', '', $string);
-            return $string;
-        };
-
-        $nombreNormalizado = $normalizeEmailPart($validatedData['nombre']);
-        $apellidosNormalizado = $normalizeEmailPart($validatedData['apellidos']);
-        $letraDni = Str::upper(substr($validatedData['dni'], -1));
-
-        $generatedEmail = $nombreNormalizado . '.' . $apellidosNormalizado . '.' . $letraDni . '@cosmosAdmin.com';
-
-        $originalEmail = $generatedEmail;
-        $counter = 1;
-        while (User::where('email', $generatedEmail)->exists()) {
-            $generatedEmail = $originalEmail . $counter;
-            $counter++;
-        }
-
-        $defaultPassword = '';
-
-        if ($validatedData['tipo_usuario'] == 1) {
-            $defaultPassword = 'CosmosAdmin123';
-        } else if ($validatedData['tipo_usuario'] == 2) {
-            $defaultPassword = 'CosmosEmpleado123';
-        }
-
-        $hashedPassword = Hash::make($defaultPassword);
-
-        $fechaNacimiento = new \DateTime($validatedData['fecha_nacimiento']);
-        $hoy = new \DateTime();
-        $edad = $hoy->diff($fechaNacimiento)->y;
-        $isMayorEdad = $edad >= 18;
-
-        $user = User::create([
-            'nombre' => $validatedData['nombre'],
-            'apellidos' => $validatedData['apellidos'],
-            'email' => $generatedEmail,
-            'password' => $hashedPassword,
-            'fecha_nacimiento' => $validatedData['fecha_nacimiento'],
-            'numero_telefono' => $validatedData['numero_telefono'],
-            'dni' => $validatedData['dni'],
-            'direccion' => $validatedData['direccion'],
-            'ciudad' => $validatedData['ciudad'],
-            'codigo_postal' => $validatedData['codigo_postal'],
-            'mayor_edad' => $isMayorEdad,
-            'id_descuento' => 1,
-            'tipo_usuario' => $validatedData['tipo_usuario'],
-        ]);
-
-        if ($user->tipo_usuario == 1) {
-
-            $codigoAdmin = '';
-            $isUniqueCode = false;
-
-            do {
-                $letra1 = Str::random(1, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-                $numeros = sprintf('%02d', rand(0, 99));
-                $letra2 = Str::random(1, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-                $codigoAdmin = $letra1 . $numeros . $letra2;
-                $isUniqueCode = !Administrator::where('codigo_administrador', $codigoAdmin)->exists();
-            } while (!$isUniqueCode);
-
-            $nombreUserAdmin = '';
-            $isUniqueAdminName = false;
-
-            $nombreBaseAdmin = Str::slug($validatedData['nombre'], '_');
-            do {
-
-                $randomSuffix = rand(100, 999);
-                $nombreUserAdmin = $nombreBaseAdmin . '_Cosmos' . $randomSuffix;
-                $isUniqueAdminName = !Administrator::where('nombre_user_admin', Str::ucfirst($nombreUserAdmin))->exists();
-            } while (!$isUniqueAdminName);
-
-            Administrator::create([
-                'email' => $user->email,
-                'codigo_administrador' => Str::upper($codigoAdmin),
-                'nombre_user_admin' => Str::ucfirst($nombreUserAdmin),
-            ]);
-        }
-
-        return response()->json([
-            'message' => 'Empleado creado exitosamente.',
-        ], 201);
+    if ($validator->fails()) {
+        $ciudades = Ciudad::orderBy('nombre')->get();
+        Log::info('La validación falló. Redireccionando.');
+        return back()->withErrors($validator)->withInput()->with(compact('ciudades'));
     }
+
+    $validatedData = $validator->validated();
+    $emailParaCorreo = $validatedData['email']; // Email del input para enviar el correo
+
+    $normalizeEmailPart = function ($string) {
+        $string = Str::lower($string);
+        $string = str_replace(' ', '', $string);
+        $string = str_replace(['á', 'é', 'í', 'ó', 'ú', 'ñ', 'ü', 'Á', 'É', 'Í', 'Ó', 'Ú', 'Ñ', 'Ü'], ['a', 'e', 'i', 'o', 'u', 'n', 'u', 'A', 'E', 'I', 'O', 'U', 'N', 'U'], $string);
+        $string = preg_replace('/[^a-z0-9]/', '', $string);
+        return $string;
+    };
+
+    $nombreNormalizado = $normalizeEmailPart($validatedData['nombre']);
+    $apellidosNormalizado = $normalizeEmailPart($validatedData['apellidos']);
+    $letraDni = Str::upper(substr($validatedData['dni'], -1));
+
+    $generatedEmail = $nombreNormalizado . '.' . $apellidosNormalizado . '.' . $letraDni . '@cosmosAdmin.com';
+
+    $originalEmail = $generatedEmail;
+    $counter = 1;
+    while (User::where('email', $generatedEmail)->exists()) {
+        $generatedEmail = $originalEmail . $counter;
+        $counter++;
+    }
+
+    $defaultPassword = '';
+    $esAdmin = false;
+    $nombreAdminUsuario = null;
+    $codigoAdminGenerado = null;
+
+    if ($validatedData['tipo_usuario'] == 1) {
+        $defaultPassword = Str::random(12); // Generar contraseña aleatoria segura
+        $esAdmin = true;
+    } else if ($validatedData['tipo_usuario'] == 2) {
+        $defaultPassword = Str::random(12); // Generar contraseña aleatoria segura
+        $esAdmin = false;
+    }
+
+    $hashedPassword = Hash::make($defaultPassword);
+
+    $fechaNacimiento = new \DateTime($validatedData['fecha_nacimiento']);
+    $hoy = new \DateTime();
+    $edad = $hoy->diff($fechaNacimiento)->y;
+    $isMayorEdad = $edad >= 18;
+
+    Log::info('Creando usuario', ['email_generado' => $generatedEmail]);
+    $user = User::create([
+        'nombre' => $validatedData['nombre'],
+        'apellidos' => $validatedData['apellidos'],
+        'email' => $generatedEmail, // Guardamos el email generado
+        'password' => $hashedPassword,
+        'fecha_nacimiento' => $validatedData['fecha_nacimiento'],
+        'numero_telefono' => $validatedData['numero_telefono'],
+        'dni' => $validatedData['dni'],
+        'ciudad_id' => $validatedData['ciudad'],
+        'codigo_postal' => $validatedData['codigo_postal'],
+        'mayor_edad' => $isMayorEdad,
+        'id_descuento' => 1,
+        'tipo_usuario' => $validatedData['tipo_usuario'],
+    ]);
+    Log::info('Usuario creado', ['user_id' => $user->id]);
+
+    if ($validatedData['tipo_usuario'] == 1) {
+        $codigoAdmin = '';
+        $isUniqueCode = false;
+        do {
+            $letra1 = Str::random(1, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+            $numeros = sprintf('%02d', rand(0, 99));
+            $letra2 = Str::random(1, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+            $codigoAdmin = $letra1 . $numeros . $letra2;
+            $isUniqueCode = !Administrator::where('codigo_administrador', $codigoAdmin)->exists();
+        } while (!$isUniqueCode);
+        $codigoAdminGenerado = Str::upper($codigoAdmin);
+
+        $nombreUserAdmin = '';
+        $isUniqueAdminName = false;
+        $nombreBaseAdmin = Str::slug($validatedData['nombre'], '_');
+        do {
+            $randomSuffix = rand(100, 999);
+            $nombreUserAdmin = $nombreBaseAdmin . '_Cosmos' . $randomSuffix;
+            $isUniqueAdminName = !Administrator::where('nombre_user_admin', Str::ucfirst($nombreUserAdmin))->exists();
+        } while (!$isUniqueAdminName);
+
+        Log::info('Creando administrador', ['email_admin' => $generatedEmail, 'codigo' => $codigoAdminGenerado, 'nombre_admin' => $nombreUserAdmin]);
+        Administrator::create([
+            'email' => $generatedEmail, // Guardamos el email generado
+            'codigo_administrador' => $codigoAdminGenerado,
+            'nombre_user_admin' => Str::ucfirst($nombreUserAdmin),
+        ]);
+        Log::info('Administrador creado');
+
+        // Enviar correo a Administrador usando el email del input
+        Log::info('Enviando correo a administrador', ['email' => $emailParaCorreo]);
+        Mail::to($emailParaCorreo)->send(new CredencialesEmpleado($validatedData['nombre'], $generatedEmail, $defaultPassword, $esAdmin, Str::ucfirst($nombreUserAdmin), $codigoAdminGenerado));
+        Log::info('Correo a administrador enviado');
+
+    } else if ($user->tipo_usuario == 2) {
+        // Enviar correo a Empleado usando el email del input
+        Log::info('Enviando correo a empleado', ['email' => $emailParaCorreo]);
+        Mail::to($emailParaCorreo)->send(new CredencialesEmpleado($validatedData['nombre'], $generatedEmail, $defaultPassword, $esAdmin));
+        Log::info('Correo a empleado enviado');
+    }
+
+    Log::info('Respondiendo con JSON');
+    return response()->json([
+        'message' => 'Empleado creado exitosamente y credenciales enviadas por correo.',
+    ], 201);
+}
 
     public function gestionarNominasIndex(Request $request)
     {
         // Obtener todos los usuarios que pueden tener nóminas (ej. tipo_usuario 1=Admin, 2=Empleado)
         // Podrías filtrar más si los administradores no tienen nóminas o solo quieres empleados.
         $usuariosConNominas = User::whereIn('tipo_usuario', [1, 2])
-                                  ->orderBy('apellidos')->orderBy('nombre')
-                                  ->get();
+                                ->orderBy('apellidos')->orderBy('nombre')
+                                ->get();
 
         $selectedUserId = $request->input('user_id');
         $nominas = collect(); // Colección vacía por defecto

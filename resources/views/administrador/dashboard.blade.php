@@ -143,7 +143,9 @@
                         </select>
                         <button id="manage-filter-button">Aplicar Filtros</button>
                     </div>
-
+                    <div id="modal-error-temporal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #fdd; border: 1px solid #faa; padding: 20px; border-radius: 5px; z-index: 1000; opacity: 0;">
+                        <p style="color: #800;">No puedes activar una película si no tiene ninguna sesión ACTIVA programada.</p>
+                    </div>
                     <div class="manage-movies-area">
                         <p>Selecciona filtros y haz clic en "Aplicar Filtros" para cargar la lista.</p>
                     </div>
@@ -323,19 +325,16 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                                        <input type="date" class="form-control @error('fecha_nacimiento') is-invalid @enderror" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ old('fecha_nacimiento') }}" required>
-                                        @error('fecha_nacimiento')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                        <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
+                                        <label for="codigo_postal" class="form-label">Código Postal</label>
+                                        <input type="text" class="form-control" id="codigo_postal" name="codigo_postal" required maxlength="5" minlength="5" placeholder="00000">
+                                        <div class="client-side-field-error" style="display: none; color: red;"></div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="numero_telefono" class="form-label">Número de Teléfono</label>
-                                        <input type="text" class="form-control @error('numero_telefono') is-invalid @enderror" id="numero_telefono" name="numero_telefono" value="{{ old('numero_telefono') }}" pattern="^\d{9}$" title="El teléfono debe tener 9 dígitos." maxlength="9" minlength="9" placeholder="000000000" required>
-                                        @error('numero_telefono')
+                                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                                        <input type="date" class="form-control @error('fecha_nacimiento') is-invalid @enderror" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ old('fecha_nacimiento') }}" required>
+                                        @error('fecha_nacimiento')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                         <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
@@ -346,6 +345,16 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
+                                        <label for="numero_telefono" class="form-label">Número de Teléfono</label>
+                                        <input type="text" class="form-control @error('numero_telefono') is-invalid @enderror" id="numero_telefono" name="numero_telefono" value="{{ old('numero_telefono') }}" pattern="^\d{9}$" title="El teléfono debe tener 9 dígitos." maxlength="9" minlength="9" placeholder="000000000" required>
+                                        @error('numero_telefono')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
                                         <label for="dni" class="form-label">DNI</label>
                                         <input type="text" class="form-control @error('dni') is-invalid @enderror" id="dni" name="dni" value="{{ old('dni') }}" pattern="^\d{8}[A-Za-z]$" title="El DNI debe tener 8 dígitos seguidos de una letra." maxlength="9" minlength="9" placeholder="00000000X" required>
                                         @error('dni')
@@ -354,6 +363,9 @@
                                         <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="ciudad_id" class="form-label">Ciudad</label>
@@ -373,41 +385,28 @@
                                         <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label for="tipo_usuario" class="form-label">Tipo de Usuario</label>
+                                        <select class="form-select" id="tipo_usuario" name="tipo_usuario">
+                                            <option value="">Seleccionar tipo</option>
+                                            <option value="1">Administrador</option>
+                                            <option value="2">Empleado</option>
+                                        </select>
+                                        @error('tipo_usuario')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="mb-3">
-                                        <label for="direccion" class="form-label">Dirección</label>
-                                        <input type="text" class="form-control @error('direccion') is-invalid @enderror" id="direccion" name="direccion" value="{{ old('direccion') }}" placeholder="C/ calle NºX">
-                                        @error('direccion')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                        <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="codigo_postal" class="form-label">Código Postal</label>
-                                        <input type="text" class="form-control @error('codigo_postal') is-invalid @enderror" id="codigo_postal" name="codigo_postal" value="{{ old('codigo_postal') }}" pattern="^\d{5}$" title="El Código Postal debe tener exactamente 5 dígitos numéricos." maxlength="5" minlength="5" placeholder="00000" required>
-                                        @error('codigo_postal')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                        <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="tipo_usuario" class="form-label">Tipo de Usuario</label>
-                                        <select class="form-select @error('tipo_usuario') is-invalid @enderror" id="tipo_usuario" name="tipo_usuario" required>
-                                            <option value="">Selecciona el tipo</option>
-                                            <option value="1" {{ old('tipo_usuario') == '1' ? 'selected' : '' }}>Administrador</option>
-                                            <option value="2" {{ old('tipo_usuario') == '2' ? 'selected' : '' }}>Empleado</option>
-                                        </select>
-                                        @error('tipo_usuario')
+                                        <label for="email" class="form-label">Correo Electrónico</label>
+                                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" placeholder="correo@ejemplo.com" required>
+                                        @error('email')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                         <span class="client-side-field-error" style="color: red; font-size: 0.8em; display: none;"></span>
