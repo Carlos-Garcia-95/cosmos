@@ -14,8 +14,6 @@ return new class extends Migration
         Schema::create('factura', function (Blueprint $table) {
             $table->id('id_factura');
             $table->double('monto_total');
-            $table->bigInteger('ultimos_digitos');
-            $table->string('titular');
             $table->string('titular_email');
             $table->string('num_factura');
             $table->string('pedido_redsys_id');

@@ -50,8 +50,6 @@ class FacturaSeeder extends Seeder
 
             $facturas[] = [
                 'monto_total' => $montoBase,
-                'ultimos_digitos' => $faker->randomNumber(4, true), // 4 últimos dígitos de una tarjeta
-                'titular' => $faker->name,
                 'titular_email' => "prueba@email.com",
                 'num_factura' => $num_factura,
                 'pedido_redsys_id' => $pedido_redsys_id,
@@ -74,8 +72,6 @@ class FacturaSeeder extends Seeder
 
             $facturas[] = [
                 'monto_total' => $montoBaseHoy,
-                'ultimos_digitos' => $faker->randomNumber(4, true),
-                'titular' => $faker->name,
                 'titular_email' => "prueba@email.com",
                 'num_factura' => $num_factura,
                 'pedido_redsys_id' => $pedido_redsys_id,

@@ -208,10 +208,6 @@ class GenerarEntrada
 
 
     private function generar_factura_pendiente(): bool {
-       
-        // Se recupera el nº tarjeta, se quitan los espacios (si hay) y se reduce a los 4 últimos dígitos
-        $numeroTarjetaSinEspacios = str_replace(' ', '', $this->datos_validados["cardNumber"]);
-        $ultimos_digitos = substr($numeroTarjetaSinEspacios, -4);
 
         // Se generan el número de factura y el id de pedido a redsys
         $num_factura = 'ORD-' . time() . '-' . rand(1000, 9999);
@@ -229,9 +225,7 @@ class GenerarEntrada
             // TODO -> Mirar a ver si se puede arreglar el id_impuesto
             // Se crea la factura con los datos recuperados
             $this->factura = Factura::create([
-                'monto_total' => $this->datos_validados["precio_final"],             
-                'ultimos_digitos' => $ultimos_digitos,
-                'titular' => $this->datos_validados["cardName"],
+                'monto_total' => $this->datos_validados["precio_final"],
                 'titular_email' => $titular_email,
                 'num_factura' => $num_factura,
                 'estado' => 'pendiente',

@@ -891,6 +891,7 @@ window.confirmar_seleccion = function () {
 // Mostrar el modal de confirmar selección
 function mostrar_modal_confirmar(asientos, datos_sesion) {
     const modal_confirmar_seleccion = document.getElementById('modal_confirmar_seleccion');
+    const modal_confirmar_seleccion_form = document.getElementById('modal_confirmar_seleccion_form');
 
     if (modal_confirmar_seleccion.classList.contains('hidden')) {
         modal_confirmar_seleccion.classList.remove('hidden');
@@ -898,12 +899,13 @@ function mostrar_modal_confirmar(asientos, datos_sesion) {
         document.body.classList.add('modal_abierto');
     }
 
-    if (modal_confirmar_seleccion) {
-        crear_estructura(modal_confirmar_seleccion);
+    if (modal_confirmar_seleccion_form) {
+        crear_estructura(modal_confirmar_seleccion_form);
         generar_confirmar_titulo();
         generar_confirmar_body(datos_sesion);
         generar_confirmar_entradas(datos_sesion, asientos);
         generar_confirmar_botones(datos_sesion, asientos);
+        generar_input_ocultos(datos_sesion, asientos);
     }
 
 }
@@ -1338,14 +1340,7 @@ function generar_confirmar_botones(datos_sesion, asientos) {
 
     // Añadir evento al botón Volver
     boton_volver.addEventListener('click', function () {
-        const modal_confirmar_seleccion = document.querySelector('.modal_confirmar');
-
-        if (modal_confirmar_seleccion && modal_confirmar_seleccion.classList.contains('visible')) {
-            modal_confirmar_seleccion.classList.remove('visible');
-            modal_confirmar_seleccion.classList.add('hidden');
-            document.body.classList.remove('modal_abierto');
-            modal_confirmar_seleccion.innerHTML = "";
-        }
+        cerrar_y_limpiar_modal_confirmar();
     });
 
     // Botón Continuar div
@@ -1355,12 +1350,13 @@ function generar_confirmar_botones(datos_sesion, asientos) {
 
     // Botón Continuar
     let boton_continuar = document.createElement('button');
+    boton_continuar.setAttribute('type', 'submit');
     boton_continuar.classList.add('boton_continuar');
     boton_continuar.id = 'boton_continuar';
-    boton_continuar.innerHTML = "Continuar";
+    boton_continuar.innerHTML = "Proceder con el Pago";
 
     // Añadir evento al botón Continuar
-    boton_continuar.addEventListener('click', function () {
+   /*  boton_continuar.addEventListener('click', function () {
         const modal_confirmar_seleccion = document.querySelector('.modal_confirmar');
 
         if (modal_confirmar_seleccion && modal_confirmar_seleccion.classList.contains('visible')) {
@@ -1393,7 +1389,7 @@ function generar_confirmar_botones(datos_sesion, asientos) {
 
 
         mostrar_modal_pago(datos_sesion, asientos);
-    });
+    }); */
 
     // Añadir botones a sus div
     boton_volver_div.appendChild(boton_volver);
@@ -1409,42 +1405,107 @@ function generar_confirmar_botones(datos_sesion, asientos) {
 
 
 
+function generar_input_ocultos(datos_sesion, asientos) {
+    // Guardar la sesión y asientos para el formulario
+    // Si ya tienen valores, se borran
+    // Asientos (se generan tantos como haya)
+    const asientos_div = document.getElementById('asientos_div');
+    asientos_div.innerHTML = "";
+    asientos.forEach(asiento => {
+        const asiento_input = document.createElement('input');
+        asiento_input.setAttribute('type', 'hidden');
+        asiento_input.setAttribute('name', 'asiento[]');
+        asiento_input.setAttribute('value', asiento.id);
+        asientos_div.appendChild(asiento_input);
+    });
+
+    // Sesión
+    const datos_sesion_div = document.getElementById('datos_sesion_div');
+    datos_sesion_div.innerHTML = "";
+    const datos_sesion_input = document.createElement('input');
+    datos_sesion_input.setAttribute('type', 'hidden');
+    datos_sesion_input.setAttribute('name', 'sesion_id');
+    datos_sesion_input.setAttribute('value', datos_sesion.id);
+    datos_sesion_div.appendChild(datos_sesion_input);
+
+    // Email de invitado (si existe)
+    const email_invitado = sessionStorage.getItem('email_invitado');
+
+    if (email_invitado) {
+        const email_invitado_input = document.createElement('input');
+        email_invitado_input.setAttribute('type', 'hidden');
+        email_invitado_input.setAttribute('name', 'email_invitado');
+        email_invitado_input.setAttribute('value', email_invitado);
+        datos_sesion_div.appendChild(email_invitado_input);
+    }
+
+    // Precio
+    const precio_div = document.getElementById('precio_div');
+    precio_div.innerHTML = "";
+
+    // Precio Total
+    const precio_total_input = document.createElement('input');
+    precio_total_input.setAttribute('type', 'hidden');
+    precio_total_input.setAttribute('name', 'precio_total');
+    precio_total_input.setAttribute('value', datos_sesion.precio_asientos);
+    // Descuento
+    const precio_descuento_input = document.createElement('input');
+    precio_descuento_input.setAttribute('type', 'hidden');
+    precio_descuento_input.setAttribute('name', 'precio_descuento');
+    precio_descuento_input.setAttribute('value', datos_sesion.precio_descuento);
+    // Precio Final
+    const precio_final_input = document.createElement('input');
+    precio_final_input.setAttribute('type', 'hidden');
+    precio_final_input.setAttribute('name', 'precio_final');
+    precio_final_input.setAttribute('value', datos_sesion.precio_final);
+
+
+    precio_div.appendChild(precio_total_input);
+    precio_div.appendChild(precio_descuento_input);
+    precio_div.appendChild(precio_final_input);
+}
 
 
 
 
 
-// Para que el modal confirmar se cierre al presionar Escape (también se limpia de datos)
-if (modal_confirmar_seleccion) {
+const modal_confirmar_seleccion_div = document.getElementById('modal_confirmar_seleccion');
+const modal_confirmar_seleccion_form = document.getElementById('modal_confirmar_seleccion_form');
+
+function cerrar_y_limpiar_modal_confirmar() {
+    if (modal_confirmar_seleccion_div && modal_confirmar_seleccion_div.classList.contains('visible')) {
+        modal_confirmar_seleccion_div.classList.remove('visible');
+        modal_confirmar_seleccion_div.classList.add('hidden');
+        document.body.classList.remove('modal_abierto');
+
+        const formElement = document.getElementById('modal_confirmar_seleccion_form');
+        if (formElement) {
+            // Elimina solo el 'confirmar_container' que se añade dinámicamente
+            const confirmarContainer = formElement.querySelector('#confirmar_container');
+            if (confirmarContainer) {
+                confirmarContainer.remove();
+            }
+        }
+    }
+}
+
+// Funcionalidades para cerrar el modal
+if (modal_confirmar_seleccion_div) {
+    // Para que el modal confirmar se cierre al presionar Escape (también se limpia de datos)
     document.addEventListener('keydown', function (event) {
-        if ((event.key === 'Escape' || event.keyCode === 27) && modal_confirmar_seleccion.classList.contains('visible')) {
-
+        if ((event.key === 'Escape' || event.keyCode === 27) && modal_confirmar_seleccion_div.classList.contains('visible')) {
             event.preventDefault();
+            cerrar_y_limpiar_modal_confirmar();
+        }
+    });
 
-            // Hide the modal by reversing the class logic from mostrar_detalle
-            modal_confirmar_seleccion.classList.remove('visible');
-            modal_confirmar_seleccion.classList.add('hidden');
-            document.body.classList.remove('modal_abierto');
-            modal_confirmar_seleccion.innerHTML = "";
+    modal_confirmar_seleccion_form.addEventListener('click', function (event) {
+        // Para que el modal confirmar se cierre al clicar fuera del modal (también se limpia de datos)
+        if (event.target === modal_confirmar_seleccion_form && modal_confirmar_seleccion_div.classList.contains('visible')) {
+            cerrar_y_limpiar_modal_confirmar();
         }
     });
 }
-
-
-// Para que el modal confirmar se cierre al clicar fuera del modal (también se limpia de datos)
-if (modal_confirmar_seleccion) {
-    modal_confirmar_seleccion.addEventListener('click', function (event) {
-        if (event.target === modal_confirmar_seleccion && modal_confirmar_seleccion.classList.contains('visible')) {
-            modal_confirmar_seleccion.classList.remove('visible');
-            modal_confirmar_seleccion.classList.add('hidden');
-            document.body.classList.remove('modal_abierto');
-            modal_confirmar_seleccion.innerHTML = "";
-        }
-    });
-}
-
-
-
 
 
 
@@ -1604,301 +1665,5 @@ if (modal_invitado) {
         }
     });
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/////////////////////////////////////////////////// PAGO ///////////////////////////////////////////////////
-
-// Modal de Pago con tarjeta
-function mostrar_modal_pago(datos_sesion, asientos) {
-    const modal_pago = document.getElementById('modal_pago');
-    const boton_volver_pago = document.getElementById('boton_volver_pago');
-
-    if (!modal_pago) {
-        return;
-    }
-
-    if (modal_pago.classList.contains('hidden')) {
-        modal_pago.classList.remove('hidden');
-        modal_pago.classList.add('visible');
-        document.body.classList.add('modal_abierto');
-    }
-
-    // Guardar la sesión y asientos para el formulario
-    // Si ya tienen valores, se borran
-    // Asientos (se generan tantos como haya)
-    const asientos_div = document.getElementById('asientos_div');
-    asientos_div.innerHTML = "";
-    asientos.forEach(asiento => {
-        const asiento_input = document.createElement('input');
-        asiento_input.setAttribute('type', 'hidden');
-        asiento_input.setAttribute('name', 'asiento[]');
-        asiento_input.setAttribute('value', asiento.id);
-        asientos_div.appendChild(asiento_input);
-    });
-
-    // Sesión
-    const datos_sesion_div = document.getElementById('datos_sesion_div');
-    datos_sesion_div.innerHTML = "";
-    const datos_sesion_input = document.createElement('input');
-    datos_sesion_input.setAttribute('type', 'hidden');
-    datos_sesion_input.setAttribute('name', 'sesion_id');
-    datos_sesion_input.setAttribute('value', datos_sesion.id);
-    datos_sesion_div.appendChild(datos_sesion_input);
-
-    // Email de invitado (si existe)
-    const email_invitado = sessionStorage.getItem('email_invitado');
-
-    if (email_invitado) {
-        const email_invitado_input = document.createElement('input');
-        email_invitado_input.setAttribute('type', 'hidden');
-        email_invitado_input.setAttribute('name', 'email_invitado');
-        email_invitado_input.setAttribute('value', email_invitado);
-        datos_sesion_div.appendChild(email_invitado_input);
-    }
-
-    // Precio
-    const precio_div = document.getElementById('precio_div');
-    precio_div.innerHTML = "";
-
-    // Precio Total
-    const precio_total_input = document.createElement('input');
-    precio_total_input.setAttribute('type', 'hidden');
-    precio_total_input.setAttribute('name', 'precio_total');
-    precio_total_input.setAttribute('value', datos_sesion.precio_asientos);
-    // Descuento
-    const precio_descuento_input = document.createElement('input');
-    precio_descuento_input.setAttribute('type', 'hidden');
-    precio_descuento_input.setAttribute('name', 'precio_descuento');
-    precio_descuento_input.setAttribute('value', datos_sesion.precio_descuento);
-    // Precio Final
-    const precio_final_input = document.createElement('input');
-    precio_final_input.setAttribute('type', 'hidden');
-    precio_final_input.setAttribute('name', 'precio_final');
-    precio_final_input.setAttribute('value', datos_sesion.precio_final);
-
-
-    precio_div.appendChild(precio_total_input);
-    precio_div.appendChild(precio_descuento_input);
-    precio_div.appendChild(precio_final_input);
-
-    // Verifica si la instancia existe y su elemento aún está en el DOM
-    if (!vueAppInstance || !document.body.contains(vueAppInstance.$el)) {
-        // Destruye la instancia anterior si es necesario
-        if (vueAppInstance) {
-            vueAppInstance.$destroy();
-        }
-
-        const input_antiguo = window.laravel_antiguo_input || {};
-
-        vueAppInstance = new Vue({
-            el: "#app",
-            data() {
-                return {
-                    currentCardBackground: Math.floor(Math.random() * 25 + 1),
-                    cardName: input_antiguo.cardName || "",
-                    cardNumber: input_antiguo.cardNumber || "",
-                    cardMonth: input_antiguo.cardMonth || "",
-                    cardYear: input_antiguo.cardYear || "",
-                    cardCvv: input_antiguo.cardCvv || "",
-                    minCardYear: new Date().getFullYear(),
-                    amexCardMask: "#### ###### #####",
-                    otherCardMask: "#### #### #### ####",
-                    cardNumberTemp: "",
-                    isCardFlipped: false,
-                    focusElementStyle: null,
-                    isInputFocused: false
-                };
-            },
-            mounted() {
-                this.cardNumberTemp = this.cardNumber ? this.cardNumber : this.otherCardMask;
-                // Esperar un momento para que el DOM se actualice si el modal acaba de mostrarse
-                this.$nextTick(() => {
-                    const cardNumberInput = document.getElementById("cardNumber");
-                    if (cardNumberInput) {
-                        cardNumberInput.focus();
-                    }
-                });
-            },
-            computed: {
-                getCardType() {
-                    let number = this.cardNumber;
-                    if (!number) return "visa"; // Por defecto si no hay número
-
-                    let re = new RegExp("^4");
-                    if (number.match(re) != null) return "visa";
-
-                    re = new RegExp("^(34|37)");
-                    if (number.match(re) != null) return "amex";
-
-                    re = new RegExp("^5[1-5]");
-                    if (number.match(re) != null) return "mastercard";
-
-                    re = new RegExp("^6011");
-                    if (number.match(re) != null) return "discover";
-
-                    re = new RegExp('^9792')
-                    if (number.match(re) != null) return 'troy'
-
-                    return "visa";  // Por defecto
-                },
-                generateCardNumberMask() {
-                    return this.getCardType === "amex" ? this.amexCardMask : this.otherCardMask;
-                },
-                minCardMonth() {
-                    if (this.cardYear === this.minCardYear) return new Date().getMonth() + 1;
-                    return 1;
-                },
-                availableYears() {
-                    const currentYear = new Date().getFullYear();
-                    const maxYear = 2049; // Límite de años a mostrar en el SELECT (para entorno de pruebas)
-                    const years = [];
-                    for (let year = currentYear; year <= maxYear; year++) {
-                        years.push(year);
-                    }
-                    return years;
-                }
-            },
-            watch: {
-                cardYear() {
-                    if (this.cardMonth && parseInt(this.cardMonth) < this.minCardMonth) {
-                        this.cardMonth = "";
-                    }
-                }
-            },
-            methods: {
-                flipCard(status) {
-                    this.isCardFlipped = status;
-                },
-                focusInput(e) {
-                    this.isInputFocused = true;
-                    let targetRef = e.target.dataset.ref;
-                    // Asegurarse de que $refs esté disponible
-                    if (this.$refs && this.$refs[targetRef]) {
-                        let target = this.$refs[targetRef];
-                        this.focusElementStyle = {
-                            width: `${target.offsetWidth}px`,
-                            height: `${target.offsetHeight}px`,
-                            transform: `translateX(${target.offsetLeft}px) translateY(${target.offsetTop}px)`
-                        }
-                    }
-                },
-                blurInput() {
-                    let vm = this;
-                    setTimeout(() => {
-                        if (!vm.isInputFocused) {
-                            vm.focusElementStyle = null;
-                        }
-                    }, 300);
-                    vm.isInputFocused = false;
-                },
-                cancelarPago() {    // Oculta el modal y limpia los datos al clicar en 'Cancelar Pago'
-                    const modal_pago_el_vue = document.getElementById('modal_pago');
-
-                    if (modal_pago_el_vue && modal_pago_el_vue.classList.contains('visible')) {
-                        modal_pago_el_vue.classList.remove('visible');
-                        modal_pago_el_vue.classList.add('hidden');
-                        document.body.classList.remove('modal_abierto');
-                        
-                        limpiar_datos_pago();
-                    }
-                }
-            }
-        });
-    } else {
-        const cardNumberInput = document.getElementById("cardNumber");
-        if (cardNumberInput) {
-            cardNumberInput.focus();
-        }
-    }
-
-}
-
-window.mostrar_modal_pago = mostrar_modal_pago;
-
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-    const modal_pago = document.getElementById('modal_pago');
-
-    // Listener para cuando se pulse el botón 'Escape'
-    if (modal_pago) {
-        document.addEventListener('keydown', function (event) {
-            if ((event.key === 'Escape' || event.keyCode === 27) && modal_pago.classList.contains('visible')) {
-                event.preventDefault();
-                modal_pago.classList.remove('visible');
-                modal_pago.classList.add('hidden');
-                document.body.classList.remove('modal_abierto');
-                
-                limpiar_datos_pago();
-            }
-        });
-    }
-});
-
-
-
-function limpiar_datos_pago() {
-    const cardNumber = document.getElementById('cardNumber');
-    if (cardNumber) {
-        cardNumber.value = "";
-    }
-
-    const cardNameInput = document.getElementById('cardName');
-    if (cardNameInput) {
-        cardNameInput.value = "";
-    }
-
-    const cardMonthSelect = document.getElementById('cardMonth');
-    if (cardMonthSelect) {
-        cardMonthSelect.value = "";
-    }
-
-    const cardYearSelect = document.getElementById('cardYear');
-    if (cardYearSelect) {
-        cardYearSelect.value = "";
-    }
-
-    const cardCvvInput = document.getElementById('cardCvv');
-    if (cardCvvInput) {
-        cardCvvInput.value = "";
-    }
-
-    // Limpiar instancia de Vue
-    if (vueAppInstance) {
-        vueAppInstance.cardNumber = "";
-        vueAppInstance.cardName = "";
-        vueAppInstance.cardMonth = "";
-        vueAppInstance.cardYear = "";
-        vueAppInstance.cardCvv = "";
-        vueAppInstance.isCardFlipped = false;
-        vueAppInstance.focusElementStyle = null;
-    }
-}
-
-
 
 

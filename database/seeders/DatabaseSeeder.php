@@ -15,7 +15,6 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             ciudades::class,
-            edad_recomendad::class,
             tipo_asiento::class,
             sala::class,
             impuesto::class,

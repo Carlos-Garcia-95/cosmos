@@ -114,7 +114,7 @@ class RedsysController extends Controller
                 return response('KO - Order not found', 200)->header('Content-Type', 'text/plain');
             }
 
-            // 2. Comprobar que la factura no está pagada
+            // 2. Comprobar que la factura no está ya pagada
             if ($this->factura->estado === 'pagado' || $this->factura->estado === 'fallido') {
                 Log::info("Redsys Notification: Factura {$this->factura->id_factura} (Redsys Order: {$dsOrder}) ya está pagada.");
                 return response('OK', 200)->header('Content-Type', 'text/plain');
