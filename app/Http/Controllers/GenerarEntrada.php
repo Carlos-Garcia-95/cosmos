@@ -226,7 +226,7 @@ class GenerarEntrada
             // TODO -> Mirar a ver si se puede arreglar el id_impuesto
             // Se crea la factura con los datos recuperados
             $this->factura = Factura::create([
-                'monto_total' => $this->datos_validados["precio_final"],             
+                'monto_total' => $this->datos_validados["precio_final"],
                 'titular_email' => $titular_email,
                 'num_factura' => $num_factura,
                 'estado' => 'pendiente',

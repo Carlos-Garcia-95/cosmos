@@ -28,6 +28,7 @@ class RedsysController extends Controller
     private ?array $asientos_ids = null;
     private ?array $rutas_pdf = null;
     private ?User $usuario = null;
+    private ?string $ruta_pdf_factura = null;
 
 
     // Lógica de pago -> Petición y respuesta a Redsys
@@ -114,14 +115,14 @@ class RedsysController extends Controller
                 return response('KO - Order not found', 200)->header('Content-Type', 'text/plain');
             }
 
-            // 2. Comprobar que la factura no está pagada
+            // 2. Comprobar que la factura no está ya pagada
             if ($this->factura->estado === 'pagado' || $this->factura->estado === 'fallido') {
                 Log::info("Redsys Notification: Factura {$this->factura->id_factura} (Redsys Order: {$dsOrder}) ya está pagada.");
                 return response('OK', 200)->header('Content-Type', 'text/plain');
             }
 
             // 3. Verificar importe
-            if ((int) $this->factura->monto_total * 100 !== (int) $dsAmount) {
+            if ((float) $this->factura->monto_total * 100 !== (float) $dsAmount) {
                 Log::error("Redsys Notification: Discrepancia de importe para {$dsOrder}. BD: ".round($this->factura->monto_total * 100).", Redsys: ".$dsAmount);
                 $this->factura->estado = 'Error Importe';
                 $this->factura->save();
@@ -152,6 +153,12 @@ class RedsysController extends Controller
 
                 // 3. Actualizar el estado de las entradas de 'pendiente' a 'pagado'
                 if (!$this->actualizar_entradas()) {
+                    DB::rollBack();
+                    Log::info("Error al actualizar el estado de las entradas: " . $this->entradas);
+                    return response('OK', 200)->header('Content-Type', 'text/plain');
+                }
+
+                if (!$this->crear_pdfFacturas()) {
                     DB::rollBack();
                     Log::info("Error al actualizar el estado de las entradas: " . $this->entradas);
                     return response('OK', 200)->header('Content-Type', 'text/plain');
@@ -274,7 +281,7 @@ class RedsysController extends Controller
 
 
     // Crear un pdf por cada entrada
-    private function crear_pdf(Entrada $entrada): ?string {
+    private function crear_pdf(Entrada &$entrada): ?string {
         try {
             if (!$entrada) {
                 return null;
@@ -287,19 +294,21 @@ class RedsysController extends Controller
             ];
 
             // Recuperar fecha
-            $fecha_entrada = Fecha::find($entrada->fecha);
-            if (!$fecha_entrada) {
-                Log::error("No se pudo guardar recuperar la fecha de la entrada: " . $entrada->fecha);
-                return null;
-            }
+                $fecha_entrada = Fecha::find($entrada->fecha);
+                if (!$fecha_entrada) {
+                    Log::error("No se pudo guardar recuperar la fecha de la entrada: " . $entrada->fecha);
+                    return null;
+                }
 
-            // Recuperar hora
-            $hora_entrada = Hora::find($entrada->hora);
-            if (!$hora_entrada) {
-                Log::error("No se pudo guardar recuperar la hora de la entrada: " . $entrada->hora);
-                return null;
-            }
+                // Recuperar hora
+                $hora_entrada = Hora::find($entrada->hora);
+                if (!$hora_entrada) {
+                    Log::error("No se pudo guardar recuperar la hora de la entrada: " . $entrada->hora);
+                    return null;
+                }
 
+                $entrada->hora = $hora_entrada->hora;
+            
             // Cargar la vista Blade para la entrada
             $pdf = PDF::loadView('pdf.entrada_cine', compact('entrada', 'empresa', 'fecha_entrada', 'hora_entrada'));
 
@@ -327,6 +336,46 @@ class RedsysController extends Controller
         }
     }
 
+    private function crear_pdfFacturas(): ?bool {
+        try {
+            if (!$this->factura) {
+                return false;
+            }
+
+            $factura = $this->factura;
+            $entradas = $this->entradas;
+            $this->usuario = User::where('id', $this->factura->id_user)->first();
+            $usuario = $this->usuario;
+
+            // Cargar la vista Blade para la entrada
+            $pdf = PDF::loadView('emails.factura_entrada', compact('entradas', 'factura', 'usuario'));
+
+            // Se crea un nombre de archivo único
+            $nombre_archivo = 'factura-' . $factura->id_factura . '-' . Str::random(10) . '.pdf';
+
+            // Se crea la ruta relativa
+            $ruta_relativa_factura = 'factura_pdf/' . $nombre_archivo;
+
+            // Se guarda el pdf
+            $exito_guardado = Storage::disk('public')->put($ruta_relativa_factura, $pdf->output());
+
+            if (!$exito_guardado) {
+                Log::error("No se pudo guardar el PDF en el disco 'public': " . $ruta_relativa_factura);
+                return null;
+            }
+
+            $this->ruta_pdf_factura= Storage::disk('public')->path($ruta_relativa_factura);
+
+            return true;
+
+        } catch (\Exception $e) {
+            Log::error("Error generando PDF para entrada ID {$factura->id_factura}: " . $e->getMessage(), ['exception' => $e]);
+            // No setear $this->ultimoError aquí directamente, dejar que el método llamador lo haga
+            // si este fallo es crítico para el proceso general.
+            return false;
+        }
+    }
+
 
     private function actualizar_asientos(): bool {
         if (empty($this->asientos_ids)) {
@@ -349,7 +398,7 @@ class RedsysController extends Controller
             return false;
         }
 
-       return true;
+    return true;
     }
 
 
@@ -360,8 +409,6 @@ class RedsysController extends Controller
         $email_destino = $this->factura["titular_email"];
         $email_usuario = null;
         
-        // Recuperar usuario
-        $this->usuario = User::where('id', $this->factura->id_user)->first();
 
         // Comprobar si es usuario registrado o invitado
         if ($this->usuario) {
@@ -385,7 +432,7 @@ class RedsysController extends Controller
 
         try {
             // Crear instancia de Mailable (EmailEntradas)
-            $correo_confirmacion = new EmailEntradas($email_usuario, $this->factura, $this->rutas_pdf);
+            $correo_confirmacion = new EmailEntradas($email_usuario, $this->factura, $this->rutas_pdf, $this->ruta_pdf_factura);
 
             // Enviar el correo con Mail. También lo ponemos en cola
             // Al ponerlo en cola, la aplicación seguirá funcionando (para el usuario) mientras por detrás se manda el email

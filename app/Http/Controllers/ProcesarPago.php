@@ -16,14 +16,12 @@ class ProcesarPago extends Controller
 
         // Unir todas las reglas
         $todas_las_reglas = array_merge(
-            $this->obtener_reglas_pago(),
             $this->obtener_reglas_sesion(),
             $this->obtener_reglas_asientos()
         );
 
         // Unir todos los mensajes
         $todos_los_mensajes = array_merge(
-            $this->obtener_mensajes_pago(),
             $this->obtener_mensajes_sesion(),
             $this->obtener_mensajes_asientos()
         );
@@ -102,17 +100,6 @@ class ProcesarPago extends Controller
 
 
     // --- Métodos para definir reglas por sección ---
-    private function obtener_reglas_pago(): array
-    {
-        return [
-            'cardNumber' => ['required', 'string', 'regex:/^[\d\s]+$/', 'min:16', 'max:20'],
-            'cardName'   => 'required|string|max:255',
-            'cardMonth'  => 'required|digits:2|numeric|min:1|max:12',
-            'cardYear'   => 'required|digits:4|numeric|min:' . date('Y'),
-            'cardCvv'    => 'required|numeric|digits_between:3,4',
-        ];
-    }
-
     private function obtener_reglas_sesion(): array
     {
         return [
@@ -144,27 +131,6 @@ class ProcesarPago extends Controller
     }
 
     // --- Métodos para definir mensajes por sección ---
-    private function obtener_mensajes_pago(): array
-    {
-        return [
-            'cardNumber.required' => 'El número de tarjeta es obligatorio.',
-            'cardNumber.regex'    => 'El número de tarjeta solo puede contener dígitos y espacios.',
-            'cardNumber.min'      => 'El número de tarjeta es demasiado corto.',
-            'cardNumber.max'      => 'El número de tarjeta es demasiado largo.',
-            'cardName.required'   => 'El titular de la tarjeta es obligatorio.',
-            'cardMonth.required'  => 'El mes de caducidad es obligatorio.',
-            'cardMonth.digits'    => 'El mes debe tener 2 dígitos.',
-            'cardMonth.min'       => 'El mes de caducidad no es válido.',
-            'cardMonth.max'       => 'El mes de caducidad no es válido.',
-            'cardYear.required'   => 'El año de caducidad es obligatorio.',
-            'cardYear.digits'     => 'El año debe tener 4 dígitos.',
-            'cardYear.min'        => 'El año de caducidad no puede ser anterior al actual.',
-            'cardCvv.required'    => 'El CVV es obligatorio.',
-            'cardCvv.numeric'     => 'El CVV debe ser numérico.',
-            'cardCvv.digits_between' => 'El CVV debe tener entre 3 y 4 dígitos.',
-        ];
-    }
-
     private function obtener_mensajes_sesion(): array
     {
         return [

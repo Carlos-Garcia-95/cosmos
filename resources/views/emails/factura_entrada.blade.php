@@ -5,20 +5,103 @@
     <title>Factura de Compra</title>
     <style>
         /* Estilos CSS para la factura (en línea para mayor compatibilidad) */
-        body { font-family: DejaVu Sans, sans-serif; font-size: 10pt; line-height: 1.3; color: #333; }
-        .factura-container { width: 100%; max-width: 800px; margin: 0 auto; }
-        .factura-header { text-align: left; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ddd; }
-        .factura-header h1 { font-size: 18pt; margin-bottom: 5px; }
-        .factura-header p { margin: 5px 0; }
-        .cliente-info { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
-        .cliente-info h3 { font-size: 12pt; margin-bottom: 5px; }
-        .cliente-info p { margin: 2px 0; }
-        .entradas-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        .entradas-table th, .entradas-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        .entradas-table th { background-color: #f0f0f0; font-weight: bold; }
-        .factura-resumen { text-align: right; margin-bottom: 20px; }
-        .factura-resumen p { margin: 5px 0; font-weight: bold; }
-        .factura-footer { text-align: center; font-size: 0.9em; color: #777; border-top: 1px solid #ddd; padding-top: 10px; }
+        body {
+            font-family: DejaVu Sans, sans-serif; /* Importante para caracteres especiales */
+            font-size: 10pt;
+            line-height: 1.3;
+            color: #333;
+            position: relative; /* Necesario para posicionar la marca de agua respecto al body */
+        }
+
+        /* Estilos de la marca de agua */
+        body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('{{ public_path('images/logoCosmosCinema.png') }}');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 45%;  /* Ajusta este valor */
+    opacity: 0.2;      /* Ajusta este valor */
+    z-index: -1;
+    transform: rotate(-45deg); /* Opcional, ajusta el ángulo */
+}
+
+        .factura-container {
+            width: 100%;
+            max-width: 800px; /* Ajusta según necesites */
+            margin: 0 auto;
+        }
+
+        .factura-header {
+            text-align: left;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .factura-header h1 {
+            font-size: 18pt;
+            margin-bottom: 5px;
+        }
+
+        .factura-header p {
+            margin: 5px 0;
+        }
+
+        .cliente-info {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cliente-info h3 {
+            font-size: 12pt;
+            margin-bottom: 5px;
+        }
+
+        .cliente-info p {
+            margin: 2px 0;
+        }
+
+        .entradas-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .entradas-table th, .entradas-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .entradas-table th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+
+        .factura-resumen {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .factura-resumen p {
+            margin: 5px 0;
+            font-weight: bold;
+        }
+
+        .factura-footer {
+            text-align: center;
+            font-size: 0.9em;
+            color: #777;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
         /* Estilos específicos para alinear como en el PDF */
         .entradas-table th:nth-child(5), .entradas-table td:nth-child(5),
         .entradas-table th:nth-child(6), .entradas-table td:nth-child(6),
@@ -29,7 +112,7 @@
 <body>
     <div class="factura-container">
         <div class="factura-header">
-            <h1>Cosmos Cinema S.L</h1>
+            <h1>{{ config('company.name') }}</h1>
             <p>Direccion: Calle Falsa 123, Ciudad, CP</p>
             <p>NIF: B12345678</p>
             <h2>Factura de Compra</h2>
@@ -40,7 +123,7 @@
         @if($usuario)
         <div class="cliente-info">
             <h3>Cliente</h3>
-            <p>Nombre: {{ $usuario->name }}</p>
+            <p>Nombre: {{ $usuario->nombre }}</p>
             <p>Email: {{ $usuario->email }}</p>
         </div>
         @endif

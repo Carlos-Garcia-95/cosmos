@@ -5,7 +5,6 @@ namespace App\Mail;
 use App\Models\Factura;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -23,12 +22,12 @@ class EmailEntradas extends Mailable
     public ?string $rutaPdfFactura = null;
 
     // Crear instancia de Email
-    public function __construct(User $usuario, Factura $factura, array $rutas_pdf, ?string $rutaPdfFactura = null)
+    public function __construct(User $usuario, Factura $factura, array $rutas_pdf, ?string $ruta_pdf_factura = null)
     {
         $this->usuario = $usuario;
         $this->factura = $factura;
         $this->rutas_pdf = $rutas_pdf;
-        $this->rutaPdfFactura = $rutaPdfFactura;
+        $this->rutaPdfFactura = $ruta_pdf_factura;
     }
 
     // Cabeceras ('sobre' del correo)
@@ -62,6 +61,7 @@ class EmailEntradas extends Mailable
     {
         $archivos_adjuntos = [];
         foreach ($this->rutas_pdf as $indice => $ruta_pdf) {
+            Log::info($ruta_pdf);
             if (file_exists($ruta_pdf)) {
                 $nombreArchivoOriginal = basename($ruta_pdf);
                 $archivos_adjuntos[] = Attachment::fromPath($ruta_pdf)
@@ -74,8 +74,9 @@ class EmailEntradas extends Mailable
 
         // Adjuntar la factura si la ruta está definida y el archivo existe
         if ($this->rutaPdfFactura && file_exists($this->rutaPdfFactura)) {
+            Log::info($this->rutaPdfFactura);
             $archivos_adjuntos[] = Attachment::fromPath($this->rutaPdfFactura)
-                ->as('Factura-' . $this->factura->num_factura . '.pdf')
+                ->as('Factura.pdf')
                 ->withMime('application/pdf');
         } elseif ($this->rutaPdfFactura) {
             Log::error("Archivo PDF de factura no encontrado: " . $this->rutaPdfFactura);

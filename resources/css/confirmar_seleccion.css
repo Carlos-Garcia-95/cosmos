@@ -12,6 +12,19 @@
     z-index: 1000;
 }
 
+#modal_confirmar_seleccion_form {
+    position: inherit;
+    top: inherit;
+    left: inherit;
+    width: inherit;
+    height: inherit;
+    background-color: inherit;
+    display: inherit;
+    justify-content: inherit;
+    align-items: inherit;
+    z-index: inherit;
+}
+
 .confirmar_container {
     background-color: rgba(26, 26, 26, 0.9);
     padding: 20px;

@@ -32,7 +32,6 @@
             <tr>
                 <th>ID Fact.</th>
                 <th>Num. Factura</th> <th>Hora</th>
-                <th>Titular</th>
                 <th>Impuesto Aplicado</th>
                 <th class="text-right">M. Neto (Base)</th>
                 <th class="text-right">M. Impuesto</th>
@@ -44,7 +43,6 @@
                 <tr>
                     <td>{{ $factura->id_factura }}</td>
                     <td>{{ $factura->num_factura }}</td> <td>{{ $factura->created_at->format('H:i:s') }}</td>
-                    <td>{{ $factura->titular }}</td>
                     <td>
                         @if($factura->impuesto)
                             {{ $factura->impuesto->tipo }} ({{ $factura->impuesto->cantidad}}%)

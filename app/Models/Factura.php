@@ -30,8 +30,6 @@ class Factura extends Model
      */
     protected $fillable = [
         'monto_total',      // Este es la BASE IMPONIBLE (antes de impuestos)
-        'ultimos_digitos',
-        'titular',
         'titular_email',
         'num_factura',      // Id de pedido
         'pedido_redsys_id', // Pedido id para Redsys

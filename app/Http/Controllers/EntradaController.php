@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Entrada;
 use App\Models\Fecha;
 use App\Models\Hora;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class EntradaController extends Controller
 {

@@ -29,7 +29,6 @@
         'resources/js/detalle_y_asientos.js',
         'resources/css/confirmar_seleccion.css',
         'resources/css/invitado.css',
-        'resources/css/pago.css',
         'resources/css/swiper-custom.css',
         'resources/js/slider-init.js',
         'resources/js/menu_hamburguesa.js',
@@ -113,9 +112,6 @@
 
     <!-- Modal de confirmar selección de asientos -->
     <x-modal.modal_confirmar_seleccion/>
-    
-    <!-- Modal de pago -->
-    <x-modal.modal_pago/>
 
     @stack('scripts')
 
