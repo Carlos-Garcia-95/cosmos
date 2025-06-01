@@ -36,7 +36,6 @@ class FacturaSeeder extends Seeder
         $impuestoIds = [$impuestoIvaId, $impuestoReducidoId, $impuestoNingunoId];
 
         $facturas = [];
-        $faker = \Faker\Factory::create('es_ES'); // Usar Faker para datos más realistas
 
         // Generar facturas para los últimos 12 meses, incluyendo el actual
         for ($i = 0; $i < 50; $i++) { // Generar 50 facturas de ejemplo
