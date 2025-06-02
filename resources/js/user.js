@@ -7,8 +7,22 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
+    const cerrarCuentaModalBtn = modalCuenta?.querySelector("#cerrarCuentaModal");
+    if (cerrarCuentaModalBtn) {
+        cerrarCuentaModalBtn.addEventListener('click', closeCuentaModal);
+    }
+
+    const modalPeliculaCartelera = document.getElementById("modal_detalle");
+    const cerrarPeliculaCarteleraModalBtn = modalPeliculaCartelera?.querySelector("#cerrarPeliculaCarteleraModal");
+    if (cerrarPeliculaCarteleraModalBtn) {
+        cerrarPeliculaCarteleraModalBtn.addEventListener('click', () => {
+            modalPeliculaCartelera.classList.remove('flex');
+            modalPeliculaCartelera.classList.add('hidden');
+            // Cualquier otra lógica al cerrar este modal
+        });
+    }
+
     const mostrarCuentaModalBtn = document.getElementById("miCuenta");
-    const cerrarCuentaModalBtn = modalCuenta.querySelector("#cerrarCuentaModal");
     const editarPerfilBtn = modalCuenta.querySelector("#editarPerfilBtn");
     const guardarCambiosBtn = modalCuenta.querySelector("#guardarCambiosBtn");
     const cancelarEdicionBtn = modalCuenta.querySelector("#cancelarEdicionBtn");
@@ -60,12 +74,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const infoMayorEdadConfirmadoEdit = modalCuenta.querySelector("#infoMayorEdadConfirmadoEdit");
     const infoMayorEdadConfirmadoError = modalCuenta.querySelector("#infoMayorEdadConfirmadoError");
     const formRowMayorEdadConfirmado = infoMayorEdadConfirmadoEdit?.closest(".form-row");
-
-    const infoAceptaPublicidadEdit = modalCuenta.querySelector("#infoAceptaPublicidadEdit");
-
     const serverSideErrorsArea = modalCuenta.querySelector(".client-side-errors ul");
     const serverSideErrorsContainer = modalCuenta.querySelector(".client-side-errors");
     const profileUpdateSuccessMessage = modalCuenta.querySelector("#profileUpdateSuccessMessage");
+    const infoAceptaTerminosEdit = modalCuenta.querySelector("#infoAceptaTerminosEdit");
+    const formRowAceptaTerminos = infoAceptaTerminosEdit?.closest(".form-row");
+    const infoAceptaTerminosError = modalCuenta.querySelector("#infoAceptaTerminosEditError");
 
     let currentUserData = null;
     let isCompletingProfileGlobal = false;
@@ -103,10 +117,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if(infoDireccionEdit) infoDireccionEdit.disabled = false;
         if(infoCiudadEdit) infoCiudadEdit.disabled = false;
         if(infoCodigoPostalEdit) infoCodigoPostalEdit.disabled = false;
-        if(infoMayorEdadConfirmadoEdit) infoMayorEdadConfirmadoEdit.disabled = false;
-        if(infoAceptaPublicidadEdit) infoAceptaPublicidadEdit.disabled = false;
+        if(infoAceptaTerminosEdit) infoAceptaTerminosEdit.disabled = false;
         if(infoEmailEdit) infoEmailEdit.disabled = true;
-
+        if(infoMayorEdadConfirmadoEdit) infoMayorEdadConfirmadoEdit.disabled = false;
         if (infoFechaNacimientoEdit) infoFechaNacimientoEdit.disabled = !(isCompleting || !currentUserData.fecha_nacimiento);
         if (infoDniEdit) infoDniEdit.disabled = !(isCompleting || !currentUserData.dni);
 
@@ -213,7 +226,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if (infoCodigoPostalEdit) infoCodigoPostalEdit.value = userData.codigo_postal || "";
 
         if (infoMayorEdadConfirmadoEdit) infoMayorEdadConfirmadoEdit.checked = !!userData.mayor_edad_confirmado;
-        if (infoAceptaPublicidadEdit) infoAceptaPublicidadEdit.checked = !!userData.acepta_publicidad;
+        const infoAceptaTerminosEdit = modalCuenta.querySelector("#infoAceptaTerminosEdit"); // Asegúrate de tener este ID en tu HTML
+        if (infoAceptaTerminosEdit) infoAceptaTerminosEdit.checked = !!userData.acepta_terminos;
 
         if (infoCiudadEdit && userData.ciudad_id) {
             infoCiudadEdit.value = userData.ciudad_id;
@@ -232,26 +246,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
             });
             if (!response.ok) {
-                
+    
                 const errorData = await response.json().catch(() => ({ message: "Error desconocido al cargar datos." }));
                 console.error('Error al cargar datos del usuario:', response.status, response.statusText, errorData.message);
-                alert(errorData.message || "No se pudieron cargar los datos de tu cuenta. Intenta de nuevo.");
+                // No usar alert(), usar un modal personalizado si es necesario
+                // alert(errorData.message || "No se pudieron cargar los datos de tu cuenta. Intenta de nuevo.");
                 closeCuentaModal();
                 return;
             }
             currentUserData = await response.json(); // PUNTO 1 DE FALLO POTENCIAL
-    console.log('Datos JSON recibidos de /perfil/datos:', currentUserData);
-
-    if (!currentUserData || typeof currentUserData !== 'object') { // PUNTO 2
-        console.error("No se recibieron datos válidos del usuario o no es un objeto:", currentUserData);
-        throw new Error("Formato de datos de usuario inesperado."); // Esto activaría el catch
-    }
-
-    populateFormFields(currentUserData); // PUNTO 3
-    await populateCitiesSelect(infoCiudadEdit, currentUserData.ciudad_id); // PUNTO 4
-            
+            console.log('Datos JSON recibidos de /perfil/datos:', currentUserData);
+    
+            if (!currentUserData || typeof currentUserData !== 'object') { // PUNTO 2
+                console.error("No se recibieron datos válidos del usuario o no es un objeto:", currentUserData);
+                throw new Error("Formato de datos de usuario inesperado."); // Esto activaría el catch
+            }
+    
+            populateFormFields(currentUserData); // PUNTO 3
+            await populateCitiesSelect(infoCiudadEdit, currentUserData.ciudad_id); // PUNTO 4
+    
             const ID_TIPO_CLIENTE = 3; // Asegúrate que este sea el ID correcto para "cliente"
-            const dniFieldContainer = formRowDni; 
+            const dniFieldContainer = formRowDni;
             if (dniFieldContainer) {
                 if (currentUserData.tipo_usuario_id == ID_TIPO_CLIENTE) {
                     dniFieldContainer.style.display = 'none';
@@ -261,18 +276,31 @@ document.addEventListener("DOMContentLoaded", function () {
                     // La lógica de habilitar/deshabilitar en switchToEditMode se encargará de si el input DNI es editable o no
                 }
             }
-
-
-            if (forceCompleteMode || (currentUserData && !currentUserData.is_profile_complete)) {
-                switchToEditMode(true);
-            } else {
-                switchToDisplayMode();
+    
+            // Modificación aquí: Siempre se inicia en modo de visualización.
+            // La lógica para forzar el modo de edición si el perfil está incompleto
+            // se maneja en la redirección del controlador de login social,
+            // pero el modal en sí siempre abre en display mode inicialmente.
+            switchToDisplayMode();
+    
+            // Si el perfil está incompleto, se puede mostrar un mensaje o una indicación visual
+            // pero el modal se abre en modo display.
+            if (currentUserData && !currentUserData.is_profile_complete) {
+                // Opcional: Mostrar un mensaje en el modal para que el usuario sepa que su perfil está incompleto
+                if(profileUpdateSuccessMessage) { // Reutilizamos el elemento de mensaje de éxito para esto
+                    profileUpdateSuccessMessage.textContent = "¡Bienvenido/a! Tu perfil está incompleto. Haz clic en 'Editar Perfil' para completarlo.";
+                    profileUpdateSuccessMessage.style.display = "block";
+                    profileUpdateSuccessMessage.style.color = "orange"; // Para distinguirlo
+                }
             }
+    
+    
             modalCuenta.classList.remove("hidden");
             modalCuenta.classList.add("flex");
         } catch (error) {
             console.error("Error al cargar y popular datos del usuario:", error);
-            alert("Ocurrió un error al cargar tus datos. Intenta de nuevo más tarde.");
+            // No usar alert(), usar un modal personalizado si es necesario
+            // alert("Ocurrió un error al cargar tus datos. Intenta de nuevo más tarde.");
             closeCuentaModal();
         }
     }
@@ -417,28 +445,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
-            /* const dniFieldContainer = formRowDni;
-            if (infoDniEdit && !infoDniEdit.disabled && dniFieldContainer && dniFieldContainer.style.display !== 'none') {
-                const dniValue = infoDniEdit.value.trim().toUpperCase();
-                if (dniValue !== '') {
-                    const dniFormatValidation = isValidDniFormatAndLetter(dniValue);
-                    if (!dniFormatValidation.valid) {
-                        displayFieldError(infoDniError, formRowDni, dniFormatValidation.message);
-                        isClientValid = false;
-                    } else {
-                        clearFieldError(infoDniError, formRowDni);
-                        const dniIsUnique = await checkDniIsUniqueProfile(infoDniEdit);
-                        if (!dniIsUnique) isClientValid = false;
-                    }
-                } else if (isCompletingProfileGlobal || !currentUserData?.dni) { // Solo obligatorio si se está completando y no tiene DNI
-                    displayFieldError(infoDniError, formRowDni, "El DNI es obligatorio.");
-                    isClientValid = false;
-                } else {
-                    clearFieldError(infoDniError, formRowDni);
-                }
-            } else if (infoDniEdit) { // Si el campo DNI está oculto o deshabilitado
-                clearFieldError(infoDniError, formRowDni);
-            } */
+            if (document.querySelector('#infoAceptaTerminosEdit') && !document.querySelector('#infoAceptaTerminosEdit').checked) {
+                displayFieldError(null, document.querySelector('#infoAceptaTerminosEdit').closest('.form-row'), "Debes aceptar los Términos y Condiciones.");
+                isClientValid = false;
+            }
 
 
             if (infoCiudadEdit) {
@@ -459,6 +469,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
 
+            if (infoAceptaTerminosEdit && !infoAceptaTerminosEdit.disabled) {
+                if (!infoAceptaTerminosEdit.checked && (isCompletingProfileGlobal || !currentUserData?.acepta_terminos)) {
+                    displayFieldError(infoAceptaTerminosError, formRowAceptaTerminos, "Debes aceptar los Términos y Condiciones.");
+                    isClientValid = false;
+                } else {
+                    clearFieldError(infoAceptaTerminosError, formRowAceptaTerminos);
+                }
+            }
+
             if (!isClientValid) return;
 
             const payload = {
@@ -471,7 +490,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 fecha_nacimiento: (infoFechaNacimientoEdit && !infoFechaNacimientoEdit.disabled && infoFechaNacimientoEdit.value) ? infoFechaNacimientoEdit.value : undefined,
                 dni: (infoDniEdit && !infoDniEdit.disabled && infoDniEdit.value && dniFieldContainer && dniFieldContainer.style.display !== 'none') ? infoDniEdit.value.trim().toUpperCase() : undefined,
                 mayor_edad_confirmado: infoMayorEdadConfirmadoEdit?.checked ?? false,
-                acepta_publicidad: infoAceptaPublicidadEdit?.checked ?? false,
+                acepta_terminos: infoAceptaTerminosEdit?.checked ?? false,
             };
             const filteredPayload = Object.fromEntries(Object.entries(payload).filter(([_, v]) => v !== undefined));
 
@@ -516,7 +535,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             else if (field === "fecha_nacimiento") { errorElement = infoFechaNacimientoError; formRow = formRowFechaNacimiento; }
                             else if (field === "dni") { errorElement = infoDniError; formRow = formRowDni; }
                             else if (field === "mayor_edad_confirmado") { errorElement = infoMayorEdadConfirmadoError; formRow = formRowMayorEdadConfirmado; }
-
+                            else if (field === "acepta_terminos") { errorElement = infoAceptaTerminosError; formRow = formRowAceptaTerminos; }
                             if (errorElement) {
                                 displayFieldError(errorElement, formRow, errorMessages.join(" "));
                             } else {

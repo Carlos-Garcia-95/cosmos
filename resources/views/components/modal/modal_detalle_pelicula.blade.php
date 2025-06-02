@@ -1,5 +1,8 @@
 <div class="modal_detalle hidden" id="modal_detalle">
     <div class='detalle-container'>
+    <div class="modal-content-pelicula">
+        <button class="close-button" id="cerrarPeliculaCarteleraModal">&times;</button>
+    </div>
         <div class="detalle_imagen_box" id='detalle_imagen_box'>
         </div>
         <div class="detalle_header">

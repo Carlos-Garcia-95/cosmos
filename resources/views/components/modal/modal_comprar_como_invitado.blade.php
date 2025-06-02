@@ -1,6 +1,7 @@
 <div class='modal_invitado hidden' id='modal_invitado'>
     <div class='container_invitado' id='container_invitado'>
         <form>
+        @csrf
             <div class='invitado_titulo' id='invitado_titulo'>
                 Compra como Invitado
             </div>

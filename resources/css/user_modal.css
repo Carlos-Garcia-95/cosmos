@@ -236,3 +236,52 @@
     display: flex;
     flex-wrap: wrap;
 }
+
+@media screen and (max-width: 450px) {
+    #modalCuenta .modal-content {
+        padding: 20px; /* Reducir el padding general */
+        width: 98%; /* Ocupar casi todo el ancho */
+        margin: 10% auto; /* Ajustar el margen vertical */
+    }
+
+    #modalCuenta .modal-title {
+        font-size: 1.5em; /* Reducir el tamaño del título */
+    }
+
+    #modalCuenta .user-info-item {
+        flex-direction: column; /* Apilar etiqueta y campo */
+        align-items: center; /* Alinear a la izquierda */
+        margin-bottom: 15px; /* Reducir el margen inferior */
+    }
+
+    #modalCuenta .user-info-item strong {
+        display: block; /* Asegurar que la etiqueta esté en una línea separada */
+        width: 100%;
+        margin-bottom: 5px;
+        margin-right: 0;
+        font-size: 0.9em;
+    }
+
+    #modalCuenta .user-info-item span,
+    #modalCuenta .user-info-item select {
+        width: 100%; /* Los campos ocupan todo el ancho */
+        font-size: 0.9em;
+    }
+
+    #modalCuenta .modal-actions button {
+        font-size: 0.9em;
+        padding: 8px 15px;
+        margin-left: 5px;
+        margin-top: 10px; /* Añadir margen superior entre botones si se apilan */
+        width: calc(50% - 5px); /* Hacer que los botones ocupen la mitad del ancho (aproximadamente) */
+        box-sizing: border-box;
+    }
+
+    #modalCuenta .edit-field-container .checkbox-label {
+        font-size: 0.9em;
+    }
+
+    #modalCuenta .edit-field-container input[type="checkbox"].edit-field {
+        margin-right: 5px;
+    }
+}

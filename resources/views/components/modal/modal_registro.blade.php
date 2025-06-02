@@ -68,47 +68,22 @@
                 {{-- Si este formulario solo pide email/pass y luego hay más pasos, el reCAPTCHA iría en el último paso. --}}
                 {{-- Si este es el ÚNICO paso del registro manual antes de enviar, ponlo aquí. --}}
                 <div class="form-row" style="display: flex; justify-content: center; margin-top:15px; margin-bottom: 15px;">
-                    <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                    <div class="g-recaptcha" id="recaptcha-registro" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
                     @if ($errors->has('g-recaptcha-response'))
                     <div class="error-message backend-error" style="width:100%; text-align:center;">{{ $errors->first('g-recaptcha-response') }}</div>
                     @endif
                 </div>
 
 
-                {{-- Botones --}}
-                <div class="button-group" style="margin-top: 20px;">
-                    {{-- El botón "Volver" podría llevar a la página principal o cerrar el modal --}}
-                    <button type="button" class="btn back-button" id="cancelarRegistroBtn">Cancelar</button>
-                    {{-- Si hay más pasos para el registro manual, este sería "Siguiente" --}}
-                    {{-- Si este es el único paso, sería "Registrarse" --}}
-                    <button type="submit" class="btn" id="submitRegistroManualBtn">Registrarse</button>
-                    {{-- <button type="button" class="btn next-step" id="siguientePasoRegistroBtn">Siguiente</button> --}}
-                </div>
+                <div class="client-side-errors" style="display: none; color: red; margin-top: 10px;">
+            <ul></ul>
+        </div>
+
+        <div class="button-group" style="margin-top: 20px;">
+            <button type="button" class="btn back-button" id="cancelarRegistroBtn">Cancelar</button>
+            <button type="submit" class="btn" id="submitRegistroManualBtn">Registrarse</button>
+        </div>
             </div>
-
-            {{-- PASO 2 (Opcional): Si decides pedir más datos para el registro manual DESPUÉS de email/pass --}}
-            {{-- <div id="step2Registro" class="form-step" style="display: none;"> --}}
-            {{-- Aquí irían nombre, apellidos, DNI, etc. SI NO LOS PIDES DESPUÉS DE LOGUEARSE --}}
-            {{-- Por ejemplo, los campos de tu step2 y step3 originales irían aquí --}}
-            {{-- Incluyendo los checkboxes de "mayor de 14" y "acepto publicidad" --}}
-            {{-- Y el botón "Registrarse" final estaría aquí. --}}
-
-            {{-- Ejemplo de un campo del paso 2 si lo mantienes --}}
-            {{--
-                <div class="form-row">
-                    <input type="text" name="nombre" placeholder="Nombre" value="{{ old('nombre') }}" required class="input">
-            <span class="client-side-field-error" style="color: red; display: none; margin-bottom: 10px; font-size: 0.9em;"></span>
-    </div>
-    <div class="form-row">
-        <label><input type="checkbox" name="mayor_edad" value="on" required> Soy mayor de 14 años</label>
-        <span class="client-side-field-error" style="color: red; display: none;"></span>
-    </div>
-    <div class="button-group">
-        <button type="button" class="btn prev-step" id="anteriorPasoRegistroBtn">Anterior</button>
-        <button type="submit" class="btn">Registrarse</button>
-    </div>
-    --}}
-    {{-- </div> --}}
 
 
     {{-- Mostrar errores generales del backend (del error bag 'registro') --}}

@@ -90,20 +90,18 @@ class SocialAuthController extends Controller
                 Log::error('Google Auth Failed: Auth::check() returned false after login attempt.', ['email' => $googleUser->getEmail()]);
                 return redirect()->route('principal')->withErrors(['auth' => 'Hubo un problema al intentar iniciar tu sesión. Por favor, inténtalo de nuevo.']);
             }
-
+    
             $authenticatedUser = Auth::user();
-
+    
             // Determinar si el perfil está incompleto
             $profileIsIncomplete = method_exists($authenticatedUser, 'isProfileIncomplete') && $authenticatedUser->isProfileIncomplete();
-
-            if ($isNewUserFlow || $profileIsIncomplete) {
-                $message = $isNewUserFlow ?
-                    '¡Bienvenido/a! Accede a "Mi Cuenta" para completar tu perfil.' :
-                    '¡Bienvenido/a de nuevo! Parece que faltan algunos datos en tu perfil. Accede a "Mi Cuenta" para completarlos.';
-                return redirect()->intended(route('principal'))->with('success', $message);
+    
+            if ($profileIsIncomplete) {
+                $message = '¡Bienvenido/a! Accede a "Mi Cuenta" para completar tu perfil.';
+                return redirect()->intended(route('principal'))->with('warning', $message); // Usamos 'warning' para diferenciar
             }
-
-            // Si no es un flujo de nuevo usuario y el perfil está completo, procede con el mensaje de bienvenida regular
+    
+            // Si el perfil no está incompleto, mensaje de bienvenida normal
             $welcomeMessage = "¡Bienvenido ";
             if ($authenticatedUser->tipo_usuario === self::ID_TIPO_USUARIO_CLIENTE) {
                 $welcomeMessage .= "Cliente {$authenticatedUser->nombre} {$authenticatedUser->apellidos}!";

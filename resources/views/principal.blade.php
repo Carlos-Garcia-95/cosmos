@@ -35,7 +35,6 @@
         'resources/css/menu_hamburguesa.css',
         'resources/js/flash_mensaje.js',
     ])
-    <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
 
 </head>
 

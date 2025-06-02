@@ -14,7 +14,7 @@
         }
 
         /* Estilos de la marca de agua */
-        body::before {
+    body::before {
     content: '';
     position: absolute;
     top: 0;
@@ -24,11 +24,11 @@
     background-image: url('{{ public_path('images/logoCosmosCinema.png') }}');
     background-repeat: no-repeat;
     background-position: center center;
-    background-size: 45%;  /* Ajusta este valor */
-    opacity: 0.2;      /* Ajusta este valor */
+    background-size: 85%;  /* Ajusta este valor */
+    opacity: 0.5;      /* Ajusta este valor */
     z-index: -1;
     transform: rotate(-45deg); /* Opcional, ajusta el ángulo */
-}
+    }
 
         .factura-container {
             width: 100%;

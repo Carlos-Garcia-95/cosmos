@@ -14,6 +14,21 @@
         h1, h2, h3 { text-align: center; margin-bottom: 5px;}
         h2 { margin-bottom: 10px; font-size: 1.2em;}
         h3 { margin-bottom: 10px; font-size: 1.1em; text-align:left; margin-top: 20px;}
+        body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('{{ public_path('images/logoCosmosCinema.png') }}');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 85%;  /* Ajusta este valor */
+    opacity: 0.5;      /* Ajusta este valor */
+    z-index: -1;
+    transform: rotate(-45deg); /* Opcional, ajusta el ángulo */
+}
     </style>
 </head>
 <body>
