@@ -1,13 +1,3 @@
-// Importar Vue
-import Vue from 'vue'; // Asegúrate de que Vue se importe o esté disponible globalmente
-import VueTheMask from 'vue-the-mask';
-
-// Registrar plugins de Vue
-Vue.use(VueTheMask);
-
-// Variable para mantener la instancia de Vue
-let vueAppInstance = null;
-
 // Función para mostrar el modal de detalle
 window.mostrar_detalle = function (peliculaId) {
 
@@ -20,6 +10,7 @@ window.mostrar_detalle = function (peliculaId) {
     const duracion_element = document.getElementById('detalle_duracion');
     const sinopsis_element = document.getElementById('sinopsis');
     const comprar_btn = document.getElementById('detalle_comprar_btn');
+    const detalle_proximamente_btn = document.getElementById('detalle_proximamente_btn');
 
     // Texto de carga de imagen
     imagen_box.innerHTML = '<p>Cargando imagen...</p>';
@@ -53,6 +44,11 @@ window.mostrar_detalle = function (peliculaId) {
         document.body.classList.add('modal_abierto');
     }
 
+    if (comprar_btn.classList.contains('hidden')) {
+        comprar_btn.classList.remove('hidden');
+        detalle_proximamente_btn.classList.add('hidden');
+    }
+
     // Funcionalidad de botón COMPRAR ENTRADA
     if (comprar_btn && seccionCompra) {
         // Si ya tiene un event listener, se elimina
@@ -65,7 +61,6 @@ window.mostrar_detalle = function (peliculaId) {
         comprar_btn.addEventListener('click', elegir_pelicula);
         comprar_btn.setAttribute('listener', 'true');
         comprar_btn.dataset.peliculaId = peliculaId;
-
     }
 
 };

@@ -17,10 +17,6 @@ html {
     -ms-overflow-style: none;
 }
 
-.botones{
-    font-size: x-large;
-}
-
 .centrar{
     margin-left: 63%;
 }
@@ -89,7 +85,7 @@ html {
     padding: 15px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
 }
 
@@ -113,7 +109,6 @@ html {
 }
 
 .menu-item-name {
-    font-size: 1.2em;
     margin: 0;
     padding: 0 10px;
     text-align: center;
@@ -121,7 +116,6 @@ html {
 }
 
 .menu-item-description {
-    font-size: 0.9em;
     margin: 0 0 10px 0;
     padding: 0 10px;
     text-align: center;
@@ -129,12 +123,11 @@ html {
 }
 
 .menu-item-price {
-    font-size: 1.1em;
+    font-size: xx-large;
     font-weight: bold;
     margin: 0;
     padding: 0 10px;
     text-align: center;
-    font-size: x-large;
     color: #6feaf6;
 }
 
@@ -144,23 +137,6 @@ html {
 
 .menu-item.is-flipped .menu-item-inner {
     transform: rotateY(180deg);
-}
-
-/* Estilos generales para el botón de cerrar (si usas la misma clase .cerrar-btn) */
-.cerrar-btn {
-    background-color: #e50914;
-    color: white;
-    border: none;
-    padding: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 50%;
-    transition: background-color 0.3s ease;
-    font-size: x-large;
-}
-
-.cerrar-btn:hover {
-    background-color: #d32f2f;
 }
 
 /* Posicionamiento específico para el botón de cerrar de la sección de COMPRA (como modal) */
@@ -201,5 +177,14 @@ html {
 @media only screen and (max-width: 480px) {
     .menus-grid {
         grid-template-columns: repeat(1, 1fr);
+    }
+    .menu-item-name {
+        font-size: x-large;
+    }
+    .menu-item-description {
+        font-size: 1.1em;
+    }
+    .menu-item-price {
+        font-size: x-large;
     }
 }

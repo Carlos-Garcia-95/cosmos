@@ -24,7 +24,7 @@
 
     width: 65%;
     max-width: 65%;
-    height: 95vh;
+    overflow-y: auto;
     max-height: 95vh;
 
     justify-content: flex-start;
@@ -89,7 +89,6 @@
     text-align: center;
     border-top: 1px solid rgba(255, 255, 255, 0.5);
     width: 100%;
-    overflow-y: auto;
     &::-webkit-scrollbar { display: none; }
 }
 
@@ -109,7 +108,6 @@
 
 #detalle_comprar button {
     padding: 12px 25px;
-    background-color: #d12d10;
     border: none;
     border-radius: 5px;
     font-size: 1.1em;
@@ -119,20 +117,63 @@
     width: 80%;
 }
 
-#detalle_comprar button:hover {
+
+.detalle_btn {
+    background-color: #d12d10;
+}
+
+.detalle_btn:hover {
     background-color: #831d0b;
+}
+
+
+.detalle_proximamente_btn {
+    background-color: #555;
+}
+
+.detalle_proximamente_btn:hover {
+    background-color: #777;
 }
 
 
 
 
-
-
-
-
-
-
 /* //////////// MEDIAS QUERIES //////////// */
+
+
+
+/* PARA EL HEADER EN PANTALLAS MÁS PEQUEÑAS */
+
+@media only screen and (max-width: 1200px) {
+    /* Header en columna */
+    .detalle_header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 5%;
+    }
+
+    .detalle_titulo_box,
+    .detalle_estreno_box,
+    .detalle_duracion_box {
+        grid-column: auto;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .detalle_titulo_box {
+        order: 1;
+    }
+
+    .detalle_duracion_box {
+        order: 2;
+    }
+
+    .detalle_estreno_box {
+        order: 3;
+    }
+}
 
 /* TABLETS */
 @media only screen and (max-width: 768px) {
@@ -143,18 +184,6 @@
         min-height: 90vh;
         max-height: 90vh;
         padding: 15px;
-    }
-
-    .detalle_header {
-        padding: 10px 5%;
-    }
-
-    .detalle_titulo_box,
-    .detalle_estreno_box,
-    .detalle_duracion_box {
-        grid-column: auto;
-        text-align: center;
-        margin-bottom: 8px;
     }
 
     .detalle_titulo_box {
@@ -189,32 +218,10 @@
     .detalle-container {
         width: 90%;
         max-width: 90%;
-        min-height: 85vh;
+        height: 85vh;
         max-height: 85vh;
+        overflow-y: auto;
         padding: 15px;
-    }
-
-    .detalle_imagen_box {
-        flex-grow: 1;
-        flex-shrink: 1;
-        flex-basis: auto;
-    }
-
-    /* Header en columna */
-    .detalle_header {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 10px 5%;
-    }
-
-    .detalle_titulo_box,
-    .detalle_estreno_box,
-    .detalle_duracion_box {
-        grid-column: auto;
-        width: 100%;
-        text-align: center;
-        margin-bottom: 5px;
     }
 
     .detalle_titulo_box {
@@ -239,7 +246,6 @@
     }
 
     .detalle_body {
-        min-height: 80px;
         padding: 8px 3%;
     }
 

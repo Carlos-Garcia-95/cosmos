@@ -1,5 +1,9 @@
 @props(['peliculas_estreno'])
 
+<script>
+    var peliculas_estreno = JSON.parse('{!! json_encode($peliculas_estreno) !!}');
+</script>
+
 @if(!empty($peliculas_estreno))
 <div class='cartelera-box'>
     <div class='cartelera-titulo'>
@@ -9,7 +13,7 @@
     <div class='cartelera'>
         
         @foreach($peliculas_estreno as $pelicula_id => $pelicula)
-            <div class='cartel_pelicula' id='{{ $pelicula["id"] }}'>
+            <div class='cartel_pelicula' id='{{ $pelicula["id"] }}' onclick="mostrar_detalle_estreno('{{ $pelicula["id"] }}')">
                 <div class='imagen_pelicula_cartel'>
                     @if (isset($pelicula['poster_url']))
                         <img class='movie_poster' src="{{ $pelicula['poster_url'] }}" loading="lazy" alt="{{ $pelicula['titulo'] }}">

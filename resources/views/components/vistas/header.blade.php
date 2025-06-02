@@ -28,6 +28,8 @@
 </div>
 
 <div class="logo-container">
-    <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Cosmos Cinema Logo" class="cinema-logo">
+    <a href="{{ route('principal') }}" alt="Cosmos Cinema">
+        <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Cosmos Cinema Logo" class="cinema-logo">
+    </a>
 </div>
 

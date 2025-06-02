@@ -34,6 +34,9 @@
         'resources/js/menu_hamburguesa.js',
         'resources/css/menu_hamburguesa.css',
         'resources/js/flash_mensaje.js',
+        'resources/js/detalle_estreno.js',
+        'resources/css/footer.css',
+        'resources/css/footer_elemento.css',
     ])
     <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
 
@@ -50,8 +53,6 @@
             </section>
 
             <!-- Slider horizontal de películas -->
-            
-
             <section id="seccion_cartelera" class="seccion_cartelera">
                 <x-vistas.mostrar_peliculas_slider :peliculas='$peliculas'/>
             </section>
@@ -95,6 +96,11 @@
         <x-vistas.mostrar_menu :menus='$menus'/>
     </section>
 
+    <!-- Footer -->
+    <footer>
+        <x-vistas.footer/>
+    </footer>
+
     <!-- Modal de registro nuevo usuario -->
     <x-modal.modal_registro :ciudades='$ciudades'/>
 
@@ -114,8 +120,6 @@
     <x-modal.modal_confirmar_seleccion/>
 
     @stack('scripts')
-
-    
 
 </body>
 

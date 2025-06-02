@@ -22,7 +22,7 @@
                     
                     <div class="menu-item-back">
                         <p class="menu-item-description">{{ $menu->descripcion }}</p>
-                        <p class="menu-item-price">Precio: {{ number_format($menu->precio, 2) }}€</p>
+                        <p class="menu-item-price">{{ number_format($menu->precio, 2) }}€</p>
                     </div>
                 </div>
             </div>

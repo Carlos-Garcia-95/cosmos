@@ -17,6 +17,7 @@ use App\Http\Controllers\NominaEmpleadoController;
 use App\Http\Controllers\ProcesarPago;
 use App\Http\Controllers\EntradaController;
 use App\Http\Controllers\FacturacionController;
+use App\Http\Controllers\FooterController;
 use App\Http\Controllers\RecuperarSesionPelicula;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\RedsysController;
@@ -214,4 +215,20 @@ Route::get('/redsys/payment-ok', [RedsysController::class, 'handle_ok'])->name('
 Route::get('/redsys/payment-ko', [RedsysController::class, 'handle_ko'])->name('redsys_ko');
 
 Route::post('/redsys/webhook-notification', [RedsysController::class, 'handle_notification'])->name('redsys_notification');
+
+    // Rutas de footer
+
+Route::get('footer/politica_privacidad', [FooterController::class, 'politica_privacidad'])->name('footer_politica_privacidad');
+Route::get('footer/terminos_y_condiciones', [FooterController::class, 'terminos_y_condiciones'])->name('footer_terminos_y_condiciones');
+Route::get('footer/aviso_legal', [FooterController::class, 'aviso_legal'])->name('footer_aviso_legal');
+Route::get('footer/politica_de_cookies', [FooterController::class, 'politica_de_cookies'])->name('footer_politica_de_cookies');
+Route::get('footer/preguntas_frecuentes', [FooterController::class, 'preguntas_frecuentes'])->name('footer_preguntas_frecuentes');
+Route::get('footer/contacto', [FooterController::class, 'contacto'])->name('footer_contacto');
+
+
+
+
+
+
+
 

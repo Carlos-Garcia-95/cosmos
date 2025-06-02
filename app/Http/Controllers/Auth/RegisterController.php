@@ -20,7 +20,7 @@ class RegisterController extends Controller
 {
     public function registrar(Request $request)
     {
-        $recaptchaResponse = $request->input('g-recaptcha-response');
+        /* $recaptchaResponse = $request->input('g-recaptcha-response');
 
         if (empty($recaptchaResponse)) {
             return redirect()->route('principal')
@@ -41,7 +41,7 @@ class RegisterController extends Controller
             return redirect()->route('principal')
                 ->withErrors(['recaptcha' => 'La verificación reCAPTCHA falló. Inténtalo de nuevo.'], 'registro')
                 ->withInput();
-        }
+        } */
 
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:191|unique:users,email',

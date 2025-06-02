@@ -23,7 +23,7 @@
             $loopIndex = $loop->index; // Para data-slide-index
             @endphp
 
-            <div class="swiper-slide hero-slide" data-slide-index="{{ $loopIndex }}">
+            <div class="swiper-slide hero-slide" data-slide-index="{{ $loopIndex }}" onclick="mostrar_detalle('{{ $peliculaId }}')">
                 <img src="{{ $imageUrl }}" alt="Imagen de fondo de {{ $tituloPelicula }}" class="hero-slide-background-image">
                 <img src="{{ $imagePoster }}" alt="Póster de {{ $tituloPelicula }}" class="hero-slide-poster-image">
                 <div class="hero-slide-overlay-gradient"></div>

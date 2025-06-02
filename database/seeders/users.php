@@ -90,6 +90,25 @@ class users extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'nombre' => 'Carlos',
+                'apellidos' => 'García',
+                'email' => 'cozar1995@hotmail.com',
+                'email_verified_at' => now(),
+                'fecha_nacimiento' => '1990-02-20',
+                'numero_telefono' => '555654321', // Tenías dos 'numero_telefono', usé el segundo
+                'dni' => '53904949X',
+                'direccion' => 'Av. Siempre Muerta 321',
+                'ciudad_id' => 14,                      // CORREGIDO
+                'codigo_postal' => '65432',
+                'tipo_usuario' => 1,                 // CORREGIDO
+                'mayor_edad_confirmado' => true,        // CORREGIDO
+                'password' => bcrypt('asdasd123'),
+                'id_descuento' => 1,
+                'acepta_publicidad' => false,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }
