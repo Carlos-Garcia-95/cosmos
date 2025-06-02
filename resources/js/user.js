@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
         cerrarPeliculaCarteleraModalBtn.addEventListener('click', () => {
             modalPeliculaCartelera.classList.remove('flex');
             modalPeliculaCartelera.classList.add('hidden');
-            // Cualquier otra lógica al cerrar este modal
+            document.body.classList.remove('modal_abierto');
         });
     }
 
