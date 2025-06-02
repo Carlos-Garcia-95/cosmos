@@ -1,6 +1,6 @@
 <div class="modal hidden" id="modalCuenta">
     <div class="modal-content">
-        <button class="close-button" id="cerrarCuentaModal">×</button>
+        <button class="close-button1" id="cerrarCuentaModal">&times;</button>
 
         <div class="modal-header">
             <h2 class="modal-title" id="cuentaModalTitle">Mi Cuenta</h2>
@@ -103,21 +103,21 @@
                 </div>
 
                 {{-- Checkbox Mayor de 14 años (Visible en modo edición/completar) --}}
-                <div class="user-info-item form-row edit-field-container" style="display: none;"> {{-- El form-row aquí podría ser redundante si el edit-field-container ya maneja el layout --}}
+                <div class="user-info-item form-row edit-field-container" style="display: none;">
                     <label for="infoMayorEdadConfirmadoEdit" class="checkbox-label">
-                        <input type="checkbox" id="infoMayorEdadConfirmadoEdit" name="mayor_edad_confirmado" value="1" class="edit-field">
+                        <input type="checkbox" id="infoMayorEdadConfirmadoEdit" name="mayor_edad_confirmado" value="1" class="edit-field" required>
                         Soy mayor de 14 años
                     </label>
                     <p id="infoMayorEdadConfirmadoError" class="client-side-field-error error-text" style="display: none;"></p>
                 </div>
 
                 {{-- Checkbox Acepta Publicidad --}}
-                <div class="user-info-item form-row edit-field-container" style="display: none;">
-                    <label for="infoAceptaPublicidadEdit" class="checkbox-label">
-                        <input type="checkbox" id="infoAceptaPublicidadEdit" name="acepta_publicidad" value="1" class="edit-field">
-                        Acepto recibir publicidad y comunicaciones
+                <div class="user-info-item form-row edit-field-container">
+                    <label for ="infoAceptaTerminosEdit" class="checkbox-label">
+                    <input type="checkbox" id="infoAceptaTerminosEdit" name="acepta_terminos" value="1" class="edit-field" required>
+                        <a href="{{ route('terminos') }}">Leer y aceptar los términos y condiciones</a>
                     </label>
-                    {{-- No suele haber error para un checkbox opcional --}}
+                    <p id="infoAceptaTerminosEditError" class="client-side-field-error error-text" style="display: none;"></p>
                 </div>
 
             </form> {{-- Fin del form --}}
@@ -127,7 +127,6 @@
                 <button type="button" class="btn btn-secondary" id="cancelarEdicionBtn" style="display: none;">Cancelar</button>
             </div>
 
-            <div id="profileUpdateSuccessMessage" style="display: none; color: green; margin-top: 10px;"></div>
             <div class="client-side-errors error-messages" style="display: none; color: red; margin-top: 10px;">
                 <strong>Por favor, corrige los siguientes errores:</strong>
                 <ul></ul>

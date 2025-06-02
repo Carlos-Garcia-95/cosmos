@@ -36,7 +36,7 @@ class UserController extends Controller
             'ciudad_id' => $user->ciudad_id, // Enviar el ID de la ciudad para el select
             'ciudad_nombre' => $user->ciudad->nombre ?? null, // Nombre de la ciudad para mostrar
             'codigo_postal' => $user->codigo_postal,
-            'acepta_publicidad' => (bool) $user->acepta_publicidad, // Castear a booleano
+            'acepta_terminos' => (bool) $user->acepta_terminos, // Castear a booleano
             'mayor_edad_confirmado' => (bool) $user->mayor_edad_confirmado, // Castear a booleano
             'id_descuento' => $user->id_descuento, // Dejar null si es null
             // Podrías añadir una bandera para el frontend
@@ -44,6 +44,11 @@ class UserController extends Controller
         ];
 
         return response()->json($userData);
+    }
+
+    public function mostrarTerminos()
+    {
+        return view('terminos');
     }
 
     /**
@@ -89,12 +94,11 @@ class UserController extends Controller
             // Esto lo debería manejar la validación en ModificarUserRequest
         }
 
-
-        if ($request->has('acepta_publicidad')) { // O $validatedData['acepta_publicidad']
-            $user->acepta_publicidad = (bool) $validatedData['acepta_publicidad'];
-        } else {
-            // Si no se envía el checkbox, considerarlo false
-            $user->acepta_publicidad = false;
+        if ($request->has('acepta_terminos')) { // O $validatedData['mayor_edad_confirmado'] si es boolean en el request
+            $user->acepta_terminos = (bool) $validatedData['acepta_terminos'];
+        } else if ($this->isProfileIncomplete($user) && !isset($validatedData['acepta_terminos'])) {
+            // Si es la primera vez completando y no lo marca, podría ser un error si es 'required'
+            // Esto lo debería manejar la validación en ModificarUserRequest
         }
 
 
@@ -117,8 +121,8 @@ class UserController extends Controller
             'ciudad_id' => $user->ciudad_id,
             'ciudad_nombre' => $user->ciudad->nombre ?? null,
             'codigo_postal' => $user->codigo_postal,
-            'acepta_publicidad' => (bool) $user->acepta_publicidad,
             'mayor_edad_confirmado' => (bool) $user->mayor_edad_confirmado,
+            'acepta_terminos' => (bool) $user->acepta_terminos,
             'id_descuento' => $user->id_descuento,
             'is_profile_complete' => $profileNowComplete, // Enviar el estado actualizado
         ];

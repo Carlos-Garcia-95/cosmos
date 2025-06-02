@@ -1,11 +1,8 @@
 <script>
     const rawJsonData = '{!! json_encode($peliculas) !!}';
-    console.log("Raw JSON data:", rawJsonData);
     try {
         window.heroSliderPeliculasData = JSON.parse(rawJsonData);
     } catch (e) {
-        console.error("Error parsing JSON:", e);
-        console.log("JSON parse error on:", rawJsonData);
         window.heroSliderPeliculasData = []; // Para evitar errores posteriores
     }
 </script>

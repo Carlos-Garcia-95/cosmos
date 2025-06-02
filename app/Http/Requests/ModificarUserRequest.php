@@ -25,7 +25,8 @@ class ModificarUserRequest extends FormRequest
         // DNI es opcional. Fecha Nacimiento, Ciudad y Mayor de 14 son obligatorios al completar.
         $isCompletingProfile = is_null($user->fecha_nacimiento) ||
                             is_null($user->ciudad_id) ||
-                            !$user->mayor_edad_confirmado;
+                            !$user->mayor_edad_confirmado ||
+                            !$user->acepta_terminos;
 
         return [
             'nombre' => ['nullable', 'string', 'max:50', 'regex:/^[a-zA-ZÀ-ÖØ-öø-ÿ\s\.\-]*$/u'],
@@ -33,10 +34,9 @@ class ModificarUserRequest extends FormRequest
             'numero_telefono' => ['nullable', 'string', 'digits:9', 'numeric'],
             'direccion' => ['nullable', 'string', 'max:150'],
             'codigo_postal' => ['nullable', 'string', 'digits:5', 'numeric'],
-            'acepta_publicidad' => ['nullable', 'boolean'],
-
+            'acepta_terminos' => [Rule::requiredIf($isCompletingProfile), 'boolean'],
             'fecha_nacimiento' => [
-                Rule::requiredIf($isCompletingProfile),
+                Rule::requiredIf(is_null($user->fecha_nacimiento)),
                 'nullable',
                 'date',
                 'before_or_equal:' . now()->subYears(14)->format('Y-m-d')
@@ -56,11 +56,7 @@ class ModificarUserRequest extends FormRequest
                 'integer',
                 'exists:ciudades,id'
             ],
-            'mayor_edad_confirmado' => [
-                Rule::requiredIf($isCompletingProfile),
-                'boolean',
-                Rule::when($isCompletingProfile, ['accepted'])
-            ],
+            'mayor_edad_confirmado' => [Rule::requiredIf($isCompletingProfile), 'boolean'],
         ];
     }
 
@@ -90,7 +86,7 @@ class ModificarUserRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
-            'acepta_publicidad' => $this->boolean('acepta_publicidad'),
+            'acepta_terminos' => $this->boolean('acepta_terminos'),
             'mayor_edad_confirmado' => $this->input('mayor_edad_confirmado') ? true : false,
             'dni' => $this->input('dni') ? strtoupper(trim($this->input('dni'))) : null,
         ]);

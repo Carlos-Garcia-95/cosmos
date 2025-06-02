@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     passwordContainers.forEach((container) => {
         const passwordInput = container.querySelector('input[type="password"], input[type="text"]');
-        const toggleIcon = container.querySelector(".toggle-password");
+        const toggleIcon = container.querySelector(".toggle-password1");
 
         if (passwordInput && toggleIcon) {
             toggleIcon.addEventListener("click", function () {
@@ -50,6 +50,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (cerrarRegistroBtn) cerrarRegistroBtn.addEventListener("click", closeModal);
     if (mostrarRegistroBtn) mostrarRegistroBtn.addEventListener("click", openModal);
+
+    const cancelarRegistroBtn = modalRegistro.querySelector("#cancelarRegistroBtn");
+    if (cancelarRegistroBtn) {
+        cancelarRegistroBtn.addEventListener('click', closeModal);
+        console.log("Listener de cancelar registro añadido.");
+    } else {
+        console.log("Botón de cancelar registro no encontrado.");
+    }
 
     function showGeneralClientErrors(messages) {
         if (!clientSideErrorList || !clientSideErrorContainer) return;
@@ -203,9 +211,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         
         const recaptchaResponse = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '';
+        const recaptchaContainer = document.querySelector('.g-recaptcha');
+        console.log("recaptchaContainer:", recaptchaContainer);
         if (typeof grecaptcha !== 'undefined' && !recaptchaResponse) {
+            console.log("Error de reCAPTCHA detectado.");
             showGeneralClientErrors(["Por favor, completa el reCAPTCHA."]);
             isFormValid = false;
+        } else {
+            console.log("reCAPTCHA OK o no presente.");
         }
 
         return isFormValid;

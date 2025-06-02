@@ -562,7 +562,6 @@
                                                     <tr>
                                                         <th>ID Factura</th>
                                                         <th>Fecha</th>
-                                                        <th>Titular</th>
                                                         <th>Impuesto</th>
                                                         <th class="text-end">Neto (Base)</th>
                                                         <th class="text-end">Impuesto</th>

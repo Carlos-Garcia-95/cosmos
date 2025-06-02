@@ -366,7 +366,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         const row = `<tr>
                             <td>${factura.id_factura}</td>
                             <td>${new Date(factura.created_at).toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</td>
-                            <td>${factura.titular || 'N/A'}</td>
                             <td>${impuestoInfo}</td>
                             <td class="text-end">${factFormatCurrency(factura.monto_neto_sin_impuesto)}</td>
                             <td class="text-end">${factFormatCurrency(factura.monto_impuesto)}</td>

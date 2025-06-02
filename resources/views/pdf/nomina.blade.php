@@ -143,6 +143,22 @@
         float: right;
     }
 
+    body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('{{ public_path('images/logoCosmosCinema.png') }}');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 85%;  /* Ajusta este valor */
+    opacity: 0.5;      /* Ajusta este valor */
+    z-index: -1;
+    transform: rotate(-45deg); /* Opcional, ajusta el ángulo */
+}
+
     </style>
 </head>
 <body>

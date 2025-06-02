@@ -40,7 +40,8 @@ body {
     max-width: 500px;
     justify-content: center;
     align-items: center;
-
+    max-height: 90vh; /* O el porcentaje que prefieras */
+    overflow-y: auto;
 }
 
 .logo {

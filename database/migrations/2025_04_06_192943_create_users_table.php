@@ -37,7 +37,7 @@ return new class extends Migration
             $table->rememberToken();
             
             $table->boolean('mayor_edad_confirmado')->default(false); // Para el checkbox "Soy mayor de 14 años". Más semántico.
-            $table->boolean('acepta_publicidad')->default(false); // Para el checkbox de publicidad
+            $table->boolean('acepta_terminos')->default(false); // Para el checkbox de publicidad
 
             // Tus campos personalizados
             // Asumiendo que 'descuento' tiene 'id_descuento' como PK

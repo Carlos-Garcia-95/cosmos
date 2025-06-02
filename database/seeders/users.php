@@ -30,7 +30,7 @@ class users extends Seeder
                 'id_descuento' => 1,
                 // 'google_id' => null, // Opcional si no se registran con Google
                 // 'avatar' => null,    // Opcional
-                'acepta_publicidad' => false, // Valor por defecto para el nuevo campo
+                'acepta_terminos' => false, // Valor por defecto para el nuevo campo
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -49,7 +49,7 @@ class users extends Seeder
                 'mayor_edad_confirmado' => true,        // CORREGIDO
                 'password' => bcrypt('123456789'),
                 'id_descuento' => 2,
-                'acepta_publicidad' => true,
+                'acepta_terminos' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],[
@@ -67,7 +67,7 @@ class users extends Seeder
                 'mayor_edad_confirmado' => true,        // CORREGIDO
                 'password' => bcrypt('CosmosAdmin123'),
                 'id_descuento' => 1,
-                'acepta_publicidad' => false,
+                'acepta_terminos' => false,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -86,7 +86,7 @@ class users extends Seeder
                 'mayor_edad_confirmado' => true,        // CORREGIDO
                 'password' => bcrypt('CosmosAdmin456'),
                 'id_descuento' => 1,
-                'acepta_publicidad' => false,
+                'acepta_terminos' => false,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

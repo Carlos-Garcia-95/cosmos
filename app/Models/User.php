@@ -79,7 +79,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'google_id',
         'avatar',
         'mayor_edad_confirmado',
-        'acepta_publicidad',
+        'acepta_terminos',
         'id_descuento',      // Corresponde a la clave foránea
         'tipo_usuario',   // Corresponde a la clave foránea
         'email_verification_token',
@@ -89,7 +89,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
         'fecha_nacimiento' => 'date', // Para que Eloquent lo trate como un objeto Carbon (fecha)
         'mayor_edad_confirmado' => 'boolean',
-        'acepta_publicidad' => 'boolean',
+        'acepta_terminos' => 'boolean',
         'created_at' => 'datetime', // Si usas $table->timestamps() o definiciones explícitas
         'updated_at' => 'datetime', // Si usas $table->timestamps() o definiciones explícitas
     ];

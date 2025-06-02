@@ -57,6 +57,9 @@ Route::patch('/perfil/modificar', [UserController::class, 'modificarUser'])->nam
 //Ruta para devolver las ciudades
 Route::get('/ciudades', [CiudadController::class, 'pasar_ciudades'])->name('ciudades.pasar_ciudades');
 
+//Terminos y condiciones
+Route::get('/terminos-y-condiciones', [UserController::class, 'mostrarTerminos'])->name('terminos');
+
 //Ruta para ir al login de administradores
 Route::get('/administrador',[AdminController::class, 'mostrarLogin'])->name('administrador.loginAdministrador');
 

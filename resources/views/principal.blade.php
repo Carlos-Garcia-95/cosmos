@@ -38,7 +38,6 @@
         'resources/css/footer.css',
         'resources/css/footer_elemento.css',
     ])
-    <!-- Revisar Manera de introducir js y css en blade con vite(npm)-->
 
 </head>
 

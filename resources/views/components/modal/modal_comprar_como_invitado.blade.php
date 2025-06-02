@@ -2,6 +2,7 @@
     <div class='container_invitado' id='container_invitado'>
         @csrf
         <form>
+        @csrf
             <div class='invitado_titulo' id='invitado_titulo'>
                 Compra como Invitado
             </div>
