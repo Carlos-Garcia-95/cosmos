@@ -4,7 +4,7 @@
         <div class="logo-container">
             <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Cosmos Cinema Logo" class="logo">
         </div>
-        <form method="POST" action="{{ route('login') }}" novalidate>
+        <form method="POST" novalidate>
             @csrf
 
             <div class="form-row">

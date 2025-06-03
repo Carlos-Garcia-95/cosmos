@@ -124,7 +124,6 @@
     gap: 10px;
     margin: 0 5%;
     flex-grow: 1;
-    min-height: 0;
 }
 
 /* --- Fila Superior: Título "Asientos Seleccionados" y Botones --- */
@@ -161,7 +160,7 @@
     box-shadow: 0 2px 5px rgba(0,0,0,0.08);
     flex-grow: 1;
     overflow-y: auto;
-    min-height: 0;
+    min-height: 15vh;
     gap: 10px;
     font-size: 1em;
 }
@@ -259,50 +258,6 @@
     }
 }
 
-@media (max-height: 500px) {
-    #confirmar_container_body {
-        align-items: stretch;
-    }
-
-    .sesion_datos {
-        width: max-content;
-    }
-
-    #sesion_titulos_div,
-    #sesion_datos_div {
-        flex-grow: 1;
-        justify-content: space-between;
-        padding-top: 0;
-        padding-bottom: 0;
-        
-    }
-
-    #confirmar_titulo {
-        font-size: 1.5em;
-    }
-
-    #confirmar_container_body {
-        font-size: 1.1em;
-    }
-
-    #entradas_titulo {
-        font-size: 1.1em;
-    }
-
-    .asiento_columna_textoprecio {
-        font-size: 1em;
-    }
-
-    .asiento_columna_texto {
-        font-size: 1em;
-        white-space: normal;
-    }
-
-    .asiento_div {
-        height: 20vh;
-        min-height: 20vh;
-    }
-}
 
 @media (max-width: 768px) {
     .confirmar_container {
@@ -310,7 +265,7 @@
     }
 
     #confirmar_container_body {
-        flex-direction: column;
+        flex-direction: row;
         align-items: center;
     }
 
@@ -364,7 +319,6 @@
     }
 
     .asiento_columna {
-        flex-direction: row;
         justify-content: space-between;
         padding: 3px 0;
         border-bottom: 1px solid #eee;
@@ -460,6 +414,7 @@
         padding: 10px;
         gap: 15px;
         font-size: 0.9em;
+        height: 15vh;
     }
 
     .asiento_div_columna {

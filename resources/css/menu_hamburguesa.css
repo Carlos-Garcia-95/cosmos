@@ -33,7 +33,6 @@
     transform: translateY(-9px) rotate(-45deg);
 }
 
-
 /* Media Query for screens below 1024px */
 @media (max-width: 1023px) {
     .header-section {
@@ -87,19 +86,18 @@
     }
     /* Make sure flash message .show works inside mobile menu */
     .header-buttons.mobile-menu-active .success-message.show {
-         opacity: 1;
-         visibility: visible;
+        opacity: 1;
+        visibility: visible;
     }
-
 
     .header-buttons.mobile-menu-active button,
     .header-buttons.mobile-menu-active form button {
         width: 100%;
         padding: 12px 15px;
-        font-size: 1.1em;
+        font-size: 3.5em;
         border-top: 1px solid white;
     }
-    
+
     .header-buttons.mobile-menu-active button a,
     .header-buttons.mobile-menu-active form button a {
         display: block;
@@ -112,11 +110,8 @@
     }
 }
 
-
-
 @media (max-width: 468px) {
-.header-buttons.mobile-menu-active {
+    .header-buttons.mobile-menu-active {
         width: 100vw;
     }
-
 }
