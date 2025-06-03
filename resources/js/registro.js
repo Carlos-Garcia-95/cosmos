@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
         modalRegistro.classList.add("hidden");
         document.body.classList.remove('modal_abierto');
         resetForm();
-        modalRegistro.querySelectorAll(".error-message.backend-error").forEach(el => {
+        modalRegistro.querySelectorAll(".error-messages").forEach(el => {
             if (el.textContent.trim() !== '') {
                  el.style.display = "none"; // Ocultar solo si se mostró por error de backend
             }
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
         hideGeneralClientErrors();
         if (activeStep) clearStepFieldErrors(activeStep);
         clearInvalidClassesFromInputs();
-        modalRegistro.querySelectorAll(".error-message.backend-error").forEach(el => el.style.display = "none");
+        modalRegistro.querySelectorAll(".error-messages").forEach(el => el.style.display = "none");
     }
 
     function displayFieldError(inputElement, message) {
@@ -211,7 +211,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         
         const recaptchaResponse = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '';
-        const recaptchaContainer = document.querySelector('.g-recaptcha');
+        const recaptchaContainer = document.getElementById('recaptcha-registro');
         console.log("recaptchaContainer:", recaptchaContainer);
         if (typeof grecaptcha !== 'undefined' && !recaptchaResponse) {
             console.log("Error de reCAPTCHA detectado.");
@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    const backendErrorMessages = modalRegistro?.querySelectorAll("form .error-message.backend-error");
+    const backendErrorMessages = modalRegistro?.querySelectorAll("form .error-messages");
     let hasServerErrorsOnLoad = false;
     backendErrorMessages?.forEach(el => {
         if (el.textContent.trim() !== '') {

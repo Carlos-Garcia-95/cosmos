@@ -67,11 +67,11 @@
                 {{-- reCAPTCHA (si es para el registro manual completo) --}}
                 {{-- Si este formulario solo pide email/pass y luego hay más pasos, el reCAPTCHA iría en el último paso. --}}
                 {{-- Si este es el ÚNICO paso del registro manual antes de enviar, ponlo aquí. --}}
-                <div class="form-row" style="display: flex; justify-content: center; margin-top:15px; margin-bottom: 15px;">
+                <div class="form-row" style="display: flex; justify-content: center; flex-direction: column; margin-top:15px; margin-bottom: 15px;">
                     <div class="g-recaptcha" id="recaptcha-registro" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
-                    @if ($errors->has('g-recaptcha-response'))
-                    <div class="error-message backend-error" style="width:100%; text-align:center;">{{ $errors->first('g-recaptcha-response') }}</div>
-                    @endif
+                    @error('recaptcha_registro')
+                        <div class="error-messages" style="width:100%; text-align:center; margin-top: 5%;">{{ $message }}</div>
+                    @enderror
                 </div>
 
 

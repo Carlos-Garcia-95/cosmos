@@ -38,6 +38,9 @@
         </div>
 
         <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+        @error('recaptcha')
+            <div class="error-messages" style="width:100%; text-align:center;">{{ $message }}</div>
+        @enderror
 
         @if ($errors->any())
             <div class="validation-errors">

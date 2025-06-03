@@ -4,7 +4,7 @@
         <div class="logo-container">
             <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Cosmos Cinema Logo" class="logo">
         </div>
-        <form method="POST" novalidate>
+        <form method="POST" action="{{ route('login') }}" novalidate>
             @csrf
 
             <div class="form-row">
@@ -48,14 +48,14 @@
                 </a>
             </div>
 
-            <div class="form-row" style="display: flex; justify-content: center; margin-top:15px; margin-bottom: 15px;">
+            <div class="form-row" style="display: flex; justify-content: center; flex-direction: column; margin-top:15px; margin-bottom: 15px;">
                     <div class="g-recaptcha login-recap" id="recaptcha-login" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
-                    @if ($errors->has('g-recaptcha-response'))
-                    <div class="error-message backend-error" style="width:100%; text-align:center;">{{ $errors->first('g-recaptcha-response') }}</div>
-                    @endif
+                    @error('recaptcha_login')
+                        <div class="error-messages" style="width:100%; text-align:center; margin-top: 5%;">{{ $message }}</div>
+                    @enderror
                 </div>
 
-            <div class="client-side-errors" style="color: red; display: none; margin-bottom: 10px;"></div>
+            <div class="client-side-errors1" style="color: red; display: none; margin-bottom: 10px;"><ul></ul></div>
 
 
             <div class="button-group">

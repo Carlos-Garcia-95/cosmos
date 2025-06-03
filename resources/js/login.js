@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const volverLoginModalBtn = modalLogin?.querySelector("#volverLoginModal");
     const formLogin = modalLogin?.querySelector("form");
     const clientSideLoginErrorArea = modalLogin?.querySelector('.client-side-errors');
-    const loginPasswordContainers = modalLogin?.querySelectorAll('.password-input-container');
+    const clientSideErrorList = modalLogin.querySelector(".client-side-errors1 ul"); // Ahora apunta a modalLogin
+    const clientSideErrorContainer = clientSideErrorList?.closest(".client-side-errors1"); // Ahora apunta a modalLogin
 
     // --- Funcionalidad de mostrar/ocultar contraseña (Login) ---
     document.querySelectorAll('.password-input-container').forEach((container) => {
@@ -124,31 +125,29 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
             // --- Validación del reCAPTCHA para Login ---
-            const recaptchaContainer = modalLogin?.querySelector('.g-recaptcha .login-recap');
-            let recaptchaResponse = '';
-            if (typeof grecaptcha !== 'undefined' && recaptchaContainer) {
-                recaptchaResponse = grecaptcha.getResponse();
-                if (!recaptchaResponse) {
-                    // Intenta obtener la respuesta de nuevo (podría ser un retraso)
-                    recaptchaResponse = grecaptcha.getResponse();
-                }
-            } else {
-                
-            }
-
-            if (recaptchaContainer && typeof grecaptcha !== 'undefined' && !recaptchaResponse) {
+            const recaptchaResponse = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '';
+            const recaptchaContainer = document.getElementById('recaptcha-login');
+            console.log("recaptchaContainer:", recaptchaContainer);
+            if (typeof grecaptcha !== 'undefined' && !recaptchaResponse) {
                 console.log("Error de reCAPTCHA detectado.");
-                showErrorsJS(["Por favor, completa el reCAPTCHA."]);
+                showGeneralClientErrors(["Por favor, completa el reCAPTCHA."]);
                 isFormValid = false;
             } else {
                 console.log("reCAPTCHA OK o no presente.");
             }
+            });
+        }
 
-            if (isFormValid) {
-                event.target.submit();
-            }
-        });
-    }
+        function showGeneralClientErrors(messages) {
+            if (!clientSideErrorList || !clientSideErrorContainer) return; // Ahora estas variables se refieren al modalLogin
+            clientSideErrorList.innerHTML = '';
+            messages.forEach(msg => {
+                const li = document.createElement('li');
+                li.textContent = msg;
+                clientSideErrorList.appendChild(li);
+            });
+            clientSideErrorContainer.style.display = messages.length > 0 ? "block" : "none";
+        }
 
     // --- Funciones para abrir y cerrar modales ---
     function openModal(modal) {

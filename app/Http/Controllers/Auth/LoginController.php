@@ -28,12 +28,12 @@ class LoginController extends Controller
             'login_password' => ['required', 'string']
         ], $mensajes);
 
-        /* $recaptchaResponse = $request->input('g-recaptcha-response');
+        $recaptchaResponse = $request->input('g-recaptcha-response');
         $recaptchaSecret = env('RECAPTCHA_SECRET_KEY');
 
         if (empty($recaptchaResponse)) {
             return back()->withErrors([
-                'recaptcha' => 'Por favor, completa el desafío reCAPTCHA.',
+                'recaptcha_login' => 'Por favor, completa el desafío reCAPTCHA.',
             ])->onlyInput('login_email');
         }
 
@@ -48,9 +48,9 @@ class LoginController extends Controller
 
         if (!isset($recaptchaResult['success']) || !$recaptchaResult['success']) {
             return back()->withErrors([
-                'recaptcha' => 'La verificación reCAPTCHA falló. Inténtalo de nuevo.',
+                'recaptcha_login' => 'La verificación reCAPTCHA falló. Inténtalo de nuevo.',
             ])->onlyInput('login_email');
-        } */
+        }
 
         $authCredentials = [
             'email' => $credentials['login_email'],
@@ -87,6 +87,11 @@ class LoginController extends Controller
                 'login_email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.'
             ])->onlyInput('login_email');
         }
+    }
+
+    public function showLoginForm()
+    {
+        return view('components.login');
     }
 
     //Método para cerrar sesión
