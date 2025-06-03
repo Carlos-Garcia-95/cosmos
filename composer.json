@@ -19,6 +19,7 @@
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5",
         "fakerphp/faker": "^1.23",
+        "icanhazstring/composer-unused": "^0.9.3",
         "laravel/breeze": "*",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.13",
