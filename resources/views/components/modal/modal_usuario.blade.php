@@ -115,7 +115,7 @@
                 <div class="user-info-item form-row edit-field-container">
                     <label for ="infoAceptaTerminosEdit" class="checkbox-label">
                     <input type="checkbox" id="infoAceptaTerminosEdit" name="acepta_terminos" value="1" class="edit-field" required>
-                        <a href="{{ route('terminos') }}">Leer y aceptar los términos y condiciones</a>
+                        <a href="{{ route('footer_terminos_y_condiciones') }}">Leer y aceptar los términos y condiciones</a>
                     </label>
                     <p id="infoAceptaTerminosEditError" class="client-side-field-error error-text" style="display: none;"></p>
                 </div>

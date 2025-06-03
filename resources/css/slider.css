@@ -1,6 +1,7 @@
 /* Estilos globales */
 html {
     scroll-behavior: smooth;
+
 }
 
 body {
@@ -12,6 +13,10 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    font-family: 'Open Sans', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
     font-family: 'Roboto', sans-serif;
 }
 
@@ -63,7 +68,8 @@ body {
 
 .header-buttons button{
     padding: 10px 10px;
-    font-size: 16px;
+    font-size: 1.1em;
+    font-weight: bold;
     cursor: pointer;
     border: none;
     background-color: #000000;

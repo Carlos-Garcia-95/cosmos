@@ -7,10 +7,32 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
+    // El modal Mi Cuenta se cierra al clicar fuera del modal
+    if (modalCuenta) {
+        modalCuenta.addEventListener('click', function (event) {
+            if (event.target === modalCuenta && modalCuenta.classList.contains('flex')) {
+                closeCuentaModal();
+            }
+        });
+    }
+
+    // El modal Mi Cuenta se cierra al presionar 'Escape'
+    if (modalCuenta) {
+        document.addEventListener('keydown', function (event) {
+            if ((event.key === 'Escape' || event.keyCode === 27) && modalCuenta.classList.contains('flex')) {
+
+                event.preventDefault();
+                closeCuentaModal();
+            }
+        });
+    }
+
     const cerrarCuentaModalBtn = modalCuenta?.querySelector("#cerrarCuentaModal");
     if (cerrarCuentaModalBtn) {
         cerrarCuentaModalBtn.addEventListener('click', closeCuentaModal);
     }
+
+
 
     const modalPeliculaCartelera = document.getElementById("modal_detalle");
     const cerrarPeliculaCarteleraModalBtn = modalPeliculaCartelera?.querySelector("#cerrarPeliculaCarteleraModal");
@@ -94,6 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (modalCuenta) {
             modalCuenta.classList.remove("flex");
             modalCuenta.classList.add("hidden");
+            document.body.classList.remove('modal_abierto');
             switchToDisplayMode();
             clearAllClientErrors();
         }
@@ -297,6 +320,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
             modalCuenta.classList.remove("hidden");
             modalCuenta.classList.add("flex");
+            document.body.classList.add('modal_abierto');
         } catch (error) {
             console.error("Error al cargar y popular datos del usuario:", error);
             // No usar alert(), usar un modal personalizado si es necesario

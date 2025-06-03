@@ -42,7 +42,7 @@ Route::get('/check-email', [CheckController::class, 'checkEmail']);
 // Ruta para comprobar si el DNI existe
 Route::get('/check-dni', [CheckController::class, 'checkDni']);
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::get('/login', [AdminController::class, 'mostrarLogin'])->name('login');
 
 Route::post('/login', [LoginController::class, 'login']);
 

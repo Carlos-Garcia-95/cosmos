@@ -89,11 +89,6 @@ class LoginController extends Controller
         }
     }
 
-    public function showLoginForm()
-    {
-        return view('components.login');
-    }
-
     //Método para cerrar sesión
     public function logout(Request $request)
     {
