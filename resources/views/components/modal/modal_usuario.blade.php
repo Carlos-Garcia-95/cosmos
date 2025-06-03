@@ -1,10 +1,10 @@
 <div class="modal hidden" id="modalCuenta">
     <div class="modal-content">
-        <button class="close-button1" id="cerrarCuentaModal">&times;</button>
+       
 
         <div class="modal-header">
             <h2 class="modal-title" id="cuentaModalTitle">Mi Cuenta</h2>
-            <button class="btn btn-primary edit-button" id="editarPerfilBtn" style="display: block;">Editar Perfil</button>
+                <button class="close-button1" id="cerrarCuentaModal">&times;</button>
         </div>
 
         <div class="modal-body">
@@ -121,6 +121,8 @@
                 </div>
 
             </form> {{-- Fin del form --}}
+
+            <button class="btn btn-primary edit-button" id="editarPerfilBtn" style="display: block;">Editar Perfil</button>
 
             <div class="modal-actions">
                 <button type="button" class="btn btn-primary" id="guardarCambiosBtn" style="display: none;">Guardar Cambios</button>
