@@ -50,8 +50,8 @@
 
             <div class="form-row" style="display: flex; justify-content: center; margin-top:15px; margin-bottom: 15px;">
                     <div class="g-recaptcha login-recap" id="recaptcha-login" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
-                    @if ($errors->has('g-recaptcha-response'))
-                    <div class="error-message backend-error" style="width:100%; text-align:center;">{{ $errors->first('g-recaptcha-response') }}</div>
+                    @if ($errors->has('recaptcha'))
+                    <div class="error-message backend-error" style="width:100%; text-align:center;">{{ $errors->first('recaptcha') }}</div>
                     @endif
                 </div>
 

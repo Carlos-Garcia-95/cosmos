@@ -20,6 +20,10 @@ return [
     'redirect' => env('GOOGLE_REDIRECT_URI'),   // La URI de redireccionamiento que configuraste en Google Console
     ],
 
+    'tmdb' => [
+        'api_key' => env('API_KEY_TMDB', null),
+    ],
+
     'postmark' => [
         'token' => env('POSTMARK_TOKEN'),
     ],

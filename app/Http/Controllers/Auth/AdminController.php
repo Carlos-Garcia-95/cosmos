@@ -142,7 +142,7 @@ class AdminController extends Controller
         $pagesToFetch = $request->input('pages_to_fetch', 1);
         $searchLanguage = $request->input('language', 'en');
 
-        $apiKey = env("API_KEY_TMDB");
+        $apiKey = config('services.tmdb.api_key');
 
         if (!$apiKey) {
             return response()->json(['error' => 'API Key no configurada en el backend'], 500);
@@ -188,10 +188,6 @@ class AdminController extends Controller
                 if ($page === 1) {
                     return response()->json(['error' => 'Tipo de lista no soportado.'], 400);
                 }
-                continue;
-            }
-
-            if (empty($apiUrl)) {
                 continue;
             }
 
@@ -246,7 +242,8 @@ class AdminController extends Controller
             return response()->json(['message' => 'Esta película ya ha sido añadida.', 'status' => 'duplicate'], 409);
         }
 
-        $apiKey = env("API_KEY_TMDB");
+        $apiKey = config('services.tmdb.api_key');
+        
         if (!$apiKey) {
             return response()->json(['error' => 'API Key no configurada en el backend'], 500);
         }
@@ -678,7 +675,7 @@ class AdminController extends Controller
         $filterFechaFin = $request->input('fecha_fin');
 
         if ($selectedUserId) {
-            $selectedUser = User::with('city')->find($selectedUserId); // Carga la ciudad si es necesario para la vista
+            $selectedUser = User::with('ciudad')->find($selectedUserId); // Carga la ciudad si es necesario para la vista
             if ($selectedUser) {
                 $query = $selectedUser->nominas(); // Usa la relación definida en User
 

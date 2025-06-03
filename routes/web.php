@@ -158,7 +158,7 @@ Route::post('administrador/check-email-role', [AdminController::class, 'checkEma
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return view('administrador.dashboard');
     })->name('dashboard');
 });
 
@@ -174,9 +174,6 @@ Route::get('/recuperar_sesion/id_sesion={id_sesion}', [RecuperarSesionPelicula::
 Route::get('/auth/google', [SocialAuthController::class, 'redirectToGoogle'])->name('login.google');
 
 Route::get('/auth/google/callback', [SocialAuthController::class, 'handleGoogleCallback']);
-
-/* Route::get('/perfil/completar', [UserProfileController::class, 'showOrRequireCompleteProfile'])
-        ->name('perfil.completar'); */
 
 //Gestionar nominas del empleado, obtener nominas y descargarlas.
 
