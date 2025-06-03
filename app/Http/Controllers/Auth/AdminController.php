@@ -345,31 +345,42 @@ class AdminController extends Controller
     }
 
     public function estadoPelicula(Request $request, $id)
-    {
-        $movie = Pelicula::findOrFail($id);
+{
+    $movie = Pelicula::findOrFail($id);
+    $nuevoEstadoActiva = !$movie->activa;
 
-        $nuevoEstadoActiva = !$movie->activa;
+    Log::info("DEBUG: estadoPelicula - ID: {$id}, Activa: " . ($movie->activa ? 'true' : 'false') . ", Intento Activar: " . ($nuevoEstadoActiva ? 'true' : 'false') . ", Estreno: " . ($movie->estreno ? 'true' : 'false'));
 
-        if ($nuevoEstadoActiva === true) {
-            if (! $movie->sesiones()->exists()) {
+    if ($nuevoEstadoActiva === true) {
+        if ($movie->estreno === false) {
+            Log::info("DEBUG: estadoPelicula - Es activación de cartelera.");
+            if (!$movie->sesiones()->exists()) {
+                Log::info("DEBUG: estadoPelicula - Cartelera sin sesiones. Bloqueando.");
                 return response()->json([
                     'message' => 'No se puede activar la película en cartelera porque no tiene ninguna sesión programada.',
                     'error_type' => 'validation',
                     'movie_id' => $movie->id
                 ], 422);
+            } else {
+                Log::info("DEBUG: estadoPelicula - Cartelera con sesiones.");
             }
+        } else {
+            Log::info("DEBUG: estadoPelicula - Es activación de estreno.");
         }
-
-        $movie->activa = $nuevoEstadoActiva;
-
-        $movie->save();
-
-        return response()->json([
-            'message' => 'Estado de película actualizado con éxito.',
-            'new_status' => $movie->activa,
-            'movie_id' => $movie->id
-        ]);
+    } else {
+        Log::info("DEBUG: estadoPelicula - Es desactivación.");
     }
+
+    $movie->activa = $nuevoEstadoActiva;
+    $movie->save();
+    Log::info("DEBUG: estadoPelicula - Nuevo estado 'activa' guardado: " . ($movie->activa ? 'true' : 'false'));
+
+    return response()->json([
+        'message' => 'Estado de película actualizado con éxito.',
+        'new_status' => $movie->activa,
+        'movie_id' => $movie->id
+    ]);
+}
 
     public function EstrenoStatus($id)
     {
@@ -643,7 +654,7 @@ class AdminController extends Controller
 
         // Enviar correo a Administrador usando el email del input
         Log::info('Enviando correo a administrador', ['email' => $emailParaCorreo]);
-        Mail::to($emailParaCorreo)->send(new CredencialesEmpleado($validatedData['nombre'], $generatedEmail, $defaultPassword, $esAdmin, Str::ucfirst($nombreUserAdmin), $codigoAdminGenerado));
+        Mail::to($emailParaCorreo)->send(new CredencialesEmpleado($validatedData['nombre'], $generatedEmail, $defaultPassword, true, Str::ucfirst($nombreUserAdmin), $codigoAdminGenerado));
         Log::info('Correo a administrador enviado');
 
     } else if ($user->tipo_usuario == 2) {

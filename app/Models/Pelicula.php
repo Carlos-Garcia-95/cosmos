@@ -31,12 +31,15 @@ class Pelicula extends Model
         'puntuacion_promedio',
         'numero_votos',
         'popularidad',
+        'estreno' => 'boolean',
     ];
 
     protected $casts = [
         'adult' => 'boolean',
         'video' => 'boolean',
         'created_at' => 'datetime',
+        'activa' => 'boolean',
+        'estreno' => 'boolean', 
     ];
 
     public function generos(): BelongsToMany
