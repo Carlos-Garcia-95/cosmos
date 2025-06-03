@@ -21,6 +21,7 @@ export default defineConfig({
                 "resources/css/cartaCosmos.css",
                 "resources/js/user.js",
                 "resources/js/loginAdmin.js",
+                "resources/js/adminDashboard.js",
                 "resources/css/dashboard.css",
                 "resources/js/adminDashboardGestionarPelicula.js",
                 "resources/js/adminDashboardGestionarMenu.js",
@@ -39,8 +40,9 @@ export default defineConfig({
                 'resources/css/confirmar_seleccion.css',
                 'resources/css/invitado.css',
                 'resources/css/menu_hamburguesa.css'
-            ],
+            ], 
             refresh: true,
+            base: "./",
         }),
         vue(),
         tailwindcss(),
@@ -50,7 +52,6 @@ export default defineConfig({
             'vue': 'vue/dist/vue.esm.js',
         },
     },
-    base: "/",
     build: {
         outDir: "public/build",
         manifest: true,
