@@ -86,8 +86,7 @@
     }
     /* Make sure flash message .show works inside mobile menu */
     .header-buttons.mobile-menu-active .success-message.show {
-        opacity: 1;
-        visibility: visible;
+        display:none;
     }
 
     .header-buttons.mobile-menu-active button,
