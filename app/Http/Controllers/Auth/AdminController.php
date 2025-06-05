@@ -91,7 +91,6 @@ class AdminController extends Controller
                     $request->session()->regenerateToken();
                     return back()->withErrors([
                         'codigo_administrador' => 'El código de administrador proporcionado es incorrecto.',
-                        'email' => $request->email,
                     ])->onlyInput('email', 'codigo_administrador');
                 }
             } elseif ($user->tipo_usuario == 2) { // Asumiendo 2 es Empleado
@@ -107,7 +106,7 @@ class AdminController extends Controller
             }
         } else {
             return back()->withErrors([
-                'email' => 'Las credenciales (email y/o contraseña) proporcionadas no coinciden con nuestros registros.',
+                'email' => 'Las credenciales proporcionadas no coinciden.',
             ])->onlyInput('email');
         }
     }

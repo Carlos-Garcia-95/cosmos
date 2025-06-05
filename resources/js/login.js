@@ -1,202 +1,294 @@
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("LOGIN.JS SCRIPT EJECUTÁNDOSE Y DOMContentLoaded DISPARADO");
     const modalLogin = document.getElementById("modalLogin");
-
     if (!modalLogin) return;
 
     const mostrarLoginBtn = document.getElementById("mostrarLogin");
     const cerrarLoginBtnModalLogin = modalLogin?.querySelector("#cerrarLogin");
     const volverLoginModalBtn = modalLogin?.querySelector("#volverLoginModal");
-    const formLogin = modalLogin?.querySelector("form");
-    const clientSideLoginErrorArea = modalLogin?.querySelector('.client-side-errors');
-    const clientSideErrorList = modalLogin.querySelector(".client-side-errors1 ul"); // Ahora apunta a modalLogin
-    const clientSideErrorContainer = clientSideErrorList?.closest(".client-side-errors1"); // Ahora apunta a modalLogin
+    const formLogin = modalLogin?.querySelector("form#login-form");
+    const clientSideErrorList = modalLogin.querySelector(
+        ".client-side-errors1 ul"
+    );
+    const clientSideErrorContainer = clientSideErrorList?.closest(
+        ".client-side-errors1"
+    );
 
-    // --- Funcionalidad de mostrar/ocultar contraseña (Login) ---
-    document.querySelectorAll('.password-input-container').forEach((container) => {
-        const passwordInput = container.querySelector('input[type="password"], input[type="text"]');
-        const toggleIcon = container.querySelector(".toggle-password");
+    let loginRecaptchaWidgetId = null;
 
-        if (passwordInput && toggleIcon) {
-            toggleIcon.addEventListener("click", function () {
-                const currentType = passwordInput.getAttribute("type");
-                const newType = currentType === "password" ? "text" : "password";
-                passwordInput.setAttribute("type", newType);
-                toggleIcon.textContent = newType === "password" ? "👁️" : "🙈";
-            });
+    function renderLoginRecaptcha() {
+        const container = document.getElementById("recaptcha-login-container");
+        if (
+            container &&
+            typeof grecaptcha !== "undefined" &&
+            grecaptcha.render
+        ) {
+            if (loginRecaptchaWidgetId === null) {
+                try {
+                    loginRecaptchaWidgetId = grecaptcha.render(
+                        "recaptcha-login-container",
+                        {
+                            sitekey: container.dataset.sitekey,
+                        }
+                    );
+                } catch (e) {
+                    console.error("Error render reCAPTCHA login:", e);
+                }
+            } else {
+                grecaptcha.reset(loginRecaptchaWidgetId);
+            }
         }
-    });
-
-    // --- Funciones de utilidad para errores (Login) ---
-    function showErrorsJS(messages) {
-        if (!clientSideLoginErrorArea) return;
-        clientSideLoginErrorArea.innerHTML = messages.join('<br>');
-        clientSideLoginErrorArea.style.display = 'block';
-        modalLogin?.querySelectorAll('.error-text').forEach(el => el.style.display = 'none');
     }
 
-    function hideErrorsJS() {
-        if (!clientSideLoginErrorArea) return;
-        clientSideLoginErrorArea.innerHTML = '';
-        clientSideLoginErrorArea.style.display = 'none';
-        modalLogin?.querySelectorAll('.error-text').forEach(el => el.style.display = 'none');
+    modalLogin
+        .querySelectorAll(".password-input-container")
+        .forEach((container) => {
+            const passwordInput = container.querySelector(
+                'input[type="password"], input[type="text"]'
+            );
+            const toggleIcon = container.querySelector(".toggle-password");
+            if (passwordInput && toggleIcon) {
+                toggleIcon.addEventListener("click", function () {
+                    const currentType = passwordInput.getAttribute("type");
+                    const newType =
+                        currentType === "password" ? "text" : "password";
+                    passwordInput.setAttribute("type", newType);
+                    toggleIcon.textContent =
+                        newType === "password" ? "👁️" : "🙈";
+                });
+            }
+        });
+
+    function hideGeneralLoginErrors() {
+        if (!clientSideErrorList || !clientSideErrorContainer) return;
+        clientSideErrorList.innerHTML = "";
+        clientSideErrorContainer.style.display = "none";
     }
 
     function clearInvalidClassesLogin() {
-        modalLogin?.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+        modalLogin
+            ?.querySelectorAll("input.invalid")
+            .forEach((el) => el.classList.remove("invalid"));
     }
 
     function displayFieldErrorLogin(inputElement, message) {
-        const formRow = inputElement?.closest(".form-row");
+        if (!inputElement) return;
+        const formRow = inputElement.closest(".form-row");
         if (formRow) {
-            const errorElement = formRow.querySelector(".client-side-field-error");
+            const errorElement = formRow.querySelector(
+                ".client-side-field-error"
+            );
             if (errorElement) {
-                errorElement.innerHTML = message;
+                errorElement.textContent = message;
                 errorElement.style.display = "block";
             }
+            inputElement.classList.add("invalid");
         }
     }
 
     function clearFieldErrorLogin(inputElement) {
-        const formRow = inputElement?.closest(".form-row");
+        if (!inputElement) return;
+        const formRow = inputElement.closest(".form-row");
         if (formRow) {
-            const errorElement = formRow.querySelector(".client-side-field-error");
+            const errorElement = formRow.querySelector(
+                ".client-side-field-error"
+            );
             if (errorElement) {
-                errorElement.innerHTML = "";
+                errorElement.textContent = "";
                 errorElement.style.display = "none";
             }
+            inputElement.classList.remove("invalid");
         }
     }
 
     function clearClientFieldErrorsLogin() {
-        modalLogin?.querySelectorAll('.client-side-field-error').forEach(el => {
-            el.innerHTML = "";
-            el.style.display = "none";
-        });
+        modalLogin
+            ?.querySelectorAll(".form-row .client-side-field-error")
+            .forEach((el) => {
+                el.textContent = "";
+                el.style.display = "none";
+            });
     }
 
-    // --- Event listeners y lógica para el modal de login ---
-    if (mostrarLoginBtn) mostrarLoginBtn.addEventListener("click", () => openModal(modalLogin));
-    if (cerrarLoginBtnModalLogin) cerrarLoginBtnModalLogin.addEventListener("click", () => closeModal(modalLogin, true));
-    if (volverLoginModalBtn) volverLoginModalBtn.addEventListener("click", () => closeModal(modalLogin, true));
+    function showGeneralClientErrors(messages) {
+        if (!clientSideErrorList || !clientSideErrorContainer) return;
+        clientSideErrorList.innerHTML = "";
+        messages.forEach((msg) => {
+            const li = document.createElement("li");
+            li.textContent = msg;
+            clientSideErrorList.appendChild(li);
+        });
+        clientSideErrorContainer.style.display =
+            messages.length > 0 ? "block" : "none";
+    }
 
-    if (formLogin) {
-        formLogin.addEventListener("submit", async function (event) {
-            console.log('Submit del formulario de login detectado.');
-            event.preventDefault();
-
-            hideErrorsJS();
-            clearInvalidClassesLogin();
-            clearClientFieldErrorsLogin();
-
-            let isFormValid = true;
-
-            const emailInput = formLogin.querySelector('[name="login_email"]');
-            const passwordInput = formLogin.querySelector('[name="login_password"]');
-
-            console.log('Elemento emailInput:', emailInput);
-            console.log('Elemento passwordInput:', passwordInput);
-
-            console.log('Valor del email:', emailInput?.value);
-            console.log('Valor de la contraseña:', passwordInput?.value);
-
-            if (!emailInput || !emailInput.value?.trim()) {
-                console.log('Error: Email está vacío.');
-                displayFieldErrorLogin(emailInput, "El email es obligatorio.");
-                if (emailInput) emailInput.classList.add("invalid");
-                isFormValid = false;
-            } else if (!/\S+@\S+\.\S+/.test(emailInput.value)) {
-                console.log('Error: Email no válido:', emailInput.value);
-                displayFieldErrorLogin(emailInput, "Por favor, introduce un email válido.");
-                if (emailInput) emailInput.classList.add("invalid");
-                isFormValid = false;
-            } else {
-                clearFieldErrorLogin(emailInput);
-                if (emailInput) emailInput.classList.remove("invalid");
-            }
-
-            if (!passwordInput || !passwordInput.value?.trim()) {
-                console.log('Error: Contraseña está vacía.');
-                displayFieldErrorLogin(passwordInput, "La contraseña es obligatoria.");
-                if (passwordInput) passwordInput.classList.add("invalid");
-                isFormValid = false;
-            } else {
-                clearFieldErrorLogin(passwordInput);
-                if (passwordInput) passwordInput.classList.remove("invalid");
-            }
-
-            // --- Validación del reCAPTCHA para Login ---
-            const recaptchaResponse = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '';
-            const recaptchaContainer = document.getElementById('recaptcha-login');
-            console.log("recaptchaContainer:", recaptchaContainer);
-            if (typeof grecaptcha !== 'undefined' && !recaptchaResponse) {
-                console.log("Error de reCAPTCHA detectado.");
-                showGeneralClientErrors(["Por favor, completa el reCAPTCHA."]);
-                isFormValid = false;
-            } else {
-                console.log("reCAPTCHA OK o no presente.");
-            }
-            });
-        }
-
-        function showGeneralClientErrors(messages) {
-            if (!clientSideErrorList || !clientSideErrorContainer) return; // Ahora estas variables se refieren al modalLogin
-            clientSideErrorList.innerHTML = '';
-            messages.forEach(msg => {
-                const li = document.createElement('li');
-                li.textContent = msg;
-                clientSideErrorList.appendChild(li);
-            });
-            clientSideErrorContainer.style.display = messages.length > 0 ? "block" : "none";
-        }
-
-    // --- Funciones para abrir y cerrar modales ---
-    function openModal(modal) {
-        if (modal) {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.classList.add('modal_abierto');
-            const firstInput = modal.querySelector('input:not([type="hidden"]), select, textarea');
+    function openModalLogin() {
+        // Renombrada para ser específica
+        if (modalLogin) {
+            modalLogin.classList.remove("hidden");
+            modalLogin.classList.add("flex");
+            document.body.classList.add("modal_abierto");
+            renderLoginRecaptcha();
+            const firstInput = modalLogin.querySelector(
+                'input:not([type="hidden"]), select, textarea'
+            );
             if (firstInput) {
                 setTimeout(() => firstInput.focus(), 50);
             }
-            console.log('Modal de login abierto.');
         }
     }
 
-    function closeModal(modal, reset = false) {
-        if (modal) {
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-            document.body.classList.remove('modal_abierto');
-            if (reset && modal.querySelector('form')) {
-                modal.querySelector('form').reset();
-                const errorContainers = modal.querySelectorAll('.error-text, .client-side-field-error');
-                errorContainers.forEach(el => el.style.display = 'none');
-                hideErrorsJS();
-                clearInvalidClassesLogin();
+    function closeModalLogin(reset = false) {
+        // Renombrada para ser específica
+        if (modalLogin) {
+            modalLogin.classList.remove("flex");
+            modalLogin.classList.add("hidden");
+            document.body.classList.remove("modal_abierto");
+            if (reset && formLogin) {
+                formLogin.reset();
                 clearClientFieldErrorsLogin();
+                hideGeneralLoginErrors();
+                clearInvalidClassesLogin();
+                modalLogin.querySelectorAll(".error-text").forEach((el) => {
+                    el.textContent = "";
+                    el.style.display = "none";
+                });
+                if (
+                    typeof grecaptcha !== "undefined" &&
+                    grecaptcha.reset &&
+                    loginRecaptchaWidgetId !== null
+                ) {
+                    grecaptcha.reset(loginRecaptchaWidgetId);
+                }
             }
         }
     }
 
-    // --- Lógica para mostrar modales si hay errores del servidor al cargar la página ---
-    const hasLoginServerErrors = modalLogin?.querySelector("form .error-text") !== null;
-    if (hasLoginServerErrors) {
-        openModal(modalLogin);
-    } else if (modalLogin && !modalLogin.classList.contains('flex')) {
-        modalLogin.classList.add('hidden');
+    if (mostrarLoginBtn)
+        mostrarLoginBtn.addEventListener("click", openModalLogin);
+    if (cerrarLoginBtnModalLogin)
+        cerrarLoginBtnModalLogin.addEventListener("click", () =>
+            closeModalLogin(true)
+        );
+    if (volverLoginModalBtn)
+        volverLoginModalBtn.addEventListener("click", () =>
+            closeModalLogin(true)
+        );
+
+    if (formLogin) {
+        formLogin.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            hideGeneralLoginErrors();
+            clearInvalidClassesLogin();
+            clearClientFieldErrorsLogin();
+            modalLogin
+                .querySelectorAll(".error-text")
+                .forEach((el) => (el.style.display = "none"));
+
+            let isFormValid = true;
+            const emailInput = formLogin.querySelector('[name="login_email"]');
+            const passwordInput = formLogin.querySelector(
+                '[name="login_password"]'
+            );
+
+            if (!emailInput || !emailInput.value?.trim()) {
+                displayFieldErrorLogin(emailInput, "El email es obligatorio.");
+                isFormValid = false;
+            } else if (!/\S+@\S+\.\S+/.test(emailInput.value)) {
+                displayFieldErrorLogin(
+                    emailInput,
+                    "Por favor, introduce un email válido."
+                );
+                isFormValid = false;
+            } else {
+                clearFieldErrorLogin(emailInput);
+            }
+
+            if (!passwordInput || !passwordInput.value?.trim()) {
+                displayFieldErrorLogin(
+                    passwordInput,
+                    "La contraseña es obligatoria."
+                );
+                isFormValid = false;
+            } else {
+                clearFieldErrorLogin(passwordInput);
+            }
+
+            const recaptchaLoginContainer = document.getElementById(
+                "recaptcha-login-container"
+            );
+            let recaptchaResponseLogin = "";
+            if (
+                typeof grecaptcha !== "undefined" &&
+                loginRecaptchaWidgetId !== null
+            ) {
+                recaptchaResponseLogin = grecaptcha.getResponse(
+                    loginRecaptchaWidgetId
+                );
+            }
+
+            if (
+                recaptchaLoginContainer &&
+                typeof grecaptcha !== "undefined" &&
+                loginRecaptchaWidgetId !== null &&
+                recaptchaResponseLogin.length === 0
+            ) {
+                showGeneralClientErrors(["Por favor, completa el reCAPTCHA."]);
+                isFormValid = false;
+            } else if (
+                recaptchaLoginContainer &&
+                (loginRecaptchaWidgetId === null ||
+                    typeof grecaptcha === "undefined")
+            ) {
+                showGeneralClientErrors([
+                    "Hubo un problema con el reCAPTCHA. Inténtalo de nuevo.",
+                ]);
+                isFormValid = false;
+            }
+
+            if (isFormValid) {
+                event.target.submit();
+            }
+        });
     }
 
-    // --- Cerrar modales con la tecla Escape y al hacer clic fuera ---
-    document.addEventListener('keydown', function (event) {
-        if ((event.key === 'Escape' || event.keyCode === 27)) {
-            if (modalLogin?.classList.contains('flex')) closeModal(modalLogin, true);
+    const loginFormForServerErrors = document.getElementById("login-form");
+    let hasLoginServerErrors = false;
+    if (loginFormForServerErrors) {
+        const serverErrorMessages =
+            loginFormForServerErrors.querySelectorAll(".error-text");
+        serverErrorMessages.forEach((el) => {
+            if (el.textContent.trim() !== "") {
+                hasLoginServerErrors = true;
+                el.style.display = "block";
+            }
+        });
+    }
+
+    if (hasLoginServerErrors) {
+        if (
+            modalLogin &&
+            (modalLogin.classList.contains("hidden") ||
+                !modalLogin.classList.contains("flex"))
+        ) {
+            openModalLogin();
+        }
+    }
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" || event.keyCode === 27) {
+            if (modalLogin?.classList.contains("flex")) closeModalLogin(true);
         }
     });
 
-    document.addEventListener('click', function (event) {
-        if (event.target === modalLogin && modalLogin.classList.contains('flex')) {
-            closeModal(modalLogin, true);
-        }
-    });
+    if (modalLogin) {
+        modalLogin.addEventListener("click", function (event) {
+            if (
+                event.target === modalLogin &&
+                modalLogin.classList.contains("flex")
+            ) {
+                closeModalLogin(true);
+            }
+        });
+    }
 });

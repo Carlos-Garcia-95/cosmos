@@ -20,7 +20,7 @@
             <hr style="margin-bottom: 20px; border-top: 1px solid #eee;">
         </div>
 
-        <form method="POST" action="{{ route('registro')}}" id="formRegistroManual">
+        <form method="POST" action="{{ route('registro')}}">
             @csrf
 
             {{-- PASO 1: Email y Contraseña --}}
@@ -68,7 +68,7 @@
                 {{-- Si este formulario solo pide email/pass y luego hay más pasos, el reCAPTCHA iría en el último paso. --}}
                 {{-- Si este es el ÚNICO paso del registro manual antes de enviar, ponlo aquí. --}}
                 <div class="form-row" style="display: flex; justify-content: center; flex-direction: column; margin-top:15px; margin-bottom: 15px;">
-                    <div class="g-recaptcha" id="recaptcha-registro" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                    <div class="g-recaptcha" id="recaptcha-registro-container" data-sitekey="{{ env('RECAPTCHA_SITE_KEY_REGISTRO') }}"></div>
                     @error('recaptcha_registro')
                         <div class="error-messages" style="width:100%; text-align:center; margin-top: 5%;">{{ $message }}</div>
                     @enderror

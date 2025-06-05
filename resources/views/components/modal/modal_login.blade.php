@@ -4,7 +4,7 @@
         <div class="logo-container">
             <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Cosmos Cinema Logo" class="logo">
         </div>
-        <form method="POST" action="{{ route('login') }}" novalidate>
+        <form method="POST" id="login-form" action="{{ route('login') }}" novalidate>
             @csrf
 
             <div class="form-row">
@@ -48,8 +48,8 @@
                 </a>
             </div>
 
-            <div class="form-row" style="display: flex; justify-content: center; flex-direction: column; margin-top:15px; margin-bottom: 15px;">
-                    <div class="g-recaptcha login-recap" id="recaptcha-login" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                <div class="form-row" style="display: flex; justify-content: center; flex-direction: column; margin-top:15px; margin-bottom: 15px;">
+                    <div class="g-recaptcha" id="recaptcha-login-container" data-sitekey="{{ env('RECAPTCHA_SITE_KEY_LOGIN') }}"></div>
                     @error('recaptcha_login')
                         <div class="error-messages" style="width:100%; text-align:center; margin-top: 5%;">{{ $message }}</div>
                     @enderror

@@ -11,10 +11,28 @@ document.addEventListener("DOMContentLoaded", function () {
     const clientSideErrorList = modalRegistro.querySelector(".client-side-errors ul");
     const clientSideErrorContainer = clientSideErrorList?.closest(".client-side-errors");
 
+    let registroRecaptchaWidgetId = null;
+
+    function renderRegistroRecaptcha() {
+        const container = document.getElementById('recaptcha-registro-container');
+        if (container && typeof grecaptcha !== 'undefined' && grecaptcha.render) {
+            if (registroRecaptchaWidgetId === null) {
+                try {
+                    registroRecaptchaWidgetId = grecaptcha.render('recaptcha-registro-container', {
+                        'sitekey': container.dataset.sitekey
+                    });
+                } catch (e) {
+                    console.error("Error render reCAPTCHA registro:", e);
+                }
+            } else {
+                grecaptcha.reset(registroRecaptchaWidgetId);
+            }
+        }
+    }
 
     passwordContainers.forEach((container) => {
         const passwordInput = container.querySelector('input[type="password"], input[type="text"]');
-        const toggleIcon = container.querySelector(".toggle-password1");
+        const toggleIcon = container.querySelector(".toggle-password"); // Asegúrate que este selector es correcto, en tu HTML original era .toggle-password1
 
         if (passwordInput && toggleIcon) {
             toggleIcon.addEventListener("click", function () {
@@ -30,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
         modalRegistro.classList.remove("hidden");
         modalRegistro.classList.add("flex");
         document.body.classList.add('modal_abierto');
+        renderRegistroRecaptcha();
         const firstInput = activeStep?.querySelector('input:not([type="hidden"]), select, textarea');
         if (firstInput) {
             setTimeout(() => firstInput.focus(), 50);
@@ -41,9 +60,12 @@ document.addEventListener("DOMContentLoaded", function () {
         modalRegistro.classList.add("hidden");
         document.body.classList.remove('modal_abierto');
         resetForm();
+        if (typeof grecaptcha !== 'undefined' && grecaptcha.reset && registroRecaptchaWidgetId !== null) {
+            grecaptcha.reset(registroRecaptchaWidgetId);
+        }
         modalRegistro.querySelectorAll(".error-messages").forEach(el => {
             if (el.textContent.trim() !== '') {
-                 el.style.display = "none"; // Ocultar solo si se mostró por error de backend
+                 el.style.display = "none";
             }
         });
     }
@@ -54,9 +76,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const cancelarRegistroBtn = modalRegistro.querySelector("#cancelarRegistroBtn");
     if (cancelarRegistroBtn) {
         cancelarRegistroBtn.addEventListener('click', closeModal);
-        console.log("Listener de cancelar registro añadido.");
-    } else {
-        console.log("Botón de cancelar registro no encontrado.");
     }
 
     function showGeneralClientErrors(messages) {
@@ -120,17 +139,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 el.textContent = "";
                 el.style.display = "none";
             });
-        } else {
-            console.warn("clearStepFieldErrors: stepElement inválido:", stepElement);
         }
     }
 
     async function checkEmailExists(emailInput) {
         if (!emailInput || !emailInput.value.trim()) {
             clearFieldError(emailInput);
-            return true; // Si está vacío, no está "ocupado", la validación de 'required' se encarga
+            return true;
         }
-
         const email = emailInput.value.trim();
         try {
             const response = await fetch(`${checkUrlBase}email?email=${encodeURIComponent(email)}`);
@@ -143,7 +159,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 displayFieldError(emailInput, "Este email ya está registrado.");
                 return false;
             } else {
-                clearFieldError(emailInput); // Limpiar si NO existe y previamente había error
+                clearFieldError(emailInput);
                 return true;
             }
         } catch (error) {
@@ -209,18 +225,21 @@ document.addEventListener("DOMContentLoaded", function () {
                 isFormValid = false;
             }
         }
-        
-        const recaptchaResponse = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : '';
-        const recaptchaContainer = document.getElementById('recaptcha-registro');
-        console.log("recaptchaContainer:", recaptchaContainer);
-        if (typeof grecaptcha !== 'undefined' && !recaptchaResponse) {
-            console.log("Error de reCAPTCHA detectado.");
-            showGeneralClientErrors(["Por favor, completa el reCAPTCHA."]);
-            isFormValid = false;
-        } else {
-            console.log("reCAPTCHA OK o no presente.");
+
+        const recaptchaRegistroContainer = document.getElementById('recaptcha-registro-container');
+        let recaptchaResponseRegistro = '';
+        if (typeof grecaptcha !== 'undefined' && registroRecaptchaWidgetId !== null) {
+            recaptchaResponseRegistro = grecaptcha.getResponse(registroRecaptchaWidgetId);
         }
 
+        if (recaptchaRegistroContainer && typeof grecaptcha !== 'undefined' && registroRecaptchaWidgetId !== null && recaptchaResponseRegistro.length === 0) {
+            showGeneralClientErrors(["Por favor, completa el reCAPTCHA."]);
+            isFormValid = false;
+        } else if (recaptchaRegistroContainer && (registroRecaptchaWidgetId === null || typeof grecaptcha === 'undefined')) {
+             showGeneralClientErrors(["Hubo un problema con el reCAPTCHA. Inténtalo de nuevo."]);
+             isFormValid = false;
+        }
+        
         return isFormValid;
     }
 
@@ -235,18 +254,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (isFormValid) {
                 event.target.submit();
-            } else {
-                console.log("Validación del cliente (registro) fallida.");
             }
         });
     }
 
-    const backendErrorMessages = modalRegistro?.querySelectorAll("form .error-messages");
+    const backendErrorMessages = modalRegistro?.querySelectorAll("form .error-messages, form .error-text"); // Incluir .error-text si también se usa
     let hasServerErrorsOnLoad = false;
     backendErrorMessages?.forEach(el => {
         if (el.textContent.trim() !== '') {
             hasServerErrorsOnLoad = true;
-            el.style.display = "block"; // Asegurar que se muestren si tienen contenido
+            el.style.display = "block";
         }
     });
 
@@ -254,34 +271,18 @@ document.addEventListener("DOMContentLoaded", function () {
         if (modalRegistro && (modalRegistro.classList.contains("hidden") || !modalRegistro.classList.contains("flex"))) {
             openModal();
         }
-    } else {
-        if (modalRegistro && !modalRegistro.classList.contains("flex") && !modalRegistro.classList.contains("hidden")) {
-             modalRegistro.classList.add("hidden"); // Asegurar que esté oculto si no hay errores al cargar
-        } else if (modalRegistro && modalRegistro.classList.contains("flex")) {
-            // Si está flex pero no debería, ocultarlo.
-            // Esto es más para el estado inicial antes de cualquier interacción.
-        }
     }
 
-
-    // Para que el modal registro se cierre al presionar Escape (también se limpia de datos)
     if (modalRegistro) {
         document.addEventListener('keydown', function (event) {
             if ((event.key === 'Escape' || event.keyCode === 27) && modalRegistro.classList.contains('flex')) {
                 closeModal();
             }
         });
-    }
-
-
-    // Para que el modal registro se cierre al clicar fuera del modal (también se limpia de datos)
-    if (modalRegistro) {
         modalRegistro.addEventListener('click', function (event) {
             if (event.target === modalRegistro && modalRegistro.classList.contains('flex')) {
                 closeModal();
             }
         });
     }
-
-
 });
