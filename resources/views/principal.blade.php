@@ -23,7 +23,7 @@
         'resources/js/login.js', 
         'resources/js/entradas.js', 
         'resources/css/compraEntradas.css',
-        "resources/js/adminDashboard.js"
+        "resources/js/adminDashboard.js",
         'resources/js/user.js',
         'resources/css/user_modal.css', 
         'resources/js/cartaCosmos.js',
