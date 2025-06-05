@@ -67,7 +67,7 @@
             <p>A continuación, se presenta un listado más detallado de las cookies que pueden ser utilizadas en nuestro Sitio Web. Esta lista se actualiza periódicamente, aunque es posible que durante la actualización alguna cookie deje de estar incluida temporalmente. Le recomendamos consultar nuestro panel de configuración de cookies para obtener la información más actualizada.</p>
             
             <h3 class="legal-subsection-title">Cookies Propias</h3>
-            <div class="table-responsive"> {{-- Para hacer la tabla responsive si es muy ancha --}}
+            <div class="table-responsive">
                 <table>
                     <thead>
                         <tr>
@@ -92,44 +92,39 @@
                             <td>Registra la aceptación o rechazo de las categorías de cookies por parte del usuario.</td>
                             <td>Persistente (ej. 365 días)</td>
                         </tr>
-                        {{-- Añade más ejemplos de cookies propias que uses, simplificando la información --}}
                     </tbody>
                 </table>
             </div>
 
             <h3 class="legal-subsection-title">Cookies de Terceros</h3>
             <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>PROVEEDOR / COOKIE(S)</th>
-                            <th>PROPÓSITO</th>
-                            <th>MÁS INFORMACIÓN (Política de Privacidad/Cookies del Tercero)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Google Analytics (ej. <code>_ga</code>, <code>_gid</code>)</td>
-                            <td>Análisis estadístico del comportamiento de los usuarios en el sitio web, medición de audiencias.</td>
-                            <td><a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener noreferrer">Google Cookies Policy</a></td>
-                        </tr>
-                        <tr>
-                            <td>Google Ads / DoubleClick (ej. <code>IDE</code>)</td>
-                            <td>Publicidad personalizada, medición de la efectividad de campañas.</td>
-                            <td><a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">Google Advertising Policies</a></td>
-                        </tr>
-                        <tr>
-                            <td>Facebook (ej. <code>fbp</code>, <code>fr</code>)</td>
-                            <td>Publicidad personalizada en plataformas de Facebook, funcionalidades sociales (like, share).</td>
-                            <td><a href="https://www.facebook.com/policies/cookies/" target="_blank" rel="noopener noreferrer">Facebook Cookies Policy</a></td>
-                        </tr>
-                        {{-- Incluye otros proveedores importantes como YouTube si incrustas vídeos, etc. --}}
-                        {{-- Es importante ser transparente pero no es necesario listar cada una de las cookies técnicas de estos proveedores si son muchas,
-                             sino el proveedor y su propósito general, y enlazar a su política.
-                             Un panel de control de cookies detallado es el lugar ideal para la lista exhaustiva. --}}
-                    </tbody>
-                </table>
-            </div>
+    <table>
+        <thead>
+            <tr>
+                <th>COOKIE</th>
+                <th>CONTENIDO/PROPÓSITO</th>
+                <th>DURACIÓN</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>session_id</code></td>
+                <td>Identificador único de sesión para mantener el estado del usuario durante la navegación (ej. carrito de compra, login).</td>
+                <td>Fin de sesión</td>
+            </tr>
+            <tr>
+                <td><code>user_prefs</code></td>
+                <td>Almacena preferencias del usuario como cine favorito, idioma, etc.</td>
+                <td>Persistente (ej. 365 días)</td>
+            </tr>
+            <tr>
+                <td><code>cookie_consent_status</code></td>
+                <td>Registra la aceptación o rechazo de las categorías de cookies por parte del usuario.</td>
+                <td>Persistente (ej. 365 días)</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
             <p><em>Nota: La información sobre cookies de terceros es proporcionada por dichos terceros y está sujeta a sus propias políticas. Cosmos Cinema no es responsable de las prácticas de privacidad de estos terceros.</em></p>
         </section>
 

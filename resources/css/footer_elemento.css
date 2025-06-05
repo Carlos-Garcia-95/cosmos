@@ -129,11 +129,13 @@
 @media (max-width: 480px) {
     .footer-section {
         width: 100%;
+        max-width: none;
     }
 
     .legal-content-container {
         margin: auto;
         border-radius: 0;
+        max-width: 80%;
     }
 
     .legal-document-header h1 {
@@ -142,6 +144,18 @@
 
     .legal-section h2 {
         font-size: 1.3em;
+    }
+
+    .legal-section ul,
+    .legal-section ol {
+        margin-left: 0;
+        margin-bottom: 0;
+        padding-left: 15px;
+        text-align: justify;
+    }
+
+    .footer-content {
+        gap: 0;
     }
 }
 
@@ -231,8 +245,7 @@
 }
 
 .faq-answer-details {
-    padding: 0px 15px 15px 15px;
-    /* Padding cuando está abierto */
+    padding: 5px 15px 15px 15px;
     border-top: 1px solid #e0e0e0;
     background-color: black;
     color: white;
@@ -257,3 +270,116 @@
     list-style: none;
     /* Para Firefox */
 }
+
+
+
+
+
+/* TABLA DE POLÍTICA DE COOKIES */
+
+/* Estilos base para la tabla (vista de escritorio) */
+.table-responsive {
+    overflow-x: auto; /* Solo como fallback si los estilos responsivos fallan o para tablas muy anchas en escritorio */
+    margin-bottom: 1.5em;
+}
+
+.table-responsive table {
+    width: 100%;
+    border-collapse: collapse; /* Colapsa los bordes para un look más limpio */
+    font-size: 0.9rem; /* Ajusta el tamaño de fuente base */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.table-responsive th,
+.table-responsive td {
+    padding: 12px 15px; /* Espaciado interno generoso */
+    text-align: left;
+    border: 1px solid #ddd; /* Bordes sutiles */
+}
+
+.table-responsive th {
+    background-color: #f0f0f0; /* Color de fondo para los encabezados */
+    color: #333;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.table-responsive tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Rayado de cebra para las filas */
+}
+
+.table-responsive tbody tr:hover {
+    background-color: #f1f1f1; /* Efecto hover para las filas */
+}
+
+.table-responsive code {
+    background-color: #e8e8e8;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+}
+
+/* Estilos responsivos (para pantallas pequeñas) */
+@media screen and (max-width: 768px) {
+    .table-responsive table {
+        border: 0; /* Quitar el borde general de la tabla */
+        box-shadow: none; /* Quitar sombra en modo móvil */
+    }
+
+    .table-responsive thead {
+        display: none;
+    }
+
+    .table-responsive tr {
+        display: block; /* Cada fila se convierte en un bloque */
+        margin-bottom: 1em; /* Espacio entre "tarjetas" de fila */
+        border: 1px solid #ddd; /* Borde para cada tarjeta de fila */
+        border-radius: 5px;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        background-color: #fff; /* Asegurar fondo blanco para cada tarjeta */
+    }
+     .table-responsive tbody tr:nth-child(even) {
+        background-color: #fff; /* Resetear el rayado de cebra para el modo tarjeta */
+    }
+     .table-responsive tbody tr:hover {
+        background-color: #fff; /* Resetear hover para el modo tarjeta si es necesario */
+    }
+
+    .table-responsive :first-child {
+        text-align: center;
+    }
+
+
+    .table-responsive td {
+        display: block; /* Cada celda se convierte en un bloque */
+        position: relative; /* Necesario para posicionar el pseudo-elemento ::before */
+        border-bottom: 1px solid #eee; /* Separador entre datos dentro de una tarjeta */
+    }
+
+    .table-responsive td:last-child {
+        border-bottom: 0; /* Quitar el borde inferior de la última celda de la tarjeta */
+    }
+
+    .table-responsive td:before {
+        /* Muestra el contenido del atributo data-label */
+        content: attr(data-label);
+        position: absolute;
+        left: 15px; /* Espaciado desde la izquierda de la celda */
+        width: calc(50% - 30px); /* Ancho de la etiqueta, ajustando por el padding */
+        padding-right: 10px;
+        white-space: normal; /* Permite que las etiquetas largas se ajusten en varias líneas */
+        font-weight: bold;
+        color: #555;
+        text-transform: uppercase; /* Opcional, para las etiquetas */
+        font-size: 0.8em;
+    }
+
+    .table-responsive code {
+        /* Ajustes para el código si es necesario en móvil */
+        font-size: 0.95em;
+        word-break: break-all; /* Para IDs o valores largos de código */
+    }
+}
+

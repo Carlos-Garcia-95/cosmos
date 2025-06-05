@@ -13,7 +13,7 @@
                 <div class="faq-answer-details">
                     <p>Puedes comprar tus entradas de varias maneras:</p>
                     <ul>
-                        <li><strong>Online:</strong> A través de nuestro sitio web [Enlace] de forma rápida y segura.</li>
+                        <li><strong>Online:</strong> A través de nuestro <a href="{{ route('principal') }}">sitio web </a> de forma rápida y segura.</li>
                         <li><strong>En Taquilla:</strong> Directamente en las taquillas de nuestros cines.</li>
                     </ul>
                 </div>
@@ -45,7 +45,7 @@
                 <div class="faq-answer-details">
                     <p>Puedes comprar tus entradas de varias maneras:</p>
                     <ul>
-                        <li><strong>Online:</strong> A través de nuestro sitio web <a href="{{ route('principal') }}">www.cosmoscinema.com/cartelera</a> de forma rápida y segura.</li>
+                        <li><strong>Online:</strong> A través de nuestro <a href="{{ route('principal') }}"> sitio web</a> de forma rápida y segura.</li>
                         <li><strong>En Taquilla:</strong> Directamente en las taquillas de cualquiera de nuestros cines durante el horario de apertura.</li>
                         <li><strong>App Móvil (si aplica):</strong> Si disponemos de aplicación móvil, también podrás adquirir tus entradas desde allí.</li>
                     </ul>
@@ -163,7 +163,7 @@
              <details class="faq-item-details">
                 <summary class="faq-question-summary">¿Cómo puedo enterarme de los próximos estrenos y promociones?</summary>
                 <div class="faq-answer-details">
-                    <p>La mejor forma de estar al día es suscribiéndote a nuestro boletín de noticias a través del Sitio Web. También puedes seguirnos en nuestras redes sociales (<a href="https://facebook.com/cosmoscinema" target="_blank" rel="noopener noreferrer">Facebook</a>, <a href="https://instagram.com/cosmoscinema" target="_blank" rel="noopener noreferrer">Instagram</a>) y visitar nuestra sección de "<a href="{{ route('principal') }}">Próximos Estrenos</a>" en la web.</p>
+                    <p>La mejor forma de estar al día es suscribiéndote a nuestro boletín de noticias a través del Sitio Web. También puedes seguirnos en nuestras redes sociales (<a href="https://facebook.com/" target="_blank" rel="noopener noreferrer">Facebook</a>, <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a>) y visitar nuestra sección de "<a href="{{ route('principal') }}">Próximos Estrenos</a>" en la web.</p>
                 </div>
             </details>
 
