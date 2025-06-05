@@ -30,7 +30,7 @@ class RegisterController extends Controller
 
         $verificationUrl = 'https://www.google.com/recaptcha/api/siteverify';
         $response = Http::asForm()->post($verificationUrl, [
-            'secret' => env('RECAPTCHA_SECRET_KEY'),
+            'secret' => env('RECAPTCHA_SECRET_KEY_REGISTRO'),
             'response' => $recaptchaResponse,
             'remoteip' => $request->ip(),
         ]);

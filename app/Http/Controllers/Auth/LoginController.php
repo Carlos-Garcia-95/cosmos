@@ -29,7 +29,7 @@ class LoginController extends Controller
         ], $mensajes);
 
         $recaptchaResponse = $request->input('g-recaptcha-response');
-        $recaptchaSecret = env('RECAPTCHA_SECRET_KEY');
+        $recaptchaSecret = env('RECAPTCHA_SECRET_KEY_LOGIN');
 
         if (empty($recaptchaResponse)) {
             return back()->withErrors([
@@ -84,7 +84,7 @@ class LoginController extends Controller
             }
         } else {
             return back()->withErrors([
-                'login_email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.'
+                'login_password' => 'Las credenciales proporcionadas no coinciden con nuestros registros.'
             ])->onlyInput('login_email');
         }
     }

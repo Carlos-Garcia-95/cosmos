@@ -214,6 +214,7 @@
                                     <img id="menu-item-foto-preview" src="#" alt="Vista previa de la foto" style="max-width: 100px; max-height: 100px; display: none; margin-top: 10px;" />
                                     <input type="hidden" id="menu-item-current-foto-ruta" name="current_foto_ruta">
                                 </div>
+                                <div class="menu-form-messages" id="menu-form-message" style="display: none; text-align: center; margin-bottom: 15px; font-weight: bold;"></div>
                                 <div id="botonesEditar">
                                     <button type="button" id="cancel-menu-item-button">Cancelar</button>
                                     <button type="submit" id="save-menu-item-button">Guardar</button>
