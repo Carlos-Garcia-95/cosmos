@@ -279,43 +279,51 @@
 
 /* Estilos base para la tabla (vista de escritorio) */
 .table-responsive {
-    overflow-x: auto; /* Solo como fallback si los estilos responsivos fallan o para tablas muy anchas en escritorio */
+    overflow-x: auto;
     margin-bottom: 1.5em;
 }
 
 .table-responsive table {
     width: 100%;
-    border-collapse: collapse; /* Colapsa los bordes para un look más limpio */
-    font-size: 0.9rem; /* Ajusta el tamaño de fuente base */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Sombra un poco más pronunciada para destacar sobre el fondo */
+    background-color: #a0a0a0;
+    color: white;
 }
 
 .table-responsive th,
 .table-responsive td {
-    padding: 12px 15px; /* Espaciado interno generoso */
+    padding: 12px 15px;
     text-align: left;
-    border: 1px solid #ddd; /* Bordes sutiles */
+    border: 1px solid black; /* Bordes un poco más oscuros para definir celdas sobre #a0a0a0 */
 }
 
 .table-responsive th {
-    background-color: #f0f0f0; /* Color de fondo para los encabezados */
-    color: #333;
+    /* Un gris más oscuro para el encabezado, pero que aún contraste con el texto */
+    background-color: rgb(52, 52, 52);
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
+.table-responsive tbody tr {
+    background-color: #1a1a1a; /* Color base para todas las filas */
+}
+
 .table-responsive tbody tr:nth-child(even) {
-    background-color: #f9f9f9; /* Rayado de cebra para las filas */
+    /* Un gris ligeramente más claro que el fondo base para el efecto de cebra */
+    background-color: #323232;
 }
 
 .table-responsive tbody tr:hover {
-    background-color: #f1f1f1; /* Efecto hover para las filas */
+    /* Un gris un poco más oscuro que el color base de fila al hacer hover */
+    background-color: #484848;
 }
 
 .table-responsive code {
-    background-color: #e8e8e8;
+    background-color: #a0a0a0; /* Un fondo más claro para el código que contraste con #a0a0a0 */
+    color: #2d2d2d; /* Color de texto oscuro para el código */
     padding: 2px 5px;
     border-radius: 4px;
     font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
@@ -324,8 +332,9 @@
 /* Estilos responsivos (para pantallas pequeñas) */
 @media screen and (max-width: 768px) {
     .table-responsive table {
-        border: 0; /* Quitar el borde general de la tabla */
-        box-shadow: none; /* Quitar sombra en modo móvil */
+        border: 0;
+        box-shadow: none;
+        background-color: transparent;
     }
 
     .table-responsive thead {
@@ -333,53 +342,34 @@
     }
 
     .table-responsive tr {
-        display: block; /* Cada fila se convierte en un bloque */
-        margin-bottom: 1em; /* Espacio entre "tarjetas" de fila */
-        border: 1px solid #ddd; /* Borde para cada tarjeta de fila */
+        display: block;
+        margin-bottom: 1em;
+        border: 1px solid #888888; /* Borde para cada tarjeta de fila */
         border-radius: 5px;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        background-color: #fff; /* Asegurar fondo blanco para cada tarjeta */
-    }
-     .table-responsive tbody tr:nth-child(even) {
-        background-color: #fff; /* Resetear el rayado de cebra para el modo tarjeta */
-    }
-     .table-responsive tbody tr:hover {
-        background-color: #fff; /* Resetear hover para el modo tarjeta si es necesario */
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
-    .table-responsive :first-child {
+    .table-responsive td {
+        display: block;
+        position: relative;
+        border-bottom: 1px solid black;
+    }
+
+    .table-responsive td:first-child {
         text-align: center;
     }
 
-
-    .table-responsive td {
-        display: block; /* Cada celda se convierte en un bloque */
-        position: relative; /* Necesario para posicionar el pseudo-elemento ::before */
-        border-bottom: 1px solid #eee; /* Separador entre datos dentro de una tarjeta */
-    }
-
     .table-responsive td:last-child {
-        border-bottom: 0; /* Quitar el borde inferior de la última celda de la tarjeta */
+        border-bottom: 0;
     }
 
-    .table-responsive td:before {
-        /* Muestra el contenido del atributo data-label */
-        content: attr(data-label);
-        position: absolute;
-        left: 15px; /* Espaciado desde la izquierda de la celda */
-        width: calc(50% - 30px); /* Ancho de la etiqueta, ajustando por el padding */
-        padding-right: 10px;
-        white-space: normal; /* Permite que las etiquetas largas se ajusten en varias líneas */
-        font-weight: bold;
-        color: #555;
-        text-transform: uppercase; /* Opcional, para las etiquetas */
-        font-size: 0.8em;
+    .table-responsive tbody tr:nth-child(even) {
+        /* Un gris ligeramente más claro que el fondo base para el efecto de cebra */
+        background-color: #1a1a1a;
     }
 
     .table-responsive code {
-        /* Ajustes para el código si es necesario en móvil */
         font-size: 0.95em;
-        word-break: break-all; /* Para IDs o valores largos de código */
+        word-break: break-all;
     }
 }
-

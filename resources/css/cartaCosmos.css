@@ -169,9 +169,18 @@ html {
 
 
 /* Media Queries para responsividad de la cuadrícula */
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 1200px) {
     .menus-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+    .menu-item-name {
+        font-size: 2em;
+    }
+    .menu-item-description {
+        font-size: 1.4em;
+    }
+    .menu-item-price {
+        font-size: 2em;
     }
 }
 
