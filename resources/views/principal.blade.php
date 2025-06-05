@@ -41,6 +41,7 @@
         'resources/js/detalle_estreno.js',
         'resources/css/footer.css',
         'resources/css/footer_elemento.css',
+        'resources/css/errors.css',
     ])
 
 </head>

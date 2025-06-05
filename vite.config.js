@@ -39,7 +39,8 @@ export default defineConfig({
                 'resources/css/footer_elemento.css',
                 'resources/css/confirmar_seleccion.css',
                 'resources/css/invitado.css',
-                'resources/css/menu_hamburguesa.css'
+                'resources/css/menu_hamburguesa.css',
+                'resources/css/errors.css',
             ], 
             refresh: true,
             base: "./",

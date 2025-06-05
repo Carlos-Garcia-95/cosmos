@@ -227,10 +227,3 @@ Route::get('footer/politica_de_cookies', [FooterController::class, 'politica_de_
 Route::get('footer/preguntas_frecuentes', [FooterController::class, 'preguntas_frecuentes'])->name('footer_preguntas_frecuentes');
 Route::get('footer/contacto', [FooterController::class, 'contacto'])->name('footer_contacto');
 
-
-
-
-
-
-
-
