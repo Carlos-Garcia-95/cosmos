@@ -19,13 +19,16 @@ class RecuperarSesionPelicula extends Controller
         $fecha_hoy = Carbon::today();
         $fecha_fin = $fecha_hoy->copy()->addDays(6);
 
-        // Recuperar las sesiones de la película seleccionada en los próximos 5 días
+        // Recuperar las sesiones de la película seleccionada en los próximos 6 días
         $sesiones = SesionPelicula::with(['fecha', 'hora'])
                     ->join('fecha', 'sesion_pelicula.fecha', '=', 'fecha.id')
+                    ->join('hora', 'sesion_pelicula.hora', '=', 'hora.id')
                     ->where('fecha.fecha', '>=', $fecha_hoy->startOfDay())
                     ->where('fecha.fecha', '<=', $fecha_fin->endOfDay())
                     ->where('sesion_pelicula.id_pelicula', $id_pelicula)
                     ->select('sesion_pelicula.*')
+                    ->orderBy('fecha.fecha', 'asc')
+                    ->orderBy('hora.hora', 'asc')
                     ->get();
 
         foreach ($sesiones as &$sesion) {
