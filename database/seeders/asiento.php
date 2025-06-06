@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use App\Constants\Salas;
+use App\Constants\Salas; // Asegúrate que el namespace y la clase sean correctos
 
 class asiento extends Seeder
 {
@@ -13,66 +13,86 @@ class asiento extends Seeder
      */
     public function run(): void
     {
-        // Recoger la configuracion por defecto de las salas
-        $salas = Salas::SALAS;
+        // Recoger la configuracion de todas las salas
+        $configuracionesSalas = Salas::SALAS;
 
-        // Por cada sala hay una configuración de asientos distinta
-        foreach ($salas as $id_sala => $sala) {
-            $filas = $sala['filas'];
-            $columnas = $sala['columnas'];
-            $estado_defecto = $sala['estado_defecto'];
-            $tipo_defecto = $sala['tipo_defecto'];
+        // Obtener todas las sesiones de película
+        $sesionesPelicula = DB::table('sesion_pelicula')->get();
 
-            $sesiones_pelicula = DB::table('sesion_pelicula')->get();
+        $asientosAInsertarGlobal = [];
 
-            // Genera los asientos para la sesión actual
-            foreach ($sesiones_pelicula as $sesion) {
-                $asientos = array();
+        // Por cada sesión de película que exista
+        foreach ($sesionesPelicula as $sesion) {
+            $idSalaDeLaSesion = $sesion->id_sala;
 
-                // Se recupera el número total de filas y columnas
-                $max_fila = max($filas);
-                $max_columna = max($columnas);
+            // Verificar si tenemos una configuración para esta sala
+            if (!isset($configuracionesSalas[$idSalaDeLaSesion])) {
+                continue;
+            }
 
-                // Se generan los asientos de forma dinámica según las filas y columnas de cada sala
-                // Si no existe esa fila o columna, se rellena como false
-                for ($fila = 1; $fila <= $max_fila; $fila++) {
-                    for ($columna = 1; $columna <= $max_columna; $columna++) {
-                        // Si existe la fila y la columna, se intruduce fila y columna de asiento como integer
-                        if (in_array($fila, $filas) && in_array($columna, $columnas)) {
-                            $aleatorio = rand(0, 1);
-                            if ($aleatorio == 0) {
-                                $estado_aleatorio = 1;
-                            } else {
-                                $estado_aleatorio = 2;
-                            }
-                            $asientos[] = [
-                                'id_sesion_pelicula' => $sesion->id,
-                                'estado' => $estado_aleatorio,
-                                'columna' => $columna,
-                                'fila' => $fila,
-                                'id_sala' => $id_sala,
-                                'id_tipo_asiento' => $tipo_defecto,
-                                'created_at' => now(),
-                                'updated_at' => now(),
-                            ];
-                        } else {            // Si no hay fila o columna, se introduce un hueco (false)
-                            $asientos[] = [
-                                'id_sesion_pelicula' => $sesion->id,
-                                'estado' => $estado_defecto,
-                                'columna' => -1,
-                                'fila' => -1,
-                                'id_sala' => $id_sala,
-                                'id_tipo_asiento' => $tipo_defecto,
-                                'created_at' => now(),
-                                'updated_at' => now(),
-                            ];
-                        }
+            // Obtener la configuración específica de la sala para esta sesión
+            $configSalaActual = $configuracionesSalas[$idSalaDeLaSesion];
+            $filasDefinidas = $configSalaActual['filas'];
+            $columnasDefinidas = $configSalaActual['columnas'];
+            $estadoDefectoParaHuecos = $configSalaActual['estado_defecto'];
+            $tipoDefecto = $configSalaActual['tipo_defecto'];
+
+            // Máximo de filas y columnas
+            $max_fila = 0;
+            if (!empty($filasDefinidas)) {
+                $max_fila = max($filasDefinidas);
+            }
+
+            $max_columna = 0;
+            if (!empty($columnasDefinidas)) {
+                $max_columna = max($columnasDefinidas);
+            }
+
+            // Si no hay filas o columnas definidas para la sala, no podemos generar asientos (ni huecos)
+            if ($max_fila === 0 || $max_columna === 0) {
+                continue;
+            }
+
+            // Generar la matriz completa de asientos (incluyendo huecos) para esta sesión
+            for ($fila = 1; $fila <= $max_fila; $fila++) {
+                for ($columna = 1; $columna <= $max_columna; $columna++) {
+                    // Comprobar si la combinación fila/columna actual es un asiento real o un hueco
+                    if (in_array($fila, $filasDefinidas) && in_array($columna, $columnasDefinidas)) {
+                        // Asiento
+                        $estadoAleatorio = rand(1, 2);
+
+                        $asientosAInsertarGlobal[] = [
+                            'id_sesion_pelicula' => $sesion->id,
+                            'estado' => $estadoAleatorio,
+                            'columna' => $columna,
+                            'fila' => $fila,
+                            'id_sala' => $idSalaDeLaSesion,
+                            'id_tipo_asiento' => $tipoDefecto,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
+                    } else {
+                        // Hueco
+                        $asientosAInsertarGlobal[] = [
+                            'id_sesion_pelicula' => $sesion->id,
+                            'estado' => $estadoDefectoParaHuecos,
+                            'columna' => -1,
+                            'fila' => -1,
+                            'id_sala' => $idSalaDeLaSesion,
+                            'id_tipo_asiento' => $tipoDefecto,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ];
                     }
                 }
-                
-                // Inserta los asientos generados para la sesión
-                DB::table('asiento')->insert($asientos);
             }
         }
+
+        // Insertar todos los asientos (y huecos) generados en bloques
+        if (!empty($asientosAInsertarGlobal)) {
+            foreach (array_chunk($asientosAInsertarGlobal, 500) as $chunk) {
+                DB::table('asiento')->insert($chunk);
+            }
+        } 
     }
 }

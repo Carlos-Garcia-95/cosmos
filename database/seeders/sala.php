@@ -13,10 +13,10 @@ class sala extends Seeder
     public function run(): void
     {
         DB::table('sala')->insert([
-            ['numero_asientos' => 240],
-            ['numero_asientos' => 64],
-            ['numero_asientos' => 64],
-            ['numero_asientos' => 56],
+            ['numero_asientos' => 260],
+            ['numero_asientos' => 308],
+            ['numero_asientos' => 255],
+            ['numero_asientos' => 270],
         ]);
     }
 }

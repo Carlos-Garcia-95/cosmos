@@ -1,9 +1,8 @@
 <script>
-    const rawJsonData = '{!! json_encode($peliculas) !!}';
     try {
-        window.heroSliderPeliculasData = JSON.parse(rawJsonData);
+        window.heroSliderPeliculasData = @json($peliculas);
     } catch (e) {
-        window.heroSliderPeliculasData = []; // Para evitar errores posteriores
+        window.heroSliderPeliculasData = [];    
     }
 </script>
 
@@ -17,7 +16,7 @@
             $peliculaId = $pelicula['id'] ?? null;
             $imageUrl = $pelicula['backdrop_url'];
             $imagePoster = $pelicula['poster_url'];
-            $loopIndex = $loop->index; // Para data-slide-index
+            $loopIndex = $loop->index;
             @endphp
 
             <div class="swiper-slide hero-slide" data-slide-index="{{ $loopIndex }}" onclick="mostrar_detalle('{{ $peliculaId }}')">

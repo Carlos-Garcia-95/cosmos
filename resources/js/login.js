@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("LOGIN.JS SCRIPT EJECUTÁNDOSE Y DOMContentLoaded DISPARADO");
     const modalLogin = document.getElementById("modalLogin");
     if (!modalLogin) {
         console.log("[Login] Modal de login no encontrado. Saliendo.");
@@ -17,20 +16,15 @@ document.addEventListener("DOMContentLoaded", function () {
     let loginRecaptchaRendered = false; // Flag para el estado de renderizado
 
     function renderLoginRecaptcha() {
-        console.log("[Login] FNC: renderLoginRecaptcha. Rendered:", loginRecaptchaRendered, "WidgetId:", loginRecaptchaWidgetId);
         const container = document.getElementById('recaptcha-login-container');
 
         if (!container) {
             console.error("[Login] ERR: Contenedor 'recaptcha-login-container' NO encontrado.");
             return;
         }
-        // console.log("[Login] DBG: Estilo display del contenedor:", window.getComputedStyle(container).display);
 
         if (typeof grecaptcha !== 'undefined' && grecaptcha.render) {
-            console.log("[Login] INF: grecaptcha.render disponible.");
             if (!loginRecaptchaRendered) {
-                console.log("[Login] INF: Intentando renderizar por primera vez (rendered=false).");
-                console.log("[Login] DBG: Sitekey a usar:", container.dataset.sitekey);
                 if (!container.dataset.sitekey) {
                     console.error("[Login] ERR: Sitekey está vacío o no definido en el data-attribute!");
                     return;
@@ -53,7 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
                     if (typeof loginRecaptchaWidgetId === 'number') {
                         loginRecaptchaRendered = true;
-                        console.log("[Login] INF: Renderizado solicitado. WidgetId asignado:", loginRecaptchaWidgetId);
                     } else {
                         console.warn("[Login] WARN: grecaptcha.render no devolvió un widgetId numérico. Renderizado podría haber fallado. WidgetId:", loginRecaptchaWidgetId);
                     }
@@ -62,10 +55,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     loginRecaptchaRendered = false;
                 }
             } else if (loginRecaptchaWidgetId !== null) {
-                console.log("[Login] INF: Widget ya renderizado, reseteando. WidgetId:", loginRecaptchaWidgetId);
                 grecaptcha.reset(loginRecaptchaWidgetId);
             } else {
-                console.warn("[Login] WARN: Marcado como renderizado pero sin WidgetId. Algo inconsistente.");
                 loginRecaptchaRendered = false;
             }
         } else {
@@ -141,7 +132,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function openModalLogin() {
-        console.log("[Login] FNC: openModalLogin");
         if (modalLogin) {
             modalLogin.classList.remove("hidden");
             modalLogin.classList.add("flex");
@@ -155,7 +145,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function closeModalLogin(reset = false) {
-        console.log("[Login] FNC: closeModalLogin. Reset:", reset);
         if (modalLogin) {
             modalLogin.classList.remove("flex");
             modalLogin.classList.add("hidden");
@@ -170,7 +159,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     el.style.display = "none";
                 });
                 if (typeof grecaptcha !== "undefined" && grecaptcha.reset && loginRecaptchaWidgetId !== null) {
-                    console.log("[Login] DBG: Reseteando reCAPTCHA al cerrar modal. WidgetId:", loginRecaptchaWidgetId);
                     grecaptcha.reset(loginRecaptchaWidgetId);
                 }
             }
@@ -183,7 +171,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (formLogin) {
         formLogin.addEventListener("submit", async function (event) {
-            console.log("[Login] EVT: Submit interceptado.");
             event.preventDefault();
             hideGeneralLoginErrors();
             clearInvalidClassesLogin();
@@ -211,12 +198,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 clearFieldErrorLogin(passwordInput);
             }
 
-            console.log("[Login] DBG: Validando reCAPTCHA. WidgetId:", loginRecaptchaWidgetId);
             const recaptchaLoginContainer = document.getElementById("recaptcha-login-container");
             let recaptchaResponseLogin = "";
             if (typeof grecaptcha !== "undefined" && loginRecaptchaWidgetId !== null) {
                 recaptchaResponseLogin = grecaptcha.getResponse(loginRecaptchaWidgetId);
-                console.log("[Login] DBG: Respuesta reCAPTCHA:", recaptchaResponseLogin);
             } else {
                 console.warn("[Login] WARN: No se pudo obtener respuesta de reCAPTCHA (grecaptcha no definido o widgetId es null).");
             }
@@ -235,9 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 isFormValid = false;
             }
 
-            console.log("[Login] FNC_END: Validación de formulario. Es válido:", isFormValid);
             if (isFormValid) {
-                console.log("[Login] INF: Formulario válido, enviando...");
                 event.target.submit();
             } else {
                 console.log("[Login] INF: Formulario NO válido.");
@@ -258,7 +241,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (hasLoginServerErrors) {
-        console.log("[Login] DBG: Errores de backend detectados al cargar, abriendo modal.");
         if (modalLogin && (modalLogin.classList.contains("hidden") || !modalLogin.classList.contains("flex"))) {
             openModalLogin();
         }

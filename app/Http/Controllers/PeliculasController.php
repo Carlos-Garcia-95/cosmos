@@ -20,6 +20,7 @@ class PeliculasController extends Controller
         // - Que tengan sesiones
         // - Que esas sesiones tengan su fecha después la fecha y hora actual
         $peliculas_objeto = Pelicula::with('generos')
+            ->where('pelicula.estreno', false)
             ->whereHas('sesiones', function ($querySesion) use ($fecha_actual, $hora_actual) {
                 $querySesion->join('fecha as tabla_fecha', 'sesion_pelicula.fecha', '=', 'tabla_fecha.id')
                     ->join('hora as tabla_hora', 'sesion_pelicula.hora', '=', 'tabla_hora.id')
@@ -52,7 +53,6 @@ class PeliculasController extends Controller
                 'titulo' => $pelicula->titulo,
                 'video' => $pelicula->video,
                 'activa' => $pelicula->activa,
-                'creacion' => $pelicula->creacion,
                 'generos' => $pelicula->generos->pluck('genero')->toArray(),
                 'duracion' => $pelicula->duracion,
             ];

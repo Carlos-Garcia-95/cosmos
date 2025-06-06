@@ -35,7 +35,7 @@ class PeliculasEstrenoController extends Controller
                 'titulo' => $pelicula->titulo,
                 'video' => $pelicula->video,
                 'activa' => $pelicula->activa,
-                'creacion' => $pelicula->creacion,
+                'estreno' => $pelicula->estreno,
                 'generos' => $pelicula->generos->pluck('genero')->toArray(),
                 'duracion' => $pelicula->duracion,
             ];

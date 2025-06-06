@@ -1,7 +1,6 @@
 @props(['peliculas'])
-
 <script>
-    var peliculas = JSON.parse('{!! json_encode($peliculas) !!}');
+    var peliculas = @json($peliculas);
 </script>
 
 <div class='cartelera-box'>

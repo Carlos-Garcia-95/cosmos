@@ -11,7 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
     <script>
         function onRecaptchaLoadCallback() {
-            console.log("Google reCAPTCHA API cargada y lista (onRecaptchaLoadCallback ejecutada).");
             window.grecaptchaApiReady = true;
         }
     </script>

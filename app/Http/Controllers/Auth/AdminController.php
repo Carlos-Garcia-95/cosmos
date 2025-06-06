@@ -44,7 +44,7 @@ class AdminController extends Controller
             'password' => 'required',
         ]);
 
-        $recaptchaResponse = $request->input('g-recaptcha-response');
+        /* $recaptchaResponse = $request->input('g-recaptcha-response');
         if (empty($recaptchaResponse)) {
             return back()->withErrors(['recaptcha' => 'Por favor, completa el desafío reCAPTCHA.'])->onlyInput('email');
         }
@@ -57,7 +57,7 @@ class AdminController extends Controller
         $recaptchaResult = $response->json();
         if (!isset($recaptchaResult['success']) || !$recaptchaResult['success']) {
             return back()->withErrors(['recaptcha' => 'La verificación reCAPTCHA falló. Inténtalo de nuevo.'])->onlyInput('email');
-        }
+        } */
 
         $credentials = $request->only('email', 'password');
 

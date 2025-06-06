@@ -15,13 +15,14 @@ class fecha extends Seeder
      */
     public function run(): void
     {
-        $fechaInicio = Carbon::now(); // Gets the current date
-        $fechaFin = Carbon::now()->addDays(180); // Adds 30 days to the current date
+        // Crea fechas desde hoy hasta 365 días en el futuro
+        $fechaInicio = Carbon::now();
+        $fechaFin = Carbon::now()->addDays(365);
 
         $fechas = [];
         for ($date = $fechaInicio->copy(); $date->lte($fechaFin); $date->addDay()) {
             $fechas[] = [
-                'fecha' => $date->format('Y-m-d'), // Format the date as YYYY-MM-DD
+                'fecha' => $date->format('Y-m-d'),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];

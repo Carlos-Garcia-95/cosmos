@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("REGISTRO.JS SCRIPT EJECUTÁNDOSE Y DOMContentLoaded DISPARADO");
     const modalRegistro = document.getElementById("modalRegistro");
     if (!modalRegistro) {
         console.log("[Registro] Modal de registro no encontrado. Saliendo.");
@@ -19,20 +18,15 @@ document.addEventListener("DOMContentLoaded", function () {
     let registroRecaptchaRendered = false;
 
     function renderRegistroRecaptcha() {
-        console.log("[Registro] FNC: renderRegistroRecaptcha. Rendered:", registroRecaptchaRendered, "WidgetId:", registroRecaptchaWidgetId);
         const container = document.getElementById('recaptcha-registro-container');
 
         if (!container) {
             console.error("[Registro] ERR: Contenedor 'recaptcha-registro-container' NO encontrado.");
             return;
         }
-        // console.log("[Registro] DBG: Estilo display del contenedor:", window.getComputedStyle(container).display);
 
         if (typeof grecaptcha !== 'undefined' && grecaptcha.render) {
-            console.log("[Registro] INF: grecaptcha.render disponible.");
             if (!registroRecaptchaRendered) {
-                console.log("[Registro] INF: Intentando renderizar por primera vez (rendered=false).");
-                console.log("[Registro] DBG: Sitekey a usar:", container.dataset.sitekey);
                 if (!container.dataset.sitekey) {
                     console.error("[Registro] ERR: Sitekey está vacío o no definido en el data-attribute!");
                     return;
@@ -55,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
                     if (typeof registroRecaptchaWidgetId === 'number') {
                         registroRecaptchaRendered = true;
-                        console.log("[Registro] INF: Renderizado solicitado. WidgetId asignado:", registroRecaptchaWidgetId);
                     } else {
                         console.warn("[Registro] WARN: grecaptcha.render no devolvió un widgetId numérico. Renderizado podría haber fallado. WidgetId:", registroRecaptchaWidgetId);
                     }
@@ -64,10 +57,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     registroRecaptchaRendered = false;
                 }
             } else if (registroRecaptchaWidgetId !== null) {
-                console.log("[Registro] INF: Widget ya renderizado, reseteando. WidgetId:", registroRecaptchaWidgetId);
                 grecaptcha.reset(registroRecaptchaWidgetId);
             } else {
-                console.warn("[Registro] WARN: Marcado como renderizado pero sin WidgetId. Algo inconsistente.");
                 registroRecaptchaRendered = false;
             }
         } else {
@@ -89,7 +80,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function openModal() {
-        console.log("[Registro] FNC: openModal");
         modalRegistro.classList.remove("hidden");
         modalRegistro.classList.add("flex");
         document.body.classList.add('modal_abierto');
@@ -101,13 +91,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function closeModal() {
-        console.log("[Registro] FNC: closeModal");
         modalRegistro.classList.remove("flex");
         modalRegistro.classList.add("hidden");
         document.body.classList.remove('modal_abierto');
         resetForm();
         if (typeof grecaptcha !== 'undefined' && grecaptcha.reset && registroRecaptchaWidgetId !== null) {
-            console.log("[Registro] DBG: Reseteando reCAPTCHA al cerrar modal. WidgetId:", registroRecaptchaWidgetId);
             grecaptcha.reset(registroRecaptchaWidgetId);
         }
         modalRegistro.querySelectorAll(".error-messages").forEach(el => {
@@ -217,7 +205,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     async function validateRegistroForm() {
-        console.log("[Registro] FNC: validateRegistroForm");
         hideGeneralClientErrors();
         clearInvalidClassesFromInputs();
         if (activeStep) clearStepFieldErrors(activeStep);
@@ -269,19 +256,16 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (isFormValid && emailInput && emailInput.value.trim() && /\S+@\S+\.\S+/.test(emailInput.value)) {
-            console.log("[Registro] DBG: Validando existencia de email antes de reCAPTCHA.");
             const isEmailUnique = await checkEmailExists(emailInput);
             if (!isEmailUnique) {
                 isFormValid = false;
             }
         }
 
-        console.log("[Registro] DBG: Validando reCAPTCHA. WidgetId:", registroRecaptchaWidgetId);
         const recaptchaRegistroContainer = document.getElementById('recaptcha-registro-container');
         let recaptchaResponseRegistro = '';
         if (typeof grecaptcha !== 'undefined' && registroRecaptchaWidgetId !== null) {
             recaptchaResponseRegistro = grecaptcha.getResponse(registroRecaptchaWidgetId);
-            console.log("[Registro] DBG: Respuesta reCAPTCHA:", recaptchaResponseRegistro);
         } else {
             console.warn("[Registro] WARN: No se pudo obtener respuesta de reCAPTCHA (grecaptcha no definido o widgetId es null).");
         }
@@ -302,13 +286,11 @@ document.addEventListener("DOMContentLoaded", function () {
             isFormValid = false;
         }
         
-        console.log("[Registro] FNC_END: validateRegistroForm. Es válido:", isFormValid);
         return isFormValid;
     }
 
     if (form) {
         form.addEventListener("submit", async function (event) {
-            console.log("[Registro] EVT: Submit interceptado.");
             event.preventDefault();
             hideGeneralClientErrors();
             clearInvalidClassesFromInputs();
@@ -317,7 +299,6 @@ document.addEventListener("DOMContentLoaded", function () {
             const isFormValid = await validateRegistroForm();
 
             if (isFormValid) {
-                console.log("[Registro] INF: Formulario válido, enviando...");
                 event.target.submit();
             } else {
                 console.log("[Registro] INF: Formulario NO válido.");
@@ -335,7 +316,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     if (hasServerErrorsOnLoad) {
-        console.log("[Registro] DBG: Errores de backend detectados al cargar, abriendo modal.");
         if (modalRegistro && (modalRegistro.classList.contains("hidden") || !modalRegistro.classList.contains("flex"))) {
             openModal();
         }

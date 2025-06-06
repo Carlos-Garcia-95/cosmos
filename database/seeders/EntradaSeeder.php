@@ -37,7 +37,7 @@ class EntradaSeeder extends Seeder
         }
 
         // --- Crear algunas entradas de ejemplo ---
-        $numeroDeEntradasACrear = 5;
+        $numeroDeEntradasACrear = 50;
 
         for ($i = 0; $i < $numeroDeEntradasACrear; $i++) {
             // Simular datos para la entrada

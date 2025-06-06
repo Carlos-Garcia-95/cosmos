@@ -161,20 +161,24 @@ document.addEventListener('DOMContentLoaded', () => {
         updatePaginationControls(allFetchedMovies.length);
     };
 
-    prevPageBtn.addEventListener('click', () => {
-        if (currentPage > 1) {
-            currentPage--;
-            renderCurrentPageMovies();
-        }
-    });
+    if (prevPageBtn) {
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderCurrentPageMovies();
+            }
+        });
+    }
 
-    nextPageBtn.addEventListener('click', () => {
-        const totalDisplayPages = Math.ceil(allFetchedMovies.length / itemsPerPage);
-        if (currentPage < totalDisplayPages) {
-            currentPage++;
-            renderCurrentPageMovies();
-        }
-    });
+    if (nextPageBtn) {
+        nextPageBtn.addEventListener('click', () => {
+            const totalDisplayPages = Math.ceil(allFetchedMovies.length / itemsPerPage);
+            if (currentPage < totalDisplayPages) {
+                currentPage++;
+                renderCurrentPageMovies();
+            }
+        });
+    }
 
     const performSearch = async () => {
         const query = searchInput.value.trim();

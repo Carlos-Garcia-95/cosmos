@@ -14,7 +14,7 @@ class hora extends Seeder
     public function run(): void
     {
         DB::table('hora')->insert([
-            [
+            /* [
                 "id" => 1,
                 "hora" => '00:00',
                 'created_at' => now(),
@@ -157,7 +157,7 @@ class hora extends Seeder
                 "hora" => '11:30',
                 'created_at' => now(),
                 'updated_at' => now()
-            ],
+            ], */
             [
                 "id" => 25,
                 "hora" => '12:00',
@@ -296,12 +296,12 @@ class hora extends Seeder
                 'created_at' => now(),
                 'updated_at' => now()
             ],
-            [
+            /* [
                 "id" => 48,
                 "hora" => '23:30',
                 'created_at' => now(),
                 'updated_at' => now()
-            ]
+            ] */
         ]);
     }
 }

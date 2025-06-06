@@ -1,7 +1,6 @@
 @props(['peliculas_estreno'])
-
 <script>
-    var peliculas_estreno = JSON.parse('{!! json_encode($peliculas_estreno) !!}');
+    var peliculas_estreno = @json($peliculas_estreno);
 </script>
 
 @if(!empty($peliculas_estreno))

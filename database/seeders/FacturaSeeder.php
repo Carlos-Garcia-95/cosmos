@@ -38,8 +38,8 @@ class FacturaSeeder extends Seeder
         $facturas = [];
 
         // Generar facturas para los últimos 12 meses, incluyendo el actual
-        for ($i = 0; $i < 50; $i++) { // Generar 50 facturas de ejemplo
-            $randomDaysAgo = rand(0, 365); // Facturas en el último año
+        for ($i = 0; $i < 500; $i++) { // Generar 50 facturas de ejemplo
+            $randomDaysAgo = rand(0, 700); // Facturas en el último año
             $createdAt = Carbon::now()->subDays($randomDaysAgo)->subHours(rand(0,23))->subMinutes(rand(0,59));
             $num_factura = 'ORD-' . time() . '-' . rand(1000, 9999);
             $pedido_redsys_id = substr(str_replace('-', '', $num_factura), 5, 17);
