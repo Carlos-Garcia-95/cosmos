@@ -16,8 +16,7 @@ return new class extends Migration
             $table->string('nombre_user_admin', 30)->unique();
             $table->string('email', 50)->unique();
             $table->string('codigo_administrador', 20)->unique();
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->nullable(); 
+            $table->timestamps();
             $table->foreign('email')->references('email')->on('users');
         });
     }

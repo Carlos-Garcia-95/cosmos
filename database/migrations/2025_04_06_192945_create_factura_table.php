@@ -22,8 +22,7 @@ return new class extends Migration
             $table->date('fecha_pago')->nullable();
             $table->unsignedBigInteger('id_user')->nullable();
             $table->unsignedBigInteger('id_impuesto');
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->nullable(); 
+            $table->timestamps();
             $table->foreign('id_user')->references('id')->on('users');  
             $table->foreign('id_impuesto')->references('id_impuesto')->on('impuesto');
         });

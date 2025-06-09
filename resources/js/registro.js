@@ -235,11 +235,18 @@ document.addEventListener("DOMContentLoaded", function () {
             clearFieldError(emailConfirmationInput);
         }
 
-        if (!passwordInput || !passwordInput.value) {
+        // Comprobaciones de la contraseña
+        if (!passwordInput || !passwordInput.value.trim()) {
             displayFieldError(passwordInput, "La contraseña es obligatoria.");
             isFormValid = false;
         } else if (passwordInput.value.length < 8) {
             displayFieldError(passwordInput, "La contraseña debe tener al menos 8 caracteres.");
+            isFormValid = false;
+        } else if (!/[A-Z]/.test(passwordInput.value)) {
+            displayFieldError(passwordInput, "La contraseña debe contener al menos una letra mayúscula.");
+            isFormValid = false;
+        } else if (!/[^a-zA-Z0-9]/.test(passwordInput.value)) {
+            displayFieldError(passwordInput, "La contraseña debe contener al menos un carácter especial.");
             isFormValid = false;
         } else {
             clearFieldError(passwordInput);

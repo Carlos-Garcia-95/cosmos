@@ -15,7 +15,7 @@ class HomeController extends Controller
     public function index(){
         // Se recuperan las ciudades de la BBDD
         $ciudades = Ciudad::all();
-        $menus = DB::table('menus')->get();
+        $menus = DB::table('menus')->where('activo', true)->get();
 
         // Se recuperan las películas activas
         $peliculas = PeliculasController::recuperar_peliculas_activas();

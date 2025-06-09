@@ -34,7 +34,7 @@
 }
 
 /* Media Query for screens below 1024px */
-@media (max-width: 1023px) {
+@media (max-width: 1025px) {
     .header-section {
         justify-content: space-between;
     }
@@ -93,7 +93,7 @@
     .header-buttons.mobile-menu-active form button {
         width: 100%;
         padding: 12px 15px;
-        font-size: 3.5em;
+        font-size: 2em;
         border-top: 1px solid white;
     }
 
@@ -112,5 +112,10 @@
 @media (max-width: 468px) {
     .header-buttons.mobile-menu-active {
         width: 100vw;
+    }
+
+    .header-buttons.mobile-menu-active button,
+    .header-buttons.mobile-menu-active form button {
+        font-size: 3.5em;
     }
 }

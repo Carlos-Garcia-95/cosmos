@@ -12,9 +12,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use App\Mail\VerifyEmail;
 use Illuminate\Support\Facades\Mail;
-// Si tu regla letraDNI está en App\Rules, no necesitas importarla explícitamente
-// a menos que esté en un subdirectorio de App\Rules.
-// use App\Rules\letraDNI;
 
 class RegisterController extends Controller
 {
@@ -44,24 +41,43 @@ class RegisterController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email|max:191|unique:users,email',
+            // Reglas de email
+            'email' => 'required|string|email|max:191|unique:users,email,' . ($userIdToIgnore ?? 'NULL') . ',id', // Ignorar el email del usuario actual al actualizar
             'email_confirmation' => 'required|string|email|same:email',
-            'password' => 'required|string|min:8|confirmed',
+            // Reglas de contraseña
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+                'regex:/[A-Z]/',
+                'regex:/[^a-zA-Z0-9]/',
+            ],
         ], [
+            // Mensajes para email
             'email.required' => 'El campo email es obligatorio.',
+            'email.string' => 'El campo email debe ser una cadena de texto.',
             'email.email' => 'El email debe ser una dirección de correo válida.',
-            'email.max' => 'El email no puede tener más de 191 caracteres.',
+            'email.max' => 'El email no puede tener más de :max caracteres.',
             'email.unique' => 'Este email ya ha sido registrado.',
+
+            // Mensajes para confirmación de email
             'email_confirmation.required' => 'El campo de confirmación de email es obligatorio.',
+            'email_confirmation.string' => 'El campo de confirmación de email debe ser una cadena de texto.',
+            'email_confirmation.email' => 'La confirmación de email debe ser una dirección de correo válida.',
             'email_confirmation.same' => 'El email y su confirmación no coinciden.',
+
+            // Mensajes para password
             'password.required' => 'El campo contraseña es obligatorio.',
+            'password.string' => 'El campo contraseña debe ser una cadena de texto.',
             'password.min' => 'La contraseña debe tener al menos :min caracteres.',
             'password.confirmed' => 'La contraseña y su confirmación no coinciden.',
+            'password.regex' => 'La contraseña no cumple con los requisitos de formato (mayúscula, minúscula, número, especial).',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('principal') // O la ruta que muestra el modal de registro
-                ->withErrors($validator, 'registro') // Usar el error bag 'registro'
+            return redirect()->route('principal')
+                ->withErrors($validator, 'registro')
                 ->withInput();
         }
 
@@ -77,7 +93,7 @@ class RegisterController extends Controller
 
         Mail::to($user->email)->send(new VerifyEmail($user));
 
-        return redirect()->route('principal') // Redirige a una página de aviso
-                    ->with('success', '¡Registro exitoso! Por favor, revisa tu correo electrónico para verificar tu cuenta.');
+        return redirect()->route('principal')
+            ->with('success', '¡Registro exitoso! Por favor, revisa tu correo electrónico para verificar tu cuenta.');
     }
 }

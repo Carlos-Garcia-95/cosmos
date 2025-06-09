@@ -59,9 +59,6 @@ Route::patch('/perfil/modificar', [UserController::class, 'modificarUser'])->nam
 //Ruta para devolver las ciudades
 Route::get('/ciudades', [CiudadController::class, 'pasar_ciudades'])->name('ciudades.pasar_ciudades');
 
-//Terminos y condiciones
-Route::get('/terminos-y-condiciones', [UserController::class, 'mostrarTerminos'])->name('terminos');
-
 //Ruta para ir al login de administradores
 Route::get('/administrador',[AdminController::class, 'mostrarLogin'])->name('administrador.loginAdministrador');
 
@@ -190,11 +187,6 @@ Route::post('/procesar_pago', [ProcesarPago::class, 'procesar_pago'])->name('pro
 
 Route::get('/entrada/{id_entrada}/pdf', [EntradaController::class, 'descargarEntradaPdf'])
     ->name('entrada.pdf.download');
-
-//Ruta de prueba
-
-Route::get('/test/entrada-pdf/{id_entrada}', [EntradaController::class, 'previsualizarEntradaPdf'])
-    ->name('test.entrada.pdf');
 
 //Facturación
 

@@ -40,8 +40,7 @@ return new class extends Migration
             // Tipo Entrada
             $table->unsignedBigInteger('tipo_entrada');
             // Timestamps
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->nullable(); 
+            $table->timestamps();
 
             // Relaciones
             $table->foreign('sala_id')->references('id_sala')->on('sala');

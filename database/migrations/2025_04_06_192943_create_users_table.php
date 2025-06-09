@@ -47,10 +47,7 @@ return new class extends Migration
             $table->foreignId('tipo_usuario')->nullable()->constrained('tipo_usuario', 'id_tipo_usuario')->onDelete('set null');
 
             // Timestamps
-            // $table->timestamps(); // Esta es la forma estándar y más simple de añadir created_at y updated_at
-            // Si prefieres tu definición explícita:
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate(); // Se actualiza automáticamente en cada update
+            $table->timestamps();
         });
 
         // Estas tablas son estándar de Laravel y usualmente están en sus propias migraciones

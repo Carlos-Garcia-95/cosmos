@@ -262,6 +262,7 @@
 @media (max-width: 768px) {
     .confirmar_container {
         width: 90%;
+        max-width: 95%;
     }
 
     #confirmar_container_body {
@@ -348,6 +349,7 @@
     .confirmar_container {
         width: 95%;
         padding: 5px;
+        max-width: 95%;
     }
 
     #confirmar_container_body {
