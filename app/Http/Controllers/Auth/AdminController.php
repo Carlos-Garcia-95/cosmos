@@ -474,7 +474,7 @@ class AdminController extends Controller
 
             $menuItem->imagen_url = '/images/menus/' . $filename;
         } else {
-            $menuItem->imagen_url = '/images/menus/imagenDefecto.jpeg';
+            $menuItem->imagen_url = '/images/menus/imagenDefecto.webp';
         }
 
         $menuItem->save();

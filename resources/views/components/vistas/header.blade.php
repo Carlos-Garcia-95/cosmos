@@ -29,7 +29,7 @@
 
 <div class="logo-container">
     <a href="{{ route('principal') }}" alt="Cosmos Cinema">
-        <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Cosmos Cinema Logo" class="cinema-logo">
+        <img src="{{ asset('images/logoCosmosCinema.webp') }}" alt="Cosmos Cinema Logo" class="cinema-logo">
     </a>
 </div>
 

@@ -242,7 +242,7 @@
             <td class="ticket-stub-cell">
                 <div class="ticket-stub">
                     <div class="stub-logo-area">
-                        @php $ruta_logo = public_path('images/logoCosmosCinema.png'); @endphp
+                        @php $ruta_logo = public_path('images/logoCosmosCinema.webp'); @endphp
                             @if(file_exists($ruta_logo))
                                 <img src="{{ $ruta_logo }}" ...>
                             @else

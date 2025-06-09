@@ -63,7 +63,7 @@ class PeliculasController extends Controller
 
     public static function formatear_url($ruta)
     {
-        $url_api = "https://image.tmdb.org/t/p/original/";
+        $url_api = "https://image.tmdb.org/t/p/w1280/";
         $url = "";
 
         if (isset($ruta)) {

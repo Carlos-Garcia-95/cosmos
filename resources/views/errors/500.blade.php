@@ -52,7 +52,7 @@
         <div class="col-md-8">
             <div class="logo-errors">
                 <a href="{{ route('principal') }}" alt="Cosmos Cinema">
-                    <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Cosmos Cinema Logo" class="cinema_logo_errors">
+                    <img src="{{ asset('images/logoCosmosCinema.webp') }}" alt="Cosmos Cinema Logo" class="cinema_logo_errors">
                 </a>
             </div>
             <div class='subtitulo_404_div'>
