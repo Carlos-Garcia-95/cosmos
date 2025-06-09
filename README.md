@@ -54,7 +54,11 @@ Sistema de login y registro de usuarios robusto.
 
 <h4>Credenciales de Empleados</h4> Envío de credenciales de acceso a nuevos empleados creados por el administrador.
 
+<<<<<<< HEAD
 <h4>Diseño Responsive</h4> La interfaz de usuario está optimizada para su correcta visualización y funcionamiento en diversos dispositivos, desde ordenadores de escritorio hasta tabletas y teléfonos móviles, garantizando una experiencia consistente.
+=======
+<h4>Diseño Responsive:</h4> La interfaz de usuario está optimizada para su correcta visualización y funcionamiento en diversos dispositivos, desde ordenadores de escritorio hasta tabletas y teléfonos móviles, garantizando una experiencia consistente.
+>>>>>>> carlos1
 
 <h4>Manejo de API Requests</h4> Experiencia en la realización de peticiones a APIs para la obtención y manipulación de datos, fundamental para las integraciones externas.
 
@@ -94,3 +98,8 @@ Este proyecto ha sido desarrollado utilizando un stack tecnológico moderno y ef
 <li>Git</li>
 
 </ul>
+
+¡Gracias por tomarte el tiempo de revisar Cosmos Cinema! Si mi perfil te resulta interesante, tienes alguna pregunta sobre el proyecto o estás buscando un desarrollador para tu equipo, no dudes en contactarme.
+
+*   **LinkedIn:** [Carlos García](https://www.linkedin.com/in/tu-url-personalizada)
+*   **Email:** [cozar1995.dev@hotmail.com](mailto:cozar1995.dev@hotmail.com)
