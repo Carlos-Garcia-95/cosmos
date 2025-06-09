@@ -50,7 +50,7 @@ class sesion_pelicula extends Seeder
 
         $tiempoLimpiezaMinutos = 15; // Aumentado ligeramente para más espacio
         $sesionesAInsertar = [];
-        $numeroDeDiasAProgramar = 14; // Programar para 2 semanas
+        $numeroDeDiasAProgramar = 7; // Programar para 2 semanas
 
         // Obtener el primer ID de fecha de tu tabla 'fecha'
         $primerIdFecha = DB::table('fecha')->orderBy('id')->value('id');
