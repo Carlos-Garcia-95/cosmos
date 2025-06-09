@@ -98,8 +98,12 @@ Este proyecto ha sido desarrollado utilizando un stack tecnológico moderno y ef
 <li>Git</li>
 
 </ul>
+
 <br><br>
+
 ¡Gracias por tomarte el tiempo de revisar Cosmos Cinema! Si mi perfil te resulta interesante, tienes alguna pregunta sobre el proyecto o estás buscando un desarrollador para tu equipo, no dudes en contactarme.
+
+<br>
 
 *   **LinkedIn:** [Carlos García](https://www.linkedin.com/in/tu-url-personalizada)
 *   **Email:** [cozar1995.dev@hotmail.com](mailto:cozar1995.dev@hotmail.com)
