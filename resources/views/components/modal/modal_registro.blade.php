@@ -2,7 +2,7 @@
     <div class="form-container">
         <button class="close-button" id="cerrarRegistro">×</button>
         <div class="logo-container">
-            <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Cosmos Cinema Logo" class="logo">
+            <img src="{{ asset('images/logoCosmosCinema.webp') }}" alt="Cosmos Cinema Logo" class="logo">
         </div>
 
         {{-- Opción de Registro con Google --}}

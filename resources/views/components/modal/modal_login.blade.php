@@ -2,7 +2,7 @@
     <div class="form-container">
         <button class="close-button" id="cerrarLogin">&times;</button>
         <div class="logo-container">
-            <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Cosmos Cinema Logo" class="logo">
+            <img src="{{ asset('images/logoCosmosCinema.webp') }}" alt="Cosmos Cinema Logo" class="logo">
         </div>
         <form method="POST" id="login-form" action="{{ route('login') }}" novalidate>
             @csrf

@@ -31,7 +31,7 @@
                     {{ $userName }}
                 </span>
                 <div class="company-logo">
-                    <img src="{{ asset('images/logoCosmosCinema.png') }}" alt="Logo Empresa Cosmos Cinema">
+                    <img src="{{ asset('images/logoCosmosCinema.webp') }}" alt="Logo Empresa Cosmos Cinema">
                 </div>
             </div>
         </header>
