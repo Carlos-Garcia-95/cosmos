@@ -54,7 +54,7 @@ Sistema de login y registro de usuarios robusto.
 
 <h4>Credenciales de Empleados</h4> Envío de credenciales de acceso a nuevos empleados creados por el administrador.
 
-<h4>Diseño Responsive:</h4> La interfaz de usuario está optimizada para su correcta visualización y funcionamiento en diversos dispositivos, desde ordenadores de escritorio hasta tabletas y teléfonos móviles, garantizando una experiencia consistente.
+<h4>Diseño Responsive</h4> La interfaz de usuario está optimizada para su correcta visualización y funcionamiento en diversos dispositivos, desde ordenadores de escritorio hasta tabletas y teléfonos móviles, garantizando una experiencia consistente.
 
 <h4>Manejo de API Requests</h4> Experiencia en la realización de peticiones a APIs para la obtención y manipulación de datos, fundamental para las integraciones externas.
 
